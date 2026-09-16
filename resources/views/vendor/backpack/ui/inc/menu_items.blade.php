@@ -129,6 +129,18 @@
             :link="backpack_url('announcement')"
         />
 
+        <x-backpack::menu-dropdown-item
+            title="Sondages"
+            icon="la la-poll"
+            :link="backpack_url('poll')"
+        />
+
+        <x-backpack::menu-dropdown-item
+            title="Choix de sondage"
+            icon="la la-list-ul"
+            :link="backpack_url('poll-option')"
+        />
+
     </x-backpack::menu-dropdown>
     <x-backpack::menu-item
     title="Statistiques"

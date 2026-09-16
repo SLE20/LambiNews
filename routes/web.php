@@ -15,6 +15,7 @@ use App\Http\Controllers\Front\MediaKitController;
 use App\Http\Controllers\Front\NewsletterController;
 use App\Http\Controllers\Front\OgImageController;
 use App\Http\Controllers\Front\PageController;
+use App\Http\Controllers\Front\PollController;
 use App\Http\Controllers\Front\SearchController;
 use App\Http\Controllers\Front\SitemapController;
 use Illuminate\Support\Facades\Route;
@@ -49,6 +50,22 @@ Route::get('/contact', [ContactController::class, 'create'])
 Route::post('/contact', [ContactController::class, 'store'])
     ->middleware('throttle:3,1')
     ->name('contact.store');
+
+/*
+|--------------------------------------------------------------------------
+| Sondaj opinyon lektè
+|--------------------------------------------------------------------------
+*/
+
+Route::get('/sondaj', [PollController::class, 'index'])
+    ->name('polls.index');
+
+Route::get('/sondaj/{slug}', [PollController::class, 'show'])
+    ->name('polls.show');
+
+Route::post('/sondaj/{slug}/vote', [PollController::class, 'vote'])
+    ->middleware('throttle:20,1')
+    ->name('polls.vote');
 
 /*
 |--------------------------------------------------------------------------

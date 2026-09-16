@@ -73,6 +73,16 @@ Route::group([
         'announcement',
         'AnnouncementCrudController'
     );
+
+    Route::crud(
+        'poll',
+        'PollCrudController'
+    );
+
+    Route::crud(
+        'poll-option',
+        'PollOptionCrudController'
+    );
     Route::get('statistiques', [StatisticsController::class, 'index'])
     ->name('admin.statistics');
 });

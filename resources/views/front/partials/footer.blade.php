@@ -155,6 +155,10 @@
                         Annonces et avis
                     </a>
 
+                    <a href="{{ route('polls.index') }}">
+                        Sondages
+                    </a>
+
                     <a href="{{ route('donations.create') }}">
                         Soutenir Lambi News
                     </a>
