@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
 
@@ -25,13 +26,44 @@
 
     @include('front.partials.seo')
 
+    {{-- ========================================================= --}}
+    {{-- FAVICONS --}}
+    {{-- ========================================================= --}}
+
     <link
         rel="icon"
-        type="image/jpeg"
-        href="{{ asset('images/lambinews-embleme.jpg') }}"
+        type="image/png"
+        sizes="32x32"
+        href="{{ asset('images/favicon-32x32.png') }}"
     >
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        rel="icon"
+        type="image/png"
+        sizes="16x16"
+        href="{{ asset('images/favicon-16x16.png') }}"
+    >
+
+    <link
+        rel="shortcut icon"
+        type="image/x-icon"
+        href="{{ asset('images/favicon.ico') }}"
+    >
+
+    <link
+        rel="apple-touch-icon"
+        sizes="180x180"
+        href="{{ asset('images/apple-touch-icon.png') }}"
+    >
+
+    {{-- ========================================================= --}}
+    {{-- POLICES --}}
+    {{-- ========================================================= --}}
+
+    <link
+        rel="preconnect"
+        href="https://fonts.googleapis.com"
+    >
 
     <link
         rel="preconnect"
@@ -43,6 +75,10 @@
         href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700;800&display=swap"
         rel="stylesheet"
     >
+
+    {{-- ========================================================= --}}
+    {{-- CSS --}}
+    {{-- ========================================================= --}}
 
     <link
         rel="stylesheet"
@@ -935,28 +971,43 @@
     </style>
 
     @stack('styles')
+
 </head>
 
 <body>
+
+    {{-- ========================================================= --}}
+    {{-- BARRE SUPÉRIEURE --}}
+    {{-- ========================================================= --}}
+
     <div class="topbar">
         <div class="container topbar-inner">
+
             <span>
-                {{ now()->translatedFormat('l d F Y') }}
+                {{ now('America/Port-au-Prince')->translatedFormat('l d F Y') }}
             </span>
 
             <span class="topbar-message">
                 Le citoyen au cœur de l’information
             </span>
+
         </div>
     </div>
 
+    {{-- ========================================================= --}}
+    {{-- EN-TÊTE --}}
+    {{-- ========================================================= --}}
+
     <header class="masthead">
+
         <div class="container masthead-inner">
+
             <a
                 href="{{ route('home') }}"
                 class="brand-logo"
                 aria-label="Accueil de Lambi News"
             >
+
                 <img
                     src="{{ asset('images/lambinews-logo.jpg') }}"
                     alt="Lambi News — Le citoyen au cœur de l’information"
@@ -966,7 +1017,10 @@
                     decoding="async"
                     fetchpriority="high"
                 >
+
             </a>
+
+            {{-- Recherche --}}
 
             <form
                 action="{{ route('search') }}"
@@ -974,6 +1028,7 @@
                 class="search-form"
                 role="search"
             >
+
                 <label
                     for="site-search"
                     class="sr-only"
@@ -993,15 +1048,23 @@
                 <button type="submit">
                     Rechercher
                 </button>
+
             </form>
+
         </div>
     </header>
+
+    {{-- ========================================================= --}}
+    {{-- NAVIGATION --}}
+    {{-- ========================================================= --}}
 
     <nav
         class="navigation"
         aria-label="Navigation principale"
     >
+
         <div class="container navigation-inner">
+
             <a
                 href="{{ route('home') }}"
                 class="home-link"
@@ -1013,6 +1076,7 @@
                 $navigationCategories ?? []
                 as $navigationCategory
             )
+
                 <a
                     href="{{ route(
                         'categories.show',
@@ -1021,11 +1085,19 @@
                 >
                     {{ $navigationCategory->name }}
                 </a>
+
             @endforeach
+
         </div>
+
     </nav>
 
+    {{-- ========================================================= --}}
+    {{-- DERNIÈRE MINUTE --}}
+    {{-- ========================================================= --}}
+
     @if(($breakingArticles ?? collect())->isNotEmpty())
+
         @php
             $breakingArticle =
                 $breakingArticles->first();
@@ -1035,12 +1107,15 @@
             class="breaking-news"
             aria-label="Dernière minute"
         >
+
             <div class="container breaking-news-inner">
+
                 <span class="breaking-label">
                     Dernière minute
                 </span>
 
                 <div class="breaking-content">
+
                     <span class="breaking-time">
                         {{ $breakingArticle
                             ->published_at?->format('H:i') }}
@@ -1054,19 +1129,37 @@
                     >
                         {{ $breakingArticle->title }}
                     </a>
+
                 </div>
+
             </div>
+
         </aside>
+
     @endif
 
+    {{-- ========================================================= --}}
+    {{-- CONTENU --}}
+    {{-- ========================================================= --}}
+
     <main>
+
         <div class="container">
+
             @yield('content')
+
         </div>
+
     </main>
+
+    {{-- ========================================================= --}}
+    {{-- FOOTER --}}
+    {{-- ========================================================= --}}
 
     @include('front.partials.footer')
 
     @stack('scripts')
+
 </body>
+
 </html>

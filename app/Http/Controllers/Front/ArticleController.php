@@ -56,7 +56,11 @@ class ArticleController extends Controller
             ->where('status', 'published')
             ->where(function ($query): void {
                 $query->whereNull('published_at')
-                    ->orWhere('published_at', '<=', now());
+                    ->orWhere(
+                        'published_at',
+                        '<=',
+                        now()
+                    );
             })
             ->when(
                 $article->category_id,
@@ -71,10 +75,36 @@ class ArticleController extends Controller
             ->limit(4)
             ->get();
 
+        /*
+         * Articles les plus lus.
+         *
+         * On exclut l'article actuellement consulté.
+         */
+        $popularArticles = Article::query()
+            ->with([
+                'category',
+                'author',
+            ])
+            ->whereKeyNot($article->id)
+            ->where('status', 'published')
+            ->where(function ($query): void {
+                $query->whereNull('published_at')
+                    ->orWhere(
+                        'published_at',
+                        '<=',
+                        now()
+                    );
+            })
+            ->orderByDesc('views_count')
+            ->latest('published_at')
+            ->limit(5)
+            ->get();
+
         return view('front.articles.show', [
             'article' => $article,
             'comments' => $comments,
             'relatedArticles' => $relatedArticles,
+            'popularArticles' => $popularArticles,
         ]);
     }
 }
