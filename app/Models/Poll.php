@@ -25,12 +25,19 @@ class Poll extends Model
         'starts_at',
         'ends_at',
         'hide_results_before_vote',
+        'max_votes_per_ip',
+        'is_paid',
+        'vote_price',
+        'currency',
     ];
 
     protected function casts(): array
     {
         return [
             'is_active'                => 'boolean',
+            'is_paid'                  => 'boolean',
+            'vote_price'               => 'decimal:2',
+            'max_votes_per_ip'         => 'integer',
             'hide_results_before_vote' => 'boolean',
             'starts_at'                => 'date',
             'ends_at'                  => 'date',
@@ -145,6 +152,35 @@ class Poll extends Model
         return e(implode(' ', $words)).' <em>'.e($last).'</em>';
     }
 
+    /** Nombre de voix autorisées depuis une même connexion. */
+    public function voteQuota(): int
+    {
+        return max(1, (int) ($this->max_votes_per_ip ?: 1));
+    }
+
+    public function allowsMultipleVotes(): bool
+    {
+        return $this->voteQuota() > 1;
+    }
+
+    public function isPaid(): bool
+    {
+        return $this->is_paid && (float) $this->vote_price > 0;
+    }
+
+    public function formattedPrice(): string
+    {
+        return number_format((float) $this->vote_price, 2).' '.($this->currency ?: 'USD');
+    }
+
+    /** Seules les voix réellement acquises comptent dans les résultats. */
+    public function countedVotes()
+    {
+        return $this->votes()
+            ->where('is_void', false)
+            ->whereIn('payment_status', ['free', 'paid']);
+    }
+
     public function isShowcase(): bool
     {
         return $this->layout === 'showcase';
@@ -163,6 +199,20 @@ class Poll extends Model
         return $this->ends_at
             ? 'Ouvert jusqu’au '.$this->ends_at->format('d/m/Y')
             : 'Ouvert';
+    }
+
+    /** Résumé des règles, pour la liste de l'administration. */
+    public function getRulesLabel(): string
+    {
+        $parts = [$this->voteQuota() === 1
+            ? '1 voix / IP'
+            : $this->voteQuota().' voix / IP'];
+
+        if ($this->isPaid()) {
+            $parts[] = 'payant — '.$this->formattedPrice();
+        }
+
+        return implode(' · ', $parts);
     }
 
     public function getVotesSummary(): string

@@ -41,6 +41,13 @@ class PollCrudController extends CrudController
             'function_name' => 'getVotesSummary',
         ]);
 
+        CRUD::addColumn([
+            'name'          => 'rules',
+            'label'         => 'Règles',
+            'type'          => 'model_function',
+            'function_name' => 'getRulesLabel',
+        ]);
+
         CRUD::addColumn(['name' => 'created_at', 'label' => 'Créé le', 'type' => 'datetime']);
 
         CRUD::orderBy('created_at', 'desc');
@@ -49,8 +56,11 @@ class PollCrudController extends CrudController
     protected function setupCreateOperation(): void
     {
         CRUD::setValidation([
-            'question'  => 'required|string|max:200',
-            'ends_at'   => 'nullable|date|after_or_equal:starts_at',
+            'question'         => 'required|string|max:200',
+            'ends_at'          => 'nullable|date|after_or_equal:starts_at',
+            'max_votes_per_ip' => 'nullable|integer|min:1|max:50',
+            // Un sondage payant sans prix ne pourrait jamais encaisser.
+            'vote_price'       => 'nullable|numeric|min:0.5|max:500|required_if:is_paid,1',
         ]);
 
         CRUD::addField([
@@ -146,6 +156,47 @@ class PollCrudController extends CrudController
             'label'   => 'Cacher les résultats avant le vote',
             'type'    => 'checkbox',
             'hint'    => 'Évite d’influencer le lecteur avant qu’il choisisse.',
+            'wrapper' => ['class' => 'form-group col-md-6'],
+        ]);
+
+        CRUD::addField([
+            'name'    => 'max_votes_per_ip',
+            'label'   => 'Nombre de voix par connexion (IP)',
+            'type'    => 'number',
+            'default' => 1,
+            'hint'    => '1 = une seule voix, impossible de voter pour deux '
+                .'candidats. Au-delà, le lecteur peut voter plusieurs fois.',
+            'tab'     => 'Règles de vote',
+            'wrapper' => ['class' => 'form-group col-md-6'],
+        ]);
+
+        CRUD::addField([
+            'name'    => 'is_paid',
+            'label'   => 'Sondage payant',
+            'type'    => 'checkbox',
+            'hint'    => 'Le lecteur règle chaque voix avant qu’elle compte.',
+            'tab'     => 'Règles de vote',
+            'wrapper' => ['class' => 'form-group col-md-6'],
+        ]);
+
+        CRUD::addField([
+            'name'    => 'vote_price',
+            'label'   => 'Prix d’une voix',
+            'type'    => 'number',
+            'attributes' => ['step' => '0.01', 'min' => '0.5'],
+            'hint'    => 'Obligatoire si le sondage est payant.',
+            'tab'     => 'Règles de vote',
+            'wrapper' => ['class' => 'form-group col-md-6'],
+        ]);
+
+        CRUD::addField([
+            'name'    => 'currency',
+            'label'   => 'Devise',
+            'type'    => 'select_from_array',
+            'options' => ['USD' => 'USD'],
+            'default' => 'USD',
+            'hint'    => 'PayPal ne gère pas la gourde.',
+            'tab'     => 'Règles de vote',
             'wrapper' => ['class' => 'form-group col-md-6'],
         ]);
 

@@ -15,13 +15,24 @@ class PollVote extends Model
         'user_agent',
         'referrer',
         'is_void',
+        'payment_status',
+        'amount',
+        'paypal_order_id',
+        'paypal_capture_id',
+        'paid_at',
         'voted_at',
     ];
+
+    public const PAY_FREE    = 'free';
+    public const PAY_PENDING = 'pending_payment';
+    public const PAY_PAID    = 'paid';
 
     protected function casts(): array
     {
         return [
             'is_void'  => 'boolean',
+            'amount'   => 'decimal:2',
+            'paid_at'  => 'datetime',
             'voted_at' => 'datetime',
         ];
     }

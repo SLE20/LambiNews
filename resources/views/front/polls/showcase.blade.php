@@ -7,10 +7,13 @@
     $ranked   = $poll->ranked();
     $total    = $poll->validVotes();
     $daysLeft = $poll->daysLeft();
-    $hasVoted = $recorder->alreadyVoted($poll);
-    $chosenId = $hasVoted ? $recorder->votedOptionId($poll) : null;
-    $closed   = $poll->isClosed();
-    $canVote  = ! $hasVoted && ! $closed;
+    $hasVoted  = $recorder->alreadyVoted($poll);
+    $chosenIds = $recorder->votedOptionIds($poll);
+    $chosenId  = $recorder->votedOptionId($poll);
+    $closed    = $poll->isClosed();
+    $canVote   = ! $hasVoted && ! $closed;
+    $remaining = $recorder->remainingVotes($poll);
+    $isPaid    = $poll->isPaid();
 
     /*
      * Camembert : on convertit chaque part en segment de cercle.
@@ -87,6 +90,26 @@
     .sx__rule { width: 66px; height: 4px; background: #ef4444; margin: 18px 0 20px; }
     .sx__q { margin: 0 0 8px; font-size: clamp(1rem, 2.2vw, 1.3rem); font-weight: 700; }
     .sx__sub { margin: 0; color: rgba(255,255,255,.75); font-size: .95rem; }
+    .sx__rules { margin: 16px 0 0; display: flex; flex-wrap: wrap; gap: 8px; }
+    .sx__pill {
+        display: inline-block; padding: 5px 13px; border-radius: 999px;
+        background: rgba(255,255,255,.14); border: 1px solid rgba(255,255,255,.22);
+        font-size: .78rem; font-weight: 600;
+    }
+    .sx__pill--soft { background: transparent; color: rgba(255,255,255,.7); }
+    .sx__vote--paid { background: #b8860b; }
+    .sx__vote--paid:hover { background: #9a7009; }
+    .sx__paybox {
+        margin-top: 16px; padding: 18px; border-radius: 12px;
+        background: #fff; border: 1px solid #e3e8f0;
+    }
+    .sx__paybox h3 { margin: 0 0 6px; font-size: 1rem; }
+    .sx__paybox p { margin: 0 0 14px; font-size: .86rem; color: #64748b; }
+    .sx__payerr {
+        margin: 0 0 12px; padding: 10px 14px; border-radius: 8px;
+        background: #fdecea; border: 1px solid #f5c2bd; color: #8d2419;
+        font-size: .86rem;
+    }
 
     /* ---------------- Corps ---------------- */
     .sx__body {
@@ -260,6 +283,45 @@
     @media (max-width: 900px) {
         .sx__body { grid-template-columns: 1fr; }
     }
+
+    /*
+     * Téléphone : deux cartes par ligne. Sans cette règle, le minmax de
+     * 178px n'en laisse passer qu'une seule sur un écran de 360 px, et la
+     * page devient une colonne interminable.
+     */
+    @media (max-width: 620px) {
+        /*
+         * On abandonne le débordement pleine largeur : sur téléphone il
+         * n'apporte rien, et 100vw dépasse la zone visible dès qu'un
+         * autre élément de la page élargit le document.
+         */
+        .sx {
+            width: auto;
+            margin-left: 0;
+            margin-right: 0;
+        }
+
+        .sx__grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 12px;
+        }
+        .sx__card-body { padding: 11px 9px; }
+        .sx__name { font-size: .88rem; min-height: 2.6em; }
+        .sx__party { font-size: .74rem; margin-bottom: 10px; }
+        .sx__party i { width: 14px; height: 14px; }
+        .sx__vote, .sx__votepct { padding: 9px 6px; font-size: .8rem; }
+        .sx__hero { padding: 40px 18px 46px; }
+        .sx__body { padding: 24px 12px 48px; gap: 20px; }
+        .sx__panel { padding: 16px; }
+        .sx__donut { justify-content: center; }
+    }
+
+    /* Très petits écrans : on garde deux colonnes, en plus compact. */
+    @media (max-width: 380px) {
+        .sx__grid { gap: 9px; }
+        .sx__name { font-size: .82rem; }
+        .sx__vote, .sx__votepct { font-size: .74rem; padding: 8px 4px; }
+    }
 </style>
 @endpush
 
@@ -284,6 +346,25 @@
             @if($poll->subtitle)
                 <p class="sx__sub">{{ $poll->subtitle }}</p>
             @endif
+
+            {{-- Les règles sont annoncées avant le vote, pas découvertes après. --}}
+            <p class="sx__rules">
+                @if($isPaid)
+                    <span class="sx__pill">{{ $poll->formattedPrice() }} pa vòt</span>
+                @endif
+
+                <span class="sx__pill">
+                    @if($poll->allowsMultipleVotes())
+                        {{ $poll->voteQuota() }} vòt pa koneksyon
+                    @else
+                        Yon sèl vòt pa koneksyon
+                    @endif
+                </span>
+
+                @if($canVote && $poll->allowsMultipleVotes())
+                    <span class="sx__pill sx__pill--soft">Rete {{ $remaining }} vòt pou ou</span>
+                @endif
+            </p>
         </div>
     </header>
 
@@ -312,7 +393,7 @@
                     @foreach($ranked as $row)
                         @php($option = $row['option'])
                         <article
-                            class="sx__card{{ $chosenId === $option->id ? ' is-mine' : '' }}"
+                            class="sx__card{{ in_array($option->id, $chosenIds, true) ? ' is-mine' : '' }}"
                             style="--card-color: {{ $row['color'] }}"
                         >
                             <div class="sx__photo">
@@ -337,7 +418,14 @@
                                     </span>
                                 @endif
 
-                                @if($canVote)
+                                @if($canVote && $isPaid)
+                                    <button
+                                        type="button"
+                                        class="sx__vote sx__vote--paid"
+                                        data-option="{{ $option->id }}"
+                                        data-name="{{ $option->label }}"
+                                    >🗳 VOTE · {{ $poll->formattedPrice() }}</button>
+                                @elseif($canVote)
                                     <button
                                         type="submit"
                                         name="poll_option_id"
@@ -347,7 +435,7 @@
                                 @else
                                     <span class="sx__votepct">
                                         {{ number_format($row['percent'], 0, ',', ' ') }} %
-                                        @if($chosenId === $option->id) ✓ @endif
+                                        @if(in_array($option->id, $chosenIds, true)) ✓ @endif
                                     </span>
                                 @endif
                             </div>
@@ -355,6 +443,25 @@
                     @endforeach
                 </div>
             </form>
+
+            @if($canVote && $isPaid)
+                <div class="sx__paybox" id="sx-paybox" hidden>
+                    <h3>Peye vòt ou an : <span id="sx-payfor"></span></h3>
+                    <p>
+                        {{ $poll->formattedPrice() }} pa vòt. Vòt ou an konte
+                        sèlman apre peman an konfime.
+                    </p>
+                    <p class="sx__payerr" id="sx-payerr" hidden></p>
+                    <div id="sx-paypal"></div>
+                </div>
+
+                @unless($paypalReady)
+                    <p class="sx__payerr" style="margin-top:16px">
+                        Sistèm peman an poko konfigire : sondaj peyan an pa ka
+                        resevwa vòt pou kounye a.
+                    </p>
+                @endunless
+            @endif
         </section>
 
         {{-- ---------------- Colonne de droite ---------------- --}}
@@ -482,3 +589,80 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+@if($canVote && $isPaid && $paypalReady)
+<script
+    src="https://www.paypal.com/sdk/js?client-id={{ $paypalClientId }}&currency={{ $poll->currency ?: 'USD' }}&intent=capture&locale=fr_FR"
+    data-namespace="paypalSdk"
+></script>
+<script>
+(function () {
+    var box     = document.getElementById('sx-paybox');
+    var forEl   = document.getElementById('sx-payfor');
+    var errEl   = document.getElementById('sx-payerr');
+    var token   = '{{ csrf_token() }}';
+    var chosen  = null;
+    var rendered = false;
+
+    function showErr(m) { errEl.textContent = m; errEl.hidden = false; }
+    function hideErr() { errEl.hidden = true; errEl.textContent = ''; }
+
+    function post(url, body) {
+        return fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'X-CSRF-TOKEN': token
+            },
+            body: JSON.stringify(body)
+        }).then(function (r) {
+            return r.json().then(function (d) {
+                if (!r.ok) { throw new Error(d.message || 'Yon erè rive.'); }
+                return d;
+            });
+        });
+    }
+
+    // Choisir un candidat ouvre le paiement ; on ne rend les boutons
+    // PayPal qu'une fois, puis on change simplement le candidat visé.
+    document.querySelectorAll('.sx__vote--paid').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            hideErr();
+            chosen = btn.dataset.option;
+            forEl.textContent = btn.dataset.name;
+            box.hidden = false;
+            box.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+            if (rendered || !window.paypalSdk) { return; }
+            rendered = true;
+
+            window.paypalSdk.Buttons({
+                style: { layout: 'vertical', color: 'gold', shape: 'pill', label: 'pay' },
+
+                createOrder: function () {
+                    hideErr();
+                    return post('{{ route('polls.pay.start', $poll->slug) }}', {
+                        poll_option_id: chosen,
+                        opened_at: {{ time() }}
+                    }).then(function (r) { return r.orderID; })
+                      .catch(function (e) { showErr(e.message); throw e; });
+                },
+
+                onApprove: function (data) {
+                    return post('{{ route('polls.pay.capture', $poll->slug) }}', { orderID: data.orderID })
+                        .then(function (r) { window.location.href = r.redirect_to; })
+                        .catch(function (e) { showErr(e.message); });
+                },
+
+                onError: function () {
+                    showErr('PayPal rankontre yon pwoblèm. Tanpri eseye ankò.');
+                }
+            }).render('#sx-paypal');
+        });
+    });
+})();
+</script>
+@endif
+@endpush

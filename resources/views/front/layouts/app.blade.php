@@ -152,13 +152,21 @@
             height: auto;
         }
 
+        /* ---------- En-tête : recherche + soutien ---------- */
+        .masthead-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex: 0 1 auto;
+        }
+
         /* ---------- Bouton de soutien ---------- */
         .nav-support {
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            padding: 7px 16px;
-            margin-right: 6px;
+            flex: none;
+            padding: 11px 20px;
             border-radius: 999px;
             background: var(--primary);
             color: var(--black);
@@ -167,6 +175,30 @@
             white-space: nowrap;
         }
         .nav-support:hover { background: var(--primary-dark); color: #fff; }
+
+        /* ---------- Retour en haut ---------- */
+        .back-to-top {
+            position: fixed;
+            right: 18px;
+            bottom: 18px;
+            z-index: 60;
+            width: 46px;
+            height: 46px;
+            border: 0;
+            border-radius: 50%;
+            background: var(--black);
+            color: var(--primary);
+            font-size: 1.3rem;
+            line-height: 1;
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, .28);
+        }
+        .back-to-top:hover { background: var(--black-light); }
+        .back-to-top[hidden] { display: none; }
+
+        @media (max-width: 680px) {
+            .back-to-top { right: 12px; bottom: 12px; width: 42px; height: 42px; }
+        }
 
         /* ---------- Emplacements publicitaires ---------- */
         .ad-slot {
@@ -1114,6 +1146,24 @@
                 margin-inline: auto;
             }
 
+            /*
+             * Sur mobile, la recherche et le bouton restent sur une même
+             * ligne : le bouton ne doit pas manger toute la largeur.
+             */
+            .masthead-actions {
+                gap: 8px;
+            }
+
+            .search-form {
+                flex: 1;
+                min-width: 0;
+            }
+
+            .nav-support {
+                padding: 11px 14px;
+                font-size: .82rem;
+            }
+
             .brand-logo img {
                 max-height: 86px;
             }
@@ -1343,6 +1393,8 @@
             {{-- RECHERCHE --}}
             {{-- ================================================= --}}
 
+            <div class="masthead-actions">
+
             <form
                 action="{{ route('search') }}"
                 method="GET"
@@ -1371,6 +1423,12 @@
                 </button>
 
             </form>
+
+            <a href="{{ route('donations.create') }}" class="nav-support">
+                <span aria-hidden="true">♥</span> Soutenir
+            </a>
+
+            </div>
 
         </div>
 
@@ -1407,17 +1465,7 @@
 
             <div class="navigation-menu">
 
-                {{--
-                    Raccourcis vers les pages qui rapportent. Placés avant
-                    les rubriques pour rester visibles : dans le pied de
-                    page, presque personne ne les voit.
-                --}}
-                <div class="nav-item nav-item--support">
-                    <a href="{{ route('donations.create') }}" class="nav-support">
-                        ♥ Soutenir
-                    </a>
-                </div>
-
+                {{-- Le bouton « Soutenir » est dans l'en-tête, près de la recherche. --}}
                 <div class="nav-item">
                     <a href="{{ route('announcements.index') }}" class="nav-link">
                         Annonces
@@ -1606,6 +1654,41 @@
     {{-- ========================================================= --}}
     {{-- SCRIPTS --}}
     {{-- ========================================================= --}}
+
+    {{-- ========================================================= --}}
+    {{-- RETOUR EN HAUT --}}
+    {{-- ========================================================= --}}
+
+    <button
+        type="button"
+        id="back-to-top"
+        class="back-to-top"
+        aria-label="Retounen anlè paj la"
+        hidden
+    >
+        <span aria-hidden="true">↑</span>
+    </button>
+
+    <script>
+    (function () {
+        var btn = document.getElementById('back-to-top');
+        if (!btn) { return; }
+
+        // Le bouton n'apparaît qu'une fois la page réellement parcourue.
+        function toggle() {
+            btn.hidden = window.scrollY < 480;
+        }
+
+        window.addEventListener('scroll', toggle, { passive: true });
+        toggle();
+
+        btn.addEventListener('click', function () {
+            // Respecte le réglage « animations réduites » du système.
+            var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
+        });
+    })();
+    </script>
 
     @stack('scripts')
 

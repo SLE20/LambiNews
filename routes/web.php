@@ -18,6 +18,7 @@ use App\Http\Controllers\Front\PageController;
 use App\Http\Controllers\Front\PollController;
 use App\Http\Controllers\Front\SearchController;
 use App\Http\Controllers\Front\SitemapController;
+use App\Http\Controllers\Front\ThumbnailController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -66,6 +67,15 @@ Route::get('/sondaj/{slug}', [PollController::class, 'show'])
 Route::post('/sondaj/{slug}/vote', [PollController::class, 'vote'])
     ->middleware('throttle:20,1')
     ->name('polls.vote');
+
+// Sondage payant : commande PayPal puis capture.
+Route::post('/sondaj/{slug}/peman', [PollController::class, 'payStart'])
+    ->middleware('throttle:15,1')
+    ->name('polls.pay.start');
+
+Route::post('/sondaj/{slug}/peman/konfime', [PollController::class, 'payCapture'])
+    ->middleware('throttle:15,1')
+    ->name('polls.pay.capture');
 
 /*
 |--------------------------------------------------------------------------
@@ -252,6 +262,21 @@ Route::post(
 )
     ->middleware('throttle:3,1')
     ->name('comments.store');
+
+/*
+|--------------------------------------------------------------------------
+| Vignettes d'articles
+|--------------------------------------------------------------------------
+|
+| Les originaux pèsent deux à trois mégaoctets ; on ne les sert jamais
+| dans une liste.
+|
+*/
+
+Route::get('/vinyet/{width}/{slug}.jpg', ThumbnailController::class)
+    ->where('width', '[0-9]{3,4}')
+    ->where('slug', '[A-Za-z0-9\-_]+')
+    ->name('thumbnail');
 
 /*
 |--------------------------------------------------------------------------

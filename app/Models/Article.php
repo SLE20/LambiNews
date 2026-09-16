@@ -135,6 +135,27 @@ public function approvedComments(): HasMany
         ]);
     }
 
+    /** Mention de sponsoring, visible dans la liste des articles. */
+    public function getSponsorLabel(): string
+    {
+        if (! $this->is_sponsored) {
+            return '—';
+        }
+
+        return $this->sponsor_name
+            ? 'Oui — '.$this->sponsor_name
+            : 'Oui';
+    }
+
+    /** URL d'une vignette, à la largeur demandée. */
+    public function thumbUrl(int $width): string
+    {
+        return route('thumbnail', [
+            'width' => \App\Services\Thumbnailer::nearestWidth($width),
+            'slug'  => $this->slug,
+        ]);
+    }
+
     /** État de diffusion sur le canal Telegram. */
     public function getTelegramStatus(): string
     {
