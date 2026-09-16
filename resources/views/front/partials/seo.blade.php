@@ -203,8 +203,13 @@
             strip_tags($article->content ?? '')
         ));
 
+        /*
+         * Un publireportage n’est pas un article de presse : le déclarer
+         * NewsArticle tromperait Google Actualités. On le publie en
+         * « Article » avec son sponsor déclaré.
+         */
         $graph[] = [
-            '@type'            => 'NewsArticle',
+            '@type'            => $article->is_sponsored ? 'Article' : 'NewsArticle',
             '@id'              => $canonicalUrl.'#article',
             'headline'         => Str::limit($article->title, 110, ''),
             'description'      => $pageDescription,
@@ -219,6 +224,13 @@
             'mainEntityOfPage' => ['@type' => 'WebPage', '@id' => $canonicalUrl],
             'isPartOf'         => ['@id' => $websiteId],
             'publisher'        => ['@id' => $organizationId],
+            'sponsor'          => $article->is_sponsored && $article->sponsor_name
+                ? array_filter([
+                    '@type' => 'Organization',
+                    'name'  => $article->sponsor_name,
+                    'url'   => $article->sponsor_url ?: null,
+                ])
+                : null,
             'author'           => $article->author ? [
                 '@type' => 'Person',
                 'name'  => $article->author->name,
@@ -269,6 +281,13 @@
             'inLanguage' => 'fr',
         ];
     }
+
+    // Retire les clés nulles : un « sponsor: null » dans le JSON-LD est
+    // signalé comme une erreur par les validateurs.
+    $graph = array_map(
+        fn (array $node) => array_filter($node, fn ($value) => $value !== null),
+        $graph
+    );
 
     $structuredData = ['@context' => 'https://schema.org', '@graph' => $graph];
 @endphp

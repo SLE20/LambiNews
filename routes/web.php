@@ -108,6 +108,29 @@ Route::get('/sitemap.xml', [SitemapController::class, 'index'])
 Route::get('/sitemap-news.xml', [SitemapController::class, 'news'])
     ->name('sitemap.news');
 
+/*
+|--------------------------------------------------------------------------
+| ads.txt
+|--------------------------------------------------------------------------
+|
+| Exigé par les régies programmatiques pour prouver qui a le droit de
+| vendre l’inventaire du site. Sans ce fichier, AdSense finit par cesser
+| de diffuser. Généré à partir de ADSENSE_PUBLISHER_ID.
+|
+*/
+
+Route::get('/ads.txt', function () {
+    $publisherId = config('services.adsense.publisher_id');
+
+    abort_if(blank($publisherId), 404);
+
+    return response(
+        'google.com, '.$publisherId.', DIRECT, f08c47fec0942fa0',
+        200,
+        ['Content-Type' => 'text/plain; charset=UTF-8']
+    );
+})->name('ads.txt');
+
 Route::get('/robots.txt', function () {
     $content = implode("\n", [
         'User-agent: *',

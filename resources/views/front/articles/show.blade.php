@@ -415,6 +415,40 @@
     |--------------------------------------------------------------------------
     */
 
+    .sponsored-flag {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin: 0 0 14px;
+        font-size: .9rem;
+    }
+    .sponsored-flag__tag {
+        display: inline-block;
+        padding: 5px 12px;
+        border-radius: 4px;
+        background: #2f2a1c;
+        color: var(--primary);
+        font-size: .72rem;
+        font-weight: 700;
+        letter-spacing: .1em;
+        text-transform: uppercase;
+    }
+    .sponsored-flag__by { color: var(--muted); }
+    .sponsored-flag__by a {
+        color: var(--primary-dark);
+        text-decoration: underline;
+    }
+    .sponsored-note {
+        margin: 28px 0 0;
+        padding: 16px 18px;
+        border-left: 3px solid var(--primary);
+        background: var(--background);
+        border-radius: 8px;
+        font-size: .9rem;
+        color: var(--muted);
+    }
+
     .article-sidebar {
         position: sticky;
         top: 85px;
@@ -778,6 +812,31 @@
                         {{ $article->category->name }}
                     </a>
 
+                @endif
+
+                @if($article->is_sponsored)
+                    {{--
+                        Mention obligatoire : elle doit être visible avant
+                        le titre, pas enfouie en bas de page.
+                    --}}
+                    <p class="sponsored-flag">
+                        <span class="sponsored-flag__tag">Contenu sponsorisé</span>
+
+                        @if($article->sponsor_name)
+                            <span class="sponsored-flag__by">
+                                Publié pour
+                                @if($article->sponsor_url)
+                                    <a
+                                        href="{{ $article->sponsor_url }}"
+                                        rel="nofollow sponsored noopener"
+                                        target="_blank"
+                                    >{{ $article->sponsor_name }}</a>
+                                @else
+                                    {{ $article->sponsor_name }}
+                                @endif
+                            </span>
+                        @endif
+                    </p>
                 @endif
 
                 <h1>

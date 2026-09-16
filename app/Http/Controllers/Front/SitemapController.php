@@ -78,6 +78,8 @@ class SitemapController extends Controller
     {
         $articles = Article::query()
             ->published()
+            // Google Actualités refuse le contenu sponsorisé.
+            ->editorial()
             ->where('published_at', '>=', now()->subDays(2))
             ->latest('published_at')
             ->limit(1000)

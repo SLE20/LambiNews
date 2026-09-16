@@ -34,6 +34,10 @@ class Article extends Model
         'published_at',
         'seo_title',
         'seo_description',
+        'is_sponsored',
+        'sponsor_name',
+        'sponsor_url',
+        'sponsor_logo',
     ];
 
     public function comments(): HasMany
@@ -62,6 +66,7 @@ public function approvedComments(): HasMany
     protected function casts(): array
     {
         return [
+            'is_sponsored' => 'boolean',
             'is_featured' => 'boolean',
             'allow_comments' => 'boolean',
             'views_count' => 'integer',
@@ -102,6 +107,18 @@ public function approvedComments(): HasMany
             ->where('status', 'published')
             ->whereNotNull('published_at')
             ->where('published_at', '<=', now());
+    }
+
+    /**
+     * Articles éditoriaux uniquement.
+     *
+     * Le contenu sponsorisé reste consultable et indexable, mais il ne
+     * doit pas se mêler aux fils d’actualité : ni RSS, ni sitemap Google
+     * Actualités, où il serait présenté comme du journalisme.
+     */
+    public function scopeEditorial(Builder $query): Builder
+    {
+        return $query->where('is_sponsored', false);
     }
 
     /**

@@ -28,6 +28,12 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'adsense' => [
+        // Identifiant éditeur, de la forme pub-0000000000000000.
+        // Renseigné, il active le script AdSense et la route /ads.txt.
+        'publisher_id' => env('ADSENSE_PUBLISHER_ID'),
+    ],
+
     'paypal' => [
         'client_id' => env('PAYPAL_CLIENT_ID'),
         'secret'    => env('PAYPAL_SECRET'),

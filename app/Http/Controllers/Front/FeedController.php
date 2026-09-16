@@ -12,6 +12,8 @@ class FeedController extends Controller
     {
         $articles = Article::query()
             ->published()
+            // Le contenu sponsorisé n’appartient pas au fil d’actualité.
+            ->editorial()
             ->with(['category', 'author'])
             ->latest('published_at')
             ->limit(30)

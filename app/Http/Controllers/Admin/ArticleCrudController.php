@@ -221,6 +221,42 @@ if ($user->role === 'author') {
 ]);
 
         CRUD::addField([
+            'name'  => 'is_sponsored',
+            'label' => 'Contenu sponsorisé (publireportage)',
+            'type'  => 'checkbox',
+            'hint'  => 'Affiche une mention « Contenu sponsorisé » sur '
+                .'l’article et l’exclut du flux RSS et du sitemap '
+                .'Google Actualités.',
+            'tab'   => 'Sponsoring',
+        ]);
+
+        CRUD::addField([
+            'name'  => 'sponsor_name',
+            'label' => 'Nom de l’annonceur',
+            'type'  => 'text',
+            'tab'   => 'Sponsoring',
+        ]);
+
+        CRUD::addField([
+            'name'  => 'sponsor_url',
+            'label' => 'Lien de l’annonceur',
+            'type'  => 'url',
+            'hint'  => 'Le lien porte rel="sponsored", comme Google l’exige.',
+            'tab'   => 'Sponsoring',
+        ]);
+
+        CRUD::addField([
+            'name'      => 'sponsor_logo',
+            'label'     => 'Logo de l’annonceur',
+            'type'      => 'upload',
+            'withFiles' => [
+                'disk' => 'public',
+                'path' => 'sponsors',
+            ],
+            'tab'   => 'Sponsoring',
+        ]);
+
+        CRUD::addField([
             'name' => 'image_caption',
             'label' => 'Légende de l’image',
             'type' => 'text',
