@@ -176,6 +176,25 @@
         }
         .nav-support:hover { background: var(--primary-dark); color: #fff; }
 
+        /* ---------- Flash info ---------- */
+        .breaking-item {
+            display: none;
+            align-items: center;
+            gap: 12px;
+            min-width: 0;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+        .breaking-item.is-on { display: flex; }
+        .breaking-nav { display: flex; gap: 2px; flex: none; }
+        .breaking-nav button {
+            width: 28px; height: 28px; border: 0; border-radius: 6px;
+            background: rgba(255, 255, 255, .12); color: inherit;
+            font-size: 1rem; line-height: 1; cursor: pointer;
+        }
+        .breaking-nav button:hover { background: rgba(255, 255, 255, .24); }
+
         /* ---------- Retour en haut ---------- */
         .back-to-top {
             position: fixed;
@@ -1580,55 +1599,41 @@
             ->isNotEmpty()
     )
 
-        @php
-
-            $breakingArticle =
-                $breakingArticles->first();
-
-        @endphp
-
-        <aside
-            class="breaking-news"
-            aria-label="Dernière minute"
-        >
+        <aside class="breaking-news" aria-label="Flash info" id="flashbar">
 
             <div class="container breaking-news-inner">
 
                 <span class="breaking-label">
-                    Dernière minute
+                    <span aria-hidden="true">⚡</span> Flash info
                 </span>
 
-
+                {{--
+                    Les dix titres sont tous rendus ; un seul est visible
+                    à la fois. Le défilement se fait en CSS/JS, sans
+                    recharger quoi que ce soit.
+                --}}
                 <div class="breaking-content">
-
-
-                    {{-- Heure Haïti --}}
-
-                    <span class="breaking-time">
-
-                        {{ $breakingArticle
-                            ->published_at
-                            ?->timezone('America/Port-au-Prince')
-                            ->format('H:i')
-                        }}
-
-                    </span>
-
-
-                    {{-- Article --}}
-
-                    <a
-                        href="{{ route(
-                            'articles.show',
-                            $breakingArticle->slug
-                        ) }}"
-                    >
-
-                        {{ $breakingArticle->title }}
-
-                    </a>
-
+                    @foreach($breakingArticles as $item)
+                        <a
+                            href="{{ route('articles.show', $item->slug) }}"
+                            class="breaking-item{{ $loop->first ? ' is-on' : '' }}"
+                        >
+                            <span class="breaking-time">
+                                {{ $item->published_at
+                                    ?->timezone('America/Port-au-Prince')
+                                    ->format('H:i') }}
+                            </span>
+                            {{ $item->title }}
+                        </a>
+                    @endforeach
                 </div>
+
+                @if($breakingArticles->count() > 1)
+                    <div class="breaking-nav">
+                        <button type="button" data-flash="-1" aria-label="Titre précédent">‹</button>
+                        <button type="button" data-flash="1" aria-label="Titre suivant">›</button>
+                    </div>
+                @endif
 
             </div>
 
@@ -1680,6 +1685,46 @@
     >
         <span aria-hidden="true">↑</span>
     </button>
+
+    <script>
+    (function () {
+        // Défilement des titres du bandeau flash.
+        var bar = document.getElementById('flashbar');
+
+        if (bar) {
+            var items = bar.querySelectorAll('.breaking-item');
+
+            if (items.length > 1) {
+                var index = 0;
+                var timer = null;
+
+                var show = function (next) {
+                    items[index].classList.remove('is-on');
+                    index = (next + items.length) % items.length;
+                    items[index].classList.add('is-on');
+                };
+
+                var restart = function () {
+                    clearInterval(timer);
+                    timer = setInterval(function () { show(index + 1); }, 5000);
+                };
+
+                bar.querySelectorAll('[data-flash]').forEach(function (b) {
+                    b.addEventListener('click', function () {
+                        show(index + parseInt(b.dataset.flash, 10));
+                        restart();
+                    });
+                });
+
+                // Suspendu au survol, pour laisser le temps de lire.
+                bar.addEventListener('mouseenter', function () { clearInterval(timer); });
+                bar.addEventListener('mouseleave', restart);
+
+                restart();
+            }
+        }
+    })();
+    </script>
 
     <script>
     (function () {

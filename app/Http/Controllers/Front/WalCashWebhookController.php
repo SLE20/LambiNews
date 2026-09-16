@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Front;
 
 use App\Http\Controllers\Controller;
+use App\Models\Announcement;
+use App\Models\Donation;
 use App\Models\FundraiserContribution;
 use App\Models\PollVote;
 use App\Services\PollVoteRecorder;
@@ -62,8 +64,35 @@ class WalCashWebhookController extends Controller
             ->where('paypal_order_id', $paymentId)
             ->first();
 
-        if ($vote && $vote->payment_status !== PollVote::PAY_PAID) {
-            $recorder->confirmPaidVote($vote);
+        if ($vote) {
+            if ($vote->payment_status !== PollVote::PAY_PAID) {
+                $recorder->confirmPaidVote($vote);
+            }
+
+            return response('ok', 200);
+        }
+
+        $donation = Donation::where('paypal_order_id', $paymentId)->first();
+
+        if ($donation) {
+            if ($donation->status !== Donation::STATUS_COMPLETED) {
+                $donation->forceFill([
+                    'status'  => Donation::STATUS_COMPLETED,
+                    'paid_at' => now(),
+                ])->save();
+            }
+
+            return response('ok', 200);
+        }
+
+        $announcement = Announcement::where('paypal_order_id', $paymentId)->first();
+
+        if ($announcement && $announcement->status === Announcement::STATUS_PENDING) {
+            // Payée, mais toujours soumise à la relecture avant publication.
+            $announcement->forceFill([
+                'status'  => Announcement::STATUS_PAID,
+                'paid_at' => now(),
+            ])->save();
         }
 
         return response('ok', 200);

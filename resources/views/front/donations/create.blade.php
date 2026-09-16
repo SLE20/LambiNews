@@ -70,6 +70,12 @@
     }
     .don__check input { width: 18px; height: 18px; accent-color: var(--primary); }
     .don__paypal { min-height: 52px; }
+    .don__moncash {
+        width: 100%; padding: 13px; border: 0; border-radius: 999px;
+        background: var(--black); color: #fff; font: inherit; font-weight: 700;
+        cursor: pointer;
+    }
+    .don__moncash:hover { background: var(--black-light); }
     .don__secure {
         font-size: .82rem; color: var(--muted); text-align: center; margin: 0;
     }
@@ -109,7 +115,7 @@
             @endif
         </header>
 
-        @unless($paypalReady)
+        @if(! $paypalReady && ! $moncashReady)
             <p class="don__alert">
                 Sistèm peman an poko konfigire. Tanpri retounen pita.
             </p>
@@ -161,6 +167,10 @@
                 <textarea name="message" rows="3" maxlength="500"></textarea>
             </label>
 
+            @include('front.partials.payment-methods', [
+                'currency' => $currency,
+            ])
+
             <label class="don__check">
                 <input type="checkbox" name="is_anonymous" value="1">
                 <span>Kenbe don mwen an anonim</span>
@@ -170,18 +180,83 @@
 
             <div id="paypal-buttons" class="don__paypal"></div>
 
+            <button type="button" class="don__moncash" id="don-moncash" hidden>
+                Kontinye ak MonCash
+            </button>
+
             <p class="don__secure">
                 Peman an fèt sou sèvè PayPal. Lambi News pa janm wè ni estoke
                 nimewo kat ou.
             </p>
         </form>
 
-        @endunless
+        @endif
     </div>
 </section>
 @endsection
 
 @push('scripts')
+@include('front.partials.payment-script', ['amountFieldId' => 'don-amount'])
+
+<script>
+// Bascule entre les deux moyens : PayPal montre ses boutons, MonCash le sien.
+(function () {
+    var mc = document.getElementById('don-moncash');
+    var pp = document.getElementById('paypal-buttons');
+    if (!mc || !pp) { return; }
+
+    function sync() {
+        var checked = document.querySelector('input[name=provider]:checked');
+        var isMonCash = checked && checked.value === 'moncash';
+        mc.hidden = !isMonCash;
+        pp.hidden = isMonCash;
+    }
+
+    document.querySelectorAll('input[name=provider]').forEach(function (r) {
+        r.addEventListener('change', sync);
+    });
+
+    mc.addEventListener('click', function () {
+        var form = document.getElementById('don-form');
+        var data = new FormData(form);
+        mc.disabled = true;
+        mc.textContent = 'Ap prepare peman an…';
+
+        fetch(@json(route('donations.store')), {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'X-CSRF-TOKEN': @json(csrf_token())
+            },
+            body: JSON.stringify({
+                amount: document.getElementById('don-amount').value,
+                provider: 'moncash',
+                donor_name: data.get('donor_name'),
+                donor_email: data.get('donor_email'),
+                message: data.get('message'),
+                is_anonymous: data.get('is_anonymous') ? 1 : 0
+            })
+        }).then(function (r) {
+            return r.json().then(function (d) {
+                if (!r.ok) { throw new Error(d.message || 'Yon erè rive.'); }
+                return d;
+            });
+        }).then(function (d) {
+            window.location.href = d.checkout_url;
+        }).catch(function (e) {
+            var err = document.getElementById('don-error');
+            err.textContent = e.message;
+            err.hidden = false;
+            mc.disabled = false;
+            mc.textContent = 'Kontinye ak MonCash';
+        });
+    });
+
+    sync();
+})();
+</script>
+
 @if($paypalReady)
 <script
     src="https://www.paypal.com/sdk/js?client-id={{ $paypalClientId }}&currency={{ $currency }}&intent=capture&locale=fr_FR"

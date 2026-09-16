@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Front;
 
 use App\Http\Controllers\Controller;
 use App\Models\Donation;
+use App\Services\MonCashCheckout;
 use App\Services\PayPalClient;
+use App\Services\WalCashClient;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -33,6 +35,8 @@ class DonationController extends Controller
             'currency'       => self::CURRENCY,
             'paypalClientId' => PayPalClient::publicClientId(),
             'paypalReady'    => $paypal->isConfigured(),
+            'moncashReady'   => WalCashClient::fromConfig()->isConfigured(),
+            'htgRate'        => WalCashClient::htgRate(),
             'totalRaised'    => Donation::completed()->sum('amount'),
             'donorCount'     => Donation::completed()->count(),
         ]);
@@ -52,6 +56,7 @@ class DonationController extends Controller
             'donor_email'  => ['nullable', 'email', 'max:190'],
             'message'      => ['nullable', 'string', 'max:500'],
             'is_anonymous' => ['nullable', 'boolean'],
+            'provider'     => ['nullable', 'in:paypal,moncash'],
         ]);
 
         $amount = number_format((float) $validated['amount'], 2, '.', '');
@@ -64,8 +69,33 @@ class DonationController extends Controller
             'message'      => $validated['message'] ?? null,
             'is_anonymous' => (bool) ($validated['is_anonymous'] ?? false),
             'status'       => Donation::STATUS_PENDING,
+            'provider'     => $validated['provider'] ?? 'paypal',
             'ip_hash'      => hash_hmac('sha256', (string) $request->ip(), (string) config('app.key')),
         ]);
+
+        // MonCash : on renvoie l'adresse de règlement, la confirmation
+        // arrivera par webhook.
+        if (($validated['provider'] ?? 'paypal') === 'moncash') {
+            $result = MonCashCheckout::open(
+                $donation,
+                (float) $amount,
+                self::CURRENCY,
+                $donation->reference,
+                'Sipò pou Lambi News',
+                'paypal_order_id'
+            );
+
+            if (! $result['ok']) {
+                $donation->update(['status' => Donation::STATUS_FAILED]);
+
+                return response()->json(['message' => $result['message']], 502);
+            }
+
+            return response()->json([
+                'provider'     => 'moncash',
+                'checkout_url' => $result['checkout_url'],
+            ]);
+        }
 
         try {
             $order = PayPalClient::fromConfig()->createOrder(

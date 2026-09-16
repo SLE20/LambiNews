@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Front;
 
 use App\Http\Controllers\Controller;
 use App\Models\Announcement;
+use App\Services\MonCashCheckout;
 use App\Services\PayPalClient;
+use App\Services\WalCashClient;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -58,6 +60,8 @@ class AnnouncementController extends Controller
             'catalogue'      => Announcement::catalogue(),
             'paypalClientId' => PayPalClient::publicClientId(),
             'paypalReady'    => PayPalClient::fromConfig()->isConfigured(),
+            'moncashReady'   => WalCashClient::fromConfig()->isConfigured(),
+            'htgRate'        => WalCashClient::htgRate(),
             'displayDays'    => Announcement::DISPLAY_DAYS,
         ]);
     }
@@ -77,6 +81,7 @@ class AnnouncementController extends Controller
             'requester_name'  => ['required', 'string', 'max:120'],
             'requester_email' => ['required', 'email', 'max:190'],
             'requester_phone' => ['nullable', 'string', 'max:40'],
+            'provider'        => ['nullable', 'in:paypal,moncash'],
             'location'        => ['nullable', 'string', 'max:120'],
             'public_contact'  => ['nullable', 'string', 'max:120'],
         ]);
@@ -92,8 +97,29 @@ class AnnouncementController extends Controller
             'amount'   => $price,
             'currency' => 'USD',
             'status'   => Announcement::STATUS_PENDING,
+            'provider' => $validated['provider'] ?? 'paypal',
             'ip_hash'  => hash_hmac('sha256', (string) $request->ip(), (string) config('app.key')),
         ]);
+
+        if (($validated['provider'] ?? 'paypal') === 'moncash') {
+            $result = MonCashCheckout::open(
+                $announcement,
+                (float) $price,
+                'USD',
+                $announcement->reference,
+                'Lambi News — '.$announcement->getTypeLabel(),
+                'paypal_order_id'
+            );
+
+            if (! $result['ok']) {
+                return response()->json(['message' => $result['message']], 502);
+            }
+
+            return response()->json([
+                'provider'     => 'moncash',
+                'checkout_url' => $result['checkout_url'],
+            ]);
+        }
 
         try {
             $order = PayPalClient::fromConfig()->createOrder(

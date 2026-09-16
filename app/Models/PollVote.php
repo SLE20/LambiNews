@@ -16,6 +16,8 @@ class PollVote extends Model
         'referrer',
         'is_void',
         'payment_status',
+        'provider',
+        'checkout_url',
         'amount',
         'paypal_order_id',
         'paypal_capture_id',

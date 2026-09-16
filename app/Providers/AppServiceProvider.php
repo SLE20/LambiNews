@@ -63,17 +63,31 @@ class AppServiceProvider extends ServiceProvider
             /*
              * Articles "Dernière minute".
              */
-            $breakingArticles = Article::query()
+            /*
+             * Bandeau « flash info » : les articles marqués « dernière
+             * minute » d'abord, complétés par les plus récents jusqu'à
+             * dix titres. Sans ce complément, le bandeau disparaît dès
+             * qu'aucun article n'est marqué, et la barre reste vide.
+             */
+            $breaking = Article::query()
                 ->published()
+                ->editorial()
                 ->where('is_breaking', true)
                 ->latest('published_at')
-                ->limit(3)
-                ->get([
-                    'id',
-                    'title',
-                    'slug',
-                    'published_at',
-                ]);
+                ->limit(10)
+                ->get(['id', 'title', 'slug', 'published_at']);
+
+            $breakingArticles = $breaking
+                ->concat(
+                    Article::query()
+                        ->published()
+                        ->editorial()
+                        ->whereNotIn('id', $breaking->pluck('id'))
+                        ->latest('published_at')
+                        ->limit(10 - $breaking->count())
+                        ->get(['id', 'title', 'slug', 'published_at'])
+                )
+                ->take(10);
 
             /*
              * Pages affichées dans le footer.

@@ -6,7 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Models\Poll;
 use App\Models\PollOption;
 use App\Models\PollVote;
+use App\Services\MonCashCheckout;
 use App\Services\PayPalClient;
+use App\Services\WalCashClient;
 use App\Services\PollVoteRecorder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -51,6 +53,8 @@ class PollController extends Controller
             'recorder'       => $recorder,
             'paypalClientId' => PayPalClient::publicClientId(),
             'paypalReady'    => PayPalClient::fromConfig()->isConfigured(),
+            'moncashReady'   => WalCashClient::fromConfig()->isConfigured(),
+            'htgRate'        => WalCashClient::htgRate(),
         ];
 
         return view(
@@ -107,13 +111,38 @@ class PollController extends Controller
         $option = $this->resolveOption($request, $poll);
         $price  = number_format((float) $poll->vote_price, 2, '.', '');
 
+        $provider = $request->input('provider') === 'moncash' ? 'moncash' : 'paypal';
+
         $vote = $recorder->store(
             $poll,
             $option,
             $request,
             PollVote::PAY_PENDING,
-            ['amount' => $price]
+            ['amount' => $price, 'provider' => $provider]
         );
+
+        if ($provider === 'moncash') {
+            $result = MonCashCheckout::open(
+                $vote,
+                (float) $price,
+                $poll->currency ?: 'USD',
+                'VOTE-'.$vote->id,
+                'Lambi News — vòt: '.$option->label,
+                'paypal_order_id',
+                ['poll' => $poll->slug]
+            );
+
+            if (! $result['ok']) {
+                $vote->delete();
+
+                return response()->json(['message' => $result['message']], 502);
+            }
+
+            return response()->json([
+                'provider'     => 'moncash',
+                'checkout_url' => $result['checkout_url'],
+            ]);
+        }
 
         try {
             $order = PayPalClient::fromConfig()->createOrder(

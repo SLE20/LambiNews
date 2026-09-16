@@ -25,6 +25,8 @@ class Donation extends Model
         'message',
         'is_anonymous',
         'status',
+        'provider',
+        'checkout_url',
         'paypal_order_id',
         'paypal_capture_id',
         'payer_email',

@@ -12,11 +12,14 @@
 
 @php
     /*
-     * Découpage de la une : le premier article occupe le grand cadre,
-     * les trois suivants la colonne de droite.
+     * Le grand cadre est un carrousel : les articles en vedette y
+     * défilent. Les trois suivants alimentent la colonne de droite,
+     * sans doublon avec le carrousel.
      */
-    $lead   = $featuredArticles->first();
-    $sideUp = $featuredArticles->skip(1)->take(3);
+    $slides = $featuredArticles->take(5);
+    $sideUp = $latestArticles
+        ->reject(fn ($a) => $slides->contains('id', $a->id))
+        ->take(3);
 
     // Huit rubriques au plus dans la grille du bas.
     $sections = $categorySections->take(8);
@@ -85,19 +88,40 @@
 
     /* ---------------- Article vedette ---------------- */
     .hp__hero {
-        position: relative; display: block; border-radius: 12px;
-        overflow: hidden; min-height: 430px; color: #fff; background: #12161f;
+        position: relative; border-radius: 12px;
+        overflow: hidden; min-height: 430px; background: #12161f;
     }
-    .hp__hero img {
-        position: absolute; inset: 0; width: 100%; height: 100%;
-        object-fit: cover;
+    /* Chaque diapositive occupe tout le cadre ; une seule est visible. */
+    .hp__slide {
+        position: absolute; inset: 0; display: none;
+        flex-direction: column; justify-content: flex-end; color: #fff;
     }
-    .hp__hero::after {
+    .hp__slide.is-on { display: flex; }
+    .hp__slide img {
+        position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+    }
+    .hp__slide::after {
         content: ""; position: absolute; inset: 0;
         background: linear-gradient(to top, rgba(6,10,18,.94) 8%, rgba(6,10,18,.72) 42%, rgba(6,10,18,.12) 100%);
     }
-    .hp__herobody { display: block; position: relative; z-index: 2; padding: 26px; margin-top: auto; }
-    .hp__hero { display: flex; flex-direction: column; justify-content: flex-end; }
+    .hp__arrow {
+        position: absolute; top: 50%; z-index: 4; transform: translateY(-50%);
+        width: 38px; height: 38px; border: 0; border-radius: 50%; cursor: pointer;
+        background: rgba(10,14,22,.55); color: #fff; font-size: 1.3rem; line-height: 1;
+    }
+    .hp__arrow:hover { background: rgba(10,14,22,.85); }
+    .hp__arrow--prev { left: 12px; }
+    .hp__arrow--next { right: 12px; }
+    .hp__dots {
+        position: absolute; right: 26px; bottom: 18px; z-index: 4;
+        display: flex; gap: 7px;
+    }
+    .hp__dot {
+        width: 9px; height: 9px; padding: 0; border: 0; border-radius: 50%;
+        background: rgba(255,255,255,.42); cursor: pointer;
+    }
+    .hp__dot.is-on { background: var(--primary); width: 22px; border-radius: 999px; }
+    .hp__herobody { display: block; position: relative; z-index: 2; padding: 26px; }
     .hp__tag {
         display: inline-block; vertical-align: top; padding: 4px 11px; border-radius: 4px;
         background: var(--primary); color: var(--black);
@@ -105,11 +129,12 @@
         text-transform: uppercase; margin-bottom: 11px;
     }
     .hp__herotitle {
+        display: block;
         font-family: "Playfair Display", Georgia, serif;
         font-size: clamp(1.4rem, 2.7vw, 2rem); line-height: 1.22; margin: 0 0 10px;
     }
     .hp__heroexcerpt {
-        margin: 0 0 14px; color: rgba(255,255,255,.82);
+        display: block; margin: 0 0 14px; color: rgba(255,255,255,.82);
         font-size: .93rem; line-height: 1.6;
     }
     .hp__meta {
@@ -257,36 +282,57 @@
             {{-- ---------------- La une ---------------- --}}
             <div class="hp__lead">
 
-                @if($lead)
-                    <a href="{{ route('articles.show', $lead->slug) }}" class="hp__hero">
-                        @if($lead->featured_image)
-                            <img src="{{ $lead->thumbUrl(1200) }}"
-                                 alt="{{ $lead->title }}" loading="eager" fetchpriority="high"
-                                 width="900" height="560" decoding="async">
-                        @endif
-
-                        <span class="hp__herobody">
-                            @if($lead->category)
-                                <span class="hp__tag">{{ $lead->category->name }}</span>
+                <div class="hp__hero" id="hero">
+                    @foreach($slides as $slide)
+                        <a href="{{ route('articles.show', $slide->slug) }}"
+                           class="hp__slide{{ $loop->first ? ' is-on' : '' }}">
+                            @if($slide->featured_image)
+                                <img src="{{ $slide->thumbUrl(800) }}"
+                                     alt="{{ $slide->title }}"
+                                     loading="{{ $loop->first ? 'eager' : 'lazy' }}"
+                                     fetchpriority="{{ $loop->first ? 'high' : 'auto' }}"
+                                     width="900" height="560" decoding="async">
                             @endif
 
-                            <h2 class="hp__herotitle">{{ $lead->title }}</h2>
-
-                            @if($lead->excerpt)
-                                <p class="hp__heroexcerpt">
-                                    {{ \Illuminate\Support\Str::limit(strip_tags($lead->excerpt), 165) }}
-                                </p>
-                            @endif
-
-                            <span class="hp__meta">
-                                <span>🗓 {{ $lead->published_at?->translatedFormat('d F Y') }}</span>
-                                @if($lead->views_count)
-                                    <span>👁 {{ number_format($lead->views_count, 0, ',', ' ') }} vues</span>
+                            <span class="hp__herobody">
+                                @if($slide->category)
+                                    <span class="hp__tag">{{ $slide->category->name }}</span>
                                 @endif
+
+                                <span class="hp__herotitle">{{ $slide->title }}</span>
+
+                                @if($slide->excerpt)
+                                    <span class="hp__heroexcerpt">
+                                        {{ \Illuminate\Support\Str::limit(strip_tags($slide->excerpt), 165) }}
+                                    </span>
+                                @endif
+
+                                <span class="hp__meta">
+                                    <span>🗓 {{ $slide->published_at?->translatedFormat('d F Y') }}</span>
+                                    @if($slide->views_count)
+                                        <span>👁 {{ number_format($slide->views_count, 0, ',', ' ') }} vues</span>
+                                    @endif
+                                </span>
                             </span>
-                        </span>
-                    </a>
-                @endif
+                        </a>
+                    @endforeach
+
+                    @if($slides->count() > 1)
+                        <button type="button" class="hp__arrow hp__arrow--prev"
+                                data-slide="-1" aria-label="Article précédent">‹</button>
+                        <button type="button" class="hp__arrow hp__arrow--next"
+                                data-slide="1" aria-label="Article suivant">›</button>
+
+                        <div class="hp__dots">
+                            @foreach($slides as $slide)
+                                <button type="button"
+                                        class="hp__dot{{ $loop->first ? ' is-on' : '' }}"
+                                        data-go="{{ $loop->index }}"
+                                        aria-label="Article {{ $loop->iteration }}"></button>
+                            @endforeach
+                        </div>
+                    @endif
+                </div>
 
                 <div class="hp__stack">
                     @foreach($sideUp as $article)
@@ -434,3 +480,81 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+(function () {
+    var hero = document.getElementById('hero');
+    if (!hero) { return; }
+
+    var slides = hero.querySelectorAll('.hp__slide');
+    var dots   = hero.querySelectorAll('.hp__dot');
+    if (slides.length < 2) { return; }
+
+    var index = 0;
+    var timer = null;
+
+    /*
+     * Une diapositive masquée ne charge pas son image : au premier
+     * défilement le cadre resterait vide. On les précharge une fois la
+     * page installée, pour ne pas concurrencer l'affichage initial.
+     */
+    setTimeout(function () {
+        slides.forEach(function (slide, i) {
+            if (i === 0) { return; }
+
+            var img = slide.querySelector('img');
+            if (!img) { return; }
+
+            img.loading = 'eager';
+
+            // new Image() déclenche réellement la requête réseau.
+            var pre = new Image();
+            pre.src = img.currentSrc || img.src;
+        });
+    }, 1200);
+
+    function go(next) {
+        slides[index].classList.remove('is-on');
+        if (dots[index]) { dots[index].classList.remove('is-on'); }
+
+        index = (next + slides.length) % slides.length;
+
+        slides[index].classList.add('is-on');
+        if (dots[index]) { dots[index].classList.add('is-on'); }
+    }
+
+    function restart() {
+        clearInterval(timer);
+        timer = setInterval(function () { go(index + 1); }, 7000);
+    }
+
+    hero.querySelectorAll('[data-slide]').forEach(function (btn) {
+        btn.addEventListener('click', function (e) {
+            // Le bouton est posé sur un lien : ne pas ouvrir l'article.
+            e.preventDefault();
+            go(index + parseInt(btn.dataset.slide, 10));
+            restart();
+        });
+    });
+
+    dots.forEach(function (dot) {
+        dot.addEventListener('click', function (e) {
+            e.preventDefault();
+            go(parseInt(dot.dataset.go, 10));
+            restart();
+        });
+    });
+
+    // On suspend pendant la lecture, et quand l'onglet passe à l'arrière-plan.
+    hero.addEventListener('mouseenter', function () { clearInterval(timer); });
+    hero.addEventListener('mouseleave', restart);
+
+    document.addEventListener('visibilitychange', function () {
+        document.hidden ? clearInterval(timer) : restart();
+    });
+
+    restart();
+})();
+</script>
+@endpush

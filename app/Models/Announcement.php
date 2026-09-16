@@ -35,6 +35,8 @@ class Announcement extends Model
         'amount',
         'currency',
         'status',
+        'provider',
+        'checkout_url',
         'moderation_note',
         'paypal_order_id',
         'paypal_capture_id',
