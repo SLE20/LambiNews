@@ -451,16 +451,24 @@
                         {{ $poll->formattedPrice() }} pa vòt. Vòt ou an konte
                         sèlman apre peman an konfime.
                     </p>
+                    @include('front.partials.payment-methods', [
+                        'currency' => $poll->currency ?: 'USD',
+                    ])
+
                     <p class="sx__payerr" id="sx-payerr" hidden></p>
+
                     <div id="sx-paypal"></div>
+
+                    <button type="button" class="sx__vote" id="sx-moncash" hidden
+                            style="margin-top:8px">Kontinye ak MonCash</button>
                 </div>
 
-                @unless($paypalReady)
+                @if(! $paypalReady && ! $moncashReady)
                     <p class="sx__payerr" style="margin-top:16px">
                         Sistèm peman an poko konfigire : sondaj peyan an pa ka
                         resevwa vòt pou kounye a.
                     </p>
-                @endunless
+                @endif
             @endif
         </section>
 
@@ -591,6 +599,70 @@
 @endsection
 
 @push('scripts')
+@if($canVote && $isPaid && $moncashReady)
+<script>
+(function () {
+    var box = document.getElementById('sx-paybox');
+    var mc  = document.getElementById('sx-moncash');
+    var pp  = document.getElementById('sx-paypal');
+    var err = document.getElementById('sx-payerr');
+    var chosen = null;
+
+    if (!box || !mc) { return; }
+
+    function sync() {
+        var checked = document.querySelector('input[name=provider]:checked');
+        var isMonCash = checked && checked.value === 'moncash';
+        mc.hidden = !isMonCash;
+        if (pp) { pp.hidden = isMonCash; }
+    }
+
+    document.querySelectorAll('.sx__vote--paid').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            chosen = btn.dataset.option;
+            sync();
+        });
+    });
+
+    document.querySelectorAll('input[name=provider]').forEach(function (r) {
+        r.addEventListener('change', sync);
+    });
+
+    mc.addEventListener('click', function () {
+        if (!chosen) { return; }
+        mc.disabled = true;
+        mc.textContent = 'Ap prepare peman an…';
+
+        fetch(@json(route('polls.pay.start', $poll->slug)), {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'X-CSRF-TOKEN': @json(csrf_token())
+            },
+            body: JSON.stringify({
+                poll_option_id: chosen,
+                provider: 'moncash',
+                opened_at: {{ time() }}
+            })
+        }).then(function (r) {
+            return r.json().then(function (d) {
+                if (!r.ok) { throw new Error(d.message || 'Yon erè rive.'); }
+                return d;
+            });
+        }).then(function (d) {
+            window.location.href = d.checkout_url;
+        }).catch(function (e) {
+            err.textContent = e.message; err.hidden = false;
+            mc.disabled = false; mc.textContent = 'Kontinye ak MonCash';
+        });
+    });
+
+    sync();
+})();
+</script>
+@endif
+
 @if($canVote && $isPaid && $paypalReady)
 <script
     src="https://www.paypal.com/sdk/js?client-id={{ $paypalClientId }}&currency={{ $poll->currency ?: 'USD' }}&intent=capture&locale=fr_FR"

@@ -26,7 +26,7 @@
             </p>
         </header>
 
-        @unless($paypalReady)
+        @if(! $paypalReady && ! $moncashReady)
             <p class="anons__alert">
                 Sistèm peman an poko konfigire. Tanpri retounen pita.
             </p>
@@ -109,6 +109,8 @@
                 <input type="tel" name="requester_phone" maxlength="40">
             </label>
 
+            @include('front.partials.payment-methods', ['currency' => 'USD'])
+
             <div class="anons__price">
                 <span>Montant à payer</span>
                 <strong id="anons-price">$0.00</strong>
@@ -118,18 +120,86 @@
 
             <div id="paypal-buttons"></div>
 
+            <button type="button" class="anons__moncash" id="anons-moncash" hidden>
+                Kontinye ak MonCash
+            </button>
+
             <p class="anons__secure">
                 Vos coordonnées ne sont jamais publiées : elles servent
                 uniquement à vous joindre au sujet de cette annonce.
             </p>
         </form>
 
-        @endunless
+        @endif
     </div>
 </section>
 @endsection
 
 @push('scripts')
+@if($paypalReady || $moncashReady)
+@include('front.partials.payment-script', ['amountFieldId' => 'anons-type'])
+
+<script>
+(function () {
+    var mc = document.getElementById('anons-moncash');
+    var pp = document.getElementById('paypal-buttons');
+    var form = document.getElementById('anons-form');
+    if (!mc || !form) { return; }
+
+    function sync() {
+        var checked = document.querySelector('input[name=provider]:checked');
+        var isMonCash = checked && checked.value === 'moncash';
+        mc.hidden = !isMonCash;
+        if (pp) { pp.hidden = isMonCash; }
+    }
+
+    document.querySelectorAll('input[name=provider]').forEach(function (r) {
+        r.addEventListener('change', sync);
+    });
+
+    mc.addEventListener('click', function () {
+        var d = new FormData(form);
+        mc.disabled = true;
+        mc.textContent = 'Ap prepare peman an…';
+
+        fetch(@json(route('announcements.store')), {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'X-CSRF-TOKEN': @json(csrf_token())
+            },
+            body: JSON.stringify({
+                type: d.get('type'), title: d.get('title'), body: d.get('body'),
+                requester_name: d.get('requester_name'),
+                requester_email: d.get('requester_email'),
+                requester_phone: d.get('requester_phone'),
+                location: d.get('location'),
+                public_contact: d.get('public_contact'),
+                provider: 'moncash'
+            })
+        }).then(function (r) {
+            return r.json().then(function (x) {
+                if (!r.ok) {
+                    var first = x.errors ? x.errors[Object.keys(x.errors)[0]][0] : null;
+                    throw new Error(first || x.message || 'Yon erè rive.');
+                }
+                return x;
+            });
+        }).then(function (x) {
+            window.location.href = x.checkout_url;
+        }).catch(function (e) {
+            var err = document.getElementById('anons-error');
+            err.textContent = e.message; err.hidden = false;
+            mc.disabled = false; mc.textContent = 'Kontinye ak MonCash';
+        });
+    });
+
+    sync();
+})();
+</script>
+@endif
+
 @if($paypalReady)
 <script
     src="https://www.paypal.com/sdk/js?client-id={{ $paypalClientId }}&currency=USD&intent=capture&locale=fr_FR"
