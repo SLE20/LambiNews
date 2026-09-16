@@ -16,6 +16,17 @@
 
 <a href="{{ route('polls.show', $poll->slug) }}" class="pcard">
 
+    @if($poll->hero_image)
+        {{-- Couverture : ce qui donne son allure à la carte. --}}
+        <span class="pcard__cover">
+            <img
+                src="{{ asset('storage/'.$poll->hero_image) }}"
+                alt=""
+                loading="lazy"
+            >
+        </span>
+    @endif
+
     <div class="pcard__head">
         <span class="pcard__eyebrow">Sondage des lecteurs</span>
 

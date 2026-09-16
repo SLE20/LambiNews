@@ -26,6 +26,7 @@ class Poll extends Model
         'ends_at',
         'hide_results_before_vote',
         'max_votes_per_ip',
+        'vote_identity',
         'is_paid',
         'vote_price',
         'currency',
@@ -158,6 +159,19 @@ class Poll extends Model
         return max(1, (int) ($this->max_votes_per_ip ?: 1));
     }
 
+    /** Reconnaissance du votant : par appareil ou par connexion. */
+    public function identifiesByIp(): bool
+    {
+        return $this->vote_identity === 'ip';
+    }
+
+    public function identityLabel(): string
+    {
+        return $this->identifiesByIp()
+            ? 'pa koneksyon'
+            : 'pa aparèy';
+    }
+
     public function allowsMultipleVotes(): bool
     {
         return $this->voteQuota() > 1;
@@ -204,9 +218,8 @@ class Poll extends Model
     /** Résumé des règles, pour la liste de l'administration. */
     public function getRulesLabel(): string
     {
-        $parts = [$this->voteQuota() === 1
-            ? '1 voix / IP'
-            : $this->voteQuota().' voix / IP'];
+        $unit  = $this->identifiesByIp() ? 'IP' : 'appareil';
+        $parts = [$this->voteQuota().' voix / '.$unit];
 
         if ($this->isPaid()) {
             $parts[] = 'payant — '.$this->formattedPrice();

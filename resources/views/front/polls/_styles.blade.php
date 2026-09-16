@@ -55,11 +55,22 @@
     }
 
     /* ---------- Comparaison avec photos ---------- */
+    /*
+     * Quatre colonnes au plus : au-delà les visages deviennent trop
+     * petits pour qu'on distingue les candidats.
+     */
     .poll__grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
         gap: 14px;
         margin: 16px 0 4px;
+        max-width: 100%;
+    }
+    @media (min-width: 720px) {
+        .poll__grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    }
+    @media (max-width: 620px) {
+        .poll__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
     }
     .poll--compact .poll__grid {
         grid-template-columns: repeat(auto-fit, minmax(112px, 1fr));

@@ -72,6 +72,7 @@ class PollCrudController extends CrudController
             'question'         => 'required|string|max:200',
             'ends_at'          => 'nullable|date|after_or_equal:starts_at',
             'max_votes_per_ip' => 'nullable|integer|min:1|max:50',
+            'vote_identity'    => 'nullable|in:device,ip',
             // Un sondage payant sans prix ne pourrait jamais encaisser.
             'vote_price'       => 'nullable|numeric|min:0.5|max:500|required_if:is_paid,1',
         ]);
@@ -173,12 +174,27 @@ class PollCrudController extends CrudController
         ]);
 
         CRUD::addField([
+            'name'    => 'vote_identity',
+            'label'   => 'Reconnaître un votant par',
+            'type'    => 'select_from_array',
+            'options' => [
+                'device' => 'Appareil (téléphone et ordinateur votent séparément)',
+                'ip'     => 'Connexion / IP (une seule voix par foyer ou par bureau)',
+            ],
+            'default' => 'device',
+            'hint'    => 'En Haïti, les opérateurs mobiles placent des milliers '
+                .'d’abonnés derrière une même IP : « Connexion » les fait taire '
+                .'tous sauf un. « Appareil » est le réglage recommandé.',
+            'tab'     => 'Règles de vote',
+        ]);
+
+        CRUD::addField([
             'name'    => 'max_votes_per_ip',
-            'label'   => 'Nombre de voix par connexion (IP)',
+            'label'   => 'Nombre de voix par votant',
             'type'    => 'number',
             'default' => 1,
             'hint'    => '1 = une seule voix, impossible de voter pour deux '
-                .'candidats. Au-delà, le lecteur peut voter plusieurs fois.',
+                .'candidats. Au-delà, le même votant peut voter plusieurs fois.',
             'tab'     => 'Règles de vote',
             'wrapper' => ['class' => 'form-group col-md-6'],
         ]);

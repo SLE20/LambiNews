@@ -23,6 +23,7 @@
     .pcard {
         display: block;
         padding: 22px 24px;
+        overflow: hidden;
         background: var(--surface);
         border: 1px solid var(--border);
         border-radius: var(--radius);
@@ -34,6 +35,15 @@
         box-shadow: var(--shadow);
         transform: translateY(-2px);
     }
+    .pcard__cover {
+        display: block;
+        margin: -22px -24px 16px;
+        aspect-ratio: 16 / 5;
+        overflow: hidden;
+        background: var(--border);
+    }
+    .pcard__cover img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
     .pcard__head {
         display: flex; align-items: center; justify-content: space-between;
         gap: 12px; margin-bottom: 10px;
@@ -87,6 +97,7 @@
 
     @media (max-width: 560px) {
         .pcard { padding: 18px 16px; }
+        .pcard__cover { margin: -18px -16px 14px; aspect-ratio: 16 / 7; }
         .pcard__optlabel { max-width: 92px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
     }
 </style>

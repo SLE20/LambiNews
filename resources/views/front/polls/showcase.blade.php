@@ -355,9 +355,9 @@
 
                 <span class="sx__pill">
                     @if($poll->allowsMultipleVotes())
-                        {{ $poll->voteQuota() }} vòt pa koneksyon
+                        {{ $poll->voteQuota() }} vòt {{ $poll->identityLabel() }}
                     @else
-                        Yon sèl vòt pa koneksyon
+                        Yon sèl vòt {{ $poll->identityLabel() }}
                     @endif
                 </span>
 

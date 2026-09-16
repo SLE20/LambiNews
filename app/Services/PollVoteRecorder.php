@@ -6,16 +6,18 @@ use App\Models\Poll;
 use App\Models\PollOption;
 use App\Models\PollVote;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 /**
  * Enregistre une voix dans un sondage d'opinion.
  *
- * La règle est posée par la rédaction sur chaque sondage :
- * `max_votes_per_ip` voix par adresse IP, une seule par défaut. Une
- * connexion qui a déjà voté ne peut donc pas voter pour un second
- * candidat.
+ * La règle est posée par la rédaction sur chaque sondage : un quota de
+ * voix, et la façon de reconnaître un votant — l'appareil (par défaut)
+ * ou la connexion entière. Reconnaître par IP fait taire tout un foyer
+ * ou un cybercafé, ce qui n'est pas anodin en Haïti où les opérateurs
+ * mobiles placent des milliers d'abonnés derrière une même adresse.
  *
  * Ce n'est pas un scrutin : le but est d'empêcher la triche ordinaire.
  * La vraie défense reste a posteriori — chaque voix est horodatée avec
@@ -26,6 +28,11 @@ class PollVoteRecorder
 {
     /** Délai minimal entre l'affichage de la page et le vote, en secondes. */
     private const MIN_SECONDS_ON_PAGE = 2;
+
+    /** Cookie d'appareil : rend l'empreinte stable d'une session à l'autre. */
+    private const DEVICE_COOKIE = 'ln_voter';
+
+    private const DEVICE_COOKIE_DAYS = 400;
 
     public const RESULT_OK         = 'ok';
     public const RESULT_ALREADY    = 'already_voted';
@@ -82,7 +89,7 @@ class PollVoteRecorder
             return self::RESULT_TOO_FAST;
         }
 
-        $used  = $this->votesFromIp($poll, $this->ipHash($request));
+        $used  = $this->votesUsed($poll, $request);
         $quota = $poll->voteQuota();
 
         if ($used >= $quota) {
@@ -143,58 +150,70 @@ class PollVoteRecorder
     }
 
     /**
-     * Voix déjà émises depuis cette adresse IP pour ce sondage.
+     * Voix déjà émises par ce votant pour ce sondage.
      *
-     * Les voix annulées par la rédaction et celles restées impayées ne
-     * consomment pas le quota.
+     * Selon le réglage du sondage, « ce votant » désigne l'appareil
+     * (IP + navigateur + cookie) ou la connexion entière (IP). Les voix
+     * annulées et celles restées impayées ne consomment pas le quota.
      */
-    public function votesFromIp(Poll $poll, ?string $ipHash = null): int
+    public function votesUsed(Poll $poll, ?Request $request = null): int
     {
-        $ipHash ??= $this->ipHash(request());
+        $request ??= request();
 
-        return PollVote::query()
+        $query = PollVote::query()
             ->where('poll_id', $poll->id)
-            ->where('ip_hash', $ipHash)
             ->where('is_void', false)
-            ->whereIn('payment_status', [PollVote::PAY_FREE, PollVote::PAY_PAID])
-            ->count();
+            ->whereIn('payment_status', [PollVote::PAY_FREE, PollVote::PAY_PAID]);
+
+        return $poll->identifiesByIp()
+            ? $query->where('ip_hash', $this->ipHash($request))->count()
+            : $query->where('voter_hash', $this->voterHash($request))->count();
     }
 
     /** Le visiteur a-t-il épuisé son quota ? */
     public function alreadyVoted(Poll $poll, ?string $ignored = null): bool
     {
-        return $this->votesFromIp($poll) >= $poll->voteQuota();
+        return $this->votesUsed($poll) >= $poll->voteQuota();
     }
 
     public function remainingVotes(Poll $poll): int
     {
-        return max(0, $poll->voteQuota() - $this->votesFromIp($poll));
+        return max(0, $poll->voteQuota() - $this->votesUsed($poll));
     }
 
     /** Option choisie en dernier par ce visiteur, pour la mettre en évidence. */
     public function votedOptionId(Poll $poll): ?int
     {
-        return PollVote::query()
-            ->where('poll_id', $poll->id)
-            ->where('ip_hash', $this->ipHash(request()))
-            ->where('is_void', false)
-            ->whereIn('payment_status', [PollVote::PAY_FREE, PollVote::PAY_PAID])
-            ->latest('voted_at')
-            ->value('poll_option_id');
+        return $this->ownVotes($poll)->latest('voted_at')->value('poll_option_id');
     }
 
     /** @return array<int, int> Options déjà choisies, pour le vote multiple. */
     public function votedOptionIds(Poll $poll): array
     {
-        return PollVote::query()
-            ->where('poll_id', $poll->id)
-            ->where('ip_hash', $this->ipHash(request()))
-            ->where('is_void', false)
-            ->whereIn('payment_status', [PollVote::PAY_FREE, PollVote::PAY_PAID])
-            ->pluck('poll_option_id')
-            ->all();
+        return $this->ownVotes($poll)->pluck('poll_option_id')->all();
     }
 
+    /** Voix de ce votant, selon le mode d'identification du sondage. */
+    private function ownVotes(Poll $poll)
+    {
+        $query = PollVote::query()
+            ->where('poll_id', $poll->id)
+            ->where('is_void', false)
+            ->whereIn('payment_status', [PollVote::PAY_FREE, PollVote::PAY_PAID]);
+
+        return $poll->identifiesByIp()
+            ? $query->where('ip_hash', $this->ipHash(request()))
+            : $query->where('voter_hash', $this->voterHash(request()));
+    }
+
+    /**
+     * Empreinte de l'appareil.
+     *
+     * Repose sur un cookie de longue durée plutôt que sur l'identifiant
+     * de session : un téléphone et un ordinateur derrière le même WiFi
+     * donnent deux empreintes distinctes, et l'empreinte survit à la
+     * fermeture du navigateur.
+     */
     public function voterHash(Request $request): string
     {
         return hash_hmac(
@@ -202,10 +221,29 @@ class PollVoteRecorder
             implode('|', [
                 (string) $request->ip(),
                 (string) $request->userAgent(),
-                $request->hasSession() ? $request->session()->getId() : '',
+                $this->deviceId($request),
             ]),
             (string) config('app.key')
         );
+    }
+
+    /** Identifiant d'appareil, créé au premier passage puis conservé. */
+    public function deviceId(Request $request): string
+    {
+        $existing = $request->cookie(self::DEVICE_COOKIE);
+
+        if (is_string($existing) && strlen($existing) === 32) {
+            return $existing;
+        }
+
+        $id = Str::lower(Str::random(32));
+
+        // File d'attente : le cookie part avec la réponse en cours.
+        Cookie::queue(
+            Cookie::make(self::DEVICE_COOKIE, $id, 60 * 24 * self::DEVICE_COOKIE_DAYS)
+        );
+
+        return $id;
     }
 
     public function ipHash(Request $request): string
