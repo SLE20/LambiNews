@@ -282,18 +282,6 @@
                 <a href="{{ route('contact.create') }}">
                     Contact
                 </a>
-
-                <a href="{{ route('feed') }}">
-                    RSS
-                </a>
-
-                <a href="{{ route('sitemap') }}">
-                    Plan du site
-                </a>
-
-                <a href="{{ backpack_url('dashboard') }}">
-                    Administration
-                </a>
             </nav>
         </div>
     </div>
