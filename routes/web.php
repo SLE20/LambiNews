@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Front\AdClickController;
 use App\Http\Controllers\Front\AdReportController;
+use App\Http\Controllers\Front\AnnouncementController;
 use App\Http\Controllers\Front\ArticleController;
 use App\Http\Controllers\Front\AuthorController;
 use App\Http\Controllers\Front\CategoryController;
@@ -48,6 +49,33 @@ Route::get('/contact', [ContactController::class, 'create'])
 Route::post('/contact', [ContactController::class, 'store'])
     ->middleware('throttle:3,1')
     ->name('contact.store');
+
+/*
+|--------------------------------------------------------------------------
+| Anons peye (avi lanmò, remèsiman, felisitasyon, biznis)
+|--------------------------------------------------------------------------
+*/
+
+Route::get('/anons', [AnnouncementController::class, 'index'])
+    ->name('announcements.index');
+
+Route::get('/anons/pibliye', [AnnouncementController::class, 'create'])
+    ->name('announcements.create');
+
+Route::post('/anons/kreye', [AnnouncementController::class, 'store'])
+    ->middleware('throttle:10,1')
+    ->name('announcements.store');
+
+Route::post('/anons/konfime', [AnnouncementController::class, 'capture'])
+    ->middleware('throttle:10,1')
+    ->name('announcements.capture');
+
+Route::get('/anons/mesi/{reference}', [AnnouncementController::class, 'thanks'])
+    ->name('announcements.thanks');
+
+// En dernier : ce motif attraperait sinon /anons/pibliye.
+Route::get('/anons/{slug}', [AnnouncementController::class, 'show'])
+    ->name('announcements.show');
 
 /*
 |--------------------------------------------------------------------------

@@ -151,6 +151,18 @@
                         Contactez-nous
                     </a>
 
+                    <a href="{{ route('announcements.index') }}">
+                        Annonces et avis
+                    </a>
+
+                    <a href="{{ route('donations.create') }}">
+                        Soutenir Lambi News
+                    </a>
+
+                    <a href="{{ route('media-kit') }}">
+                        Annoncer chez nous
+                    </a>
+
                     <a href="{{ route('feed') }}">
                         Flux RSS
                     </a>

@@ -68,6 +68,11 @@ Route::group([
         'ad',
         'AdCrudController'
     );
+
+    Route::crud(
+        'announcement',
+        'AnnouncementCrudController'
+    );
     Route::get('statistiques', [StatisticsController::class, 'index'])
     ->name('admin.statistics');
 });

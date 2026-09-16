@@ -123,6 +123,12 @@
             :link="backpack_url('ad')"
         />
 
+        <x-backpack::menu-dropdown-item
+            title="Annonces payantes"
+            icon="la la-bullhorn"
+            :link="backpack_url('announcement')"
+        />
+
     </x-backpack::menu-dropdown>
     <x-backpack::menu-item
     title="Statistiques"
