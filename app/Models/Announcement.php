@@ -26,6 +26,8 @@ class Announcement extends Model
         'type',
         'title',
         'body',
+        'location',
+        'public_contact',
         'photo',
         'requester_name',
         'requester_email',
@@ -91,7 +93,32 @@ class Announcement extends Model
             'business' => [
                 'label' => 'Annonce commerciale',
                 'price' => 30.00,
-                'intro' => 'Ouverture, promotion, recrutement, service.',
+                'intro' => 'Ouverture, promotion, service.',
+            ],
+            'emploi' => [
+                'label' => 'Offre d’emploi',
+                'price' => 20.00,
+                'intro' => 'Recruter : poste, profil recherché, comment postuler.',
+            ],
+            'immobilier' => [
+                'label' => 'Immobilier',
+                'price' => 25.00,
+                'intro' => 'Maison, terrain ou local à vendre ou à louer.',
+            ],
+            'vehicules' => [
+                'label' => 'Véhicules',
+                'price' => 20.00,
+                'intro' => 'Voiture, moto ou camion à vendre.',
+            ],
+            'services' => [
+                'label' => 'Services',
+                'price' => 15.00,
+                'intro' => 'Cours, réparation, transport, artisanat.',
+            ],
+            'a_vendre' => [
+                'label' => 'À vendre',
+                'price' => 10.00,
+                'intro' => 'Objet, matériel ou marchandise à céder.',
             ],
         ];
     }
@@ -100,6 +127,22 @@ class Announcement extends Model
     public static function typeOptions(): array
     {
         return array_map(fn (array $row) => $row['label'], self::catalogue());
+    }
+
+    /**
+     * Catégories de petites annonces : pour celles-là, un contact public
+     * est utile, et même indispensable.
+     *
+     * @return array<int, string>
+     */
+    public static function classifiedTypes(): array
+    {
+        return ['business', 'emploi', 'immobilier', 'vehicules', 'services', 'a_vendre'];
+    }
+
+    public function isClassified(): bool
+    {
+        return in_array($this->type, self::classifiedTypes(), true);
     }
 
     public static function priceFor(string $type): ?float

@@ -42,6 +42,7 @@
                             value="{{ $key }}"
                             data-price="{{ number_format($row['price'], 2, '.', '') }}"
                             data-intro="{{ $row['intro'] }}"
+                            data-classified="{{ in_array($key, \App\Models\Announcement::classifiedTypes(), true) ? '1' : '' }}"
                         >{{ $row['label'] }} — ${{ number_format($row['price'], 2) }}</option>
                     @endforeach
                 </select>
@@ -68,6 +69,28 @@
                     l’orthographe.
                 </span>
             </label>
+
+            {{--
+                Lieu et contact public : utiles pour une petite annonce ou
+                une offre d'emploi, inutiles pour un avis de décès. Le
+                script les masque selon la catégorie choisie.
+            --}}
+            <div id="anons-classified" hidden>
+                <div class="anons__grid">
+                    <label class="anons__label">
+                        Lieu <span class="anons__opt">(ville, quartier)</span>
+                        <input type="text" name="location" maxlength="120">
+                    </label>
+
+                    <label class="anons__label">
+                        Contact à publier
+                        <input type="text" name="public_contact" maxlength="120">
+                        <span class="anons__opt">
+                            Téléphone ou courriel visible par les lecteurs.
+                        </span>
+                    </label>
+                </div>
+            </div>
 
             <div class="anons__grid">
                 <label class="anons__label">
@@ -121,10 +144,13 @@
     var errorEl = document.getElementById('anons-error');
     var token   = '{{ csrf_token() }}';
 
+    var classifiedBox = document.getElementById('anons-classified');
+
     function refresh() {
         var opt = typeSel.options[typeSel.selectedIndex];
         priceEl.textContent = '$' + parseFloat(opt.dataset.price).toFixed(2);
         introEl.textContent = opt.dataset.intro || '';
+        classifiedBox.hidden = !opt.dataset.classified;
     }
 
     typeSel.addEventListener('change', refresh);
@@ -179,7 +205,9 @@
                 body: d.get('body'),
                 requester_name: d.get('requester_name'),
                 requester_email: d.get('requester_email'),
-                requester_phone: d.get('requester_phone')
+                requester_phone: d.get('requester_phone'),
+                location: d.get('location'),
+                public_contact: d.get('public_contact')
             }).then(function (res) {
                 return res.orderID;
             }).catch(function (err) {

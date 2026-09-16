@@ -70,6 +70,8 @@ class AnnouncementCrudController extends CrudController
         $this->setupListOperation();
 
         CRUD::addColumn(['name' => 'body', 'label' => 'Texte']);
+        CRUD::addColumn(['name' => 'location', 'label' => 'Lieu']);
+        CRUD::addColumn(['name' => 'public_contact', 'label' => 'Contact public']);
         CRUD::addColumn(['name' => 'requester_email', 'label' => 'Courriel']);
         CRUD::addColumn(['name' => 'requester_phone', 'label' => 'Téléphone']);
         CRUD::addColumn(['name' => 'paid_at', 'label' => 'Payée le', 'type' => 'datetime']);
@@ -119,6 +121,18 @@ class AnnouncementCrudController extends CrudController
             'name'  => 'moderation_note',
             'label' => 'Note interne / motif de refus',
             'type'  => 'textarea',
+        ]);
+
+        CRUD::addField([
+            'name'  => 'location',
+            'label' => 'Lieu',
+            'type'  => 'text',
+        ]);
+
+        CRUD::addField([
+            'name'  => 'public_contact',
+            'label' => 'Contact publié',
+            'type'  => 'text',
         ]);
 
         CRUD::addField([

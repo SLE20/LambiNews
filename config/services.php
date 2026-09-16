@@ -28,6 +28,13 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'telegram' => [
+        // Jeton du bot (@BotFather) et identifiant du canal (ex. @lambinews).
+        // Le bot doit être administrateur du canal pour pouvoir y publier.
+        'bot_token'  => env('TELEGRAM_BOT_TOKEN'),
+        'channel_id' => env('TELEGRAM_CHANNEL_ID'),
+    ],
+
     'adsense' => [
         // Identifiant éditeur, de la forme pub-0000000000000000.
         // Renseigné, il active le script AdSense et la route /ads.txt.

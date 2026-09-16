@@ -39,6 +39,13 @@ if ($user->role === 'author') {
 
    protected function setupListOperation(): void
 {
+        CRUD::addColumn([
+            'name'          => 'telegram',
+            'label'         => 'Telegram',
+            'type'          => 'model_function',
+            'function_name' => 'getTelegramStatus',
+        ]);
+
     /*
      * Charge les relations pour éviter des requêtes supplémentaires.
      */

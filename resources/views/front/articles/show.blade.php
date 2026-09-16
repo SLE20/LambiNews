@@ -249,6 +249,10 @@
         background: #168b46;
     }
 
+    .share-telegram {
+        background: #229ed9;
+    }
+
     .share-email {
         background: #4b5563;
     }
@@ -998,6 +1002,15 @@
                         class="share-button share-whatsapp"
                     >
                         WhatsApp
+                    </a>
+
+                    <a
+                        href="https://t.me/share/url?url={{ urlencode($articleUrl) }}&text={{ urlencode($shareTitle) }}"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="share-button share-telegram"
+                    >
+                        Telegram
                     </a>
 
                     <a

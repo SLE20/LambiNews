@@ -134,4 +134,33 @@ public function approvedComments(): HasMany
             'slug'    => $this->slug,
         ]);
     }
+
+    /** État de diffusion sur le canal Telegram. */
+    public function getTelegramStatus(): string
+    {
+        return $this->telegram_posted_at
+            ? 'Publié le '.$this->telegram_posted_at->format('d/m/Y H:i')
+            : '—';
+    }
+
+    /**
+     * Message prêt à coller dans un canal WhatsApp.
+     *
+     * WhatsApp n'expose pas d'API de diffusion pour les canaux : le seul
+     * moyen fiable reste le copier-coller par la rédaction.
+     */
+    public function getWhatsappText(): string
+    {
+        $lines = ['*'.$this->title.'*'];
+
+        $excerpt = trim(strip_tags((string) ($this->excerpt ?: $this->content)));
+
+        if ($excerpt !== '') {
+            $lines[] = Str::limit($excerpt, 220);
+        }
+
+        $lines[] = route('articles.show', $this->slug);
+
+        return implode("\n\n", $lines);
+    }
 }

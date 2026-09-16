@@ -32,6 +32,18 @@
 
             {{ $announcement->body }}
 
+            @if($announcement->location || $announcement->public_contact)
+                <p class="anons__meta" style="border-top:0;padding-top:0;margin-top:18px">
+                    @if($announcement->location)
+                        📍 {{ $announcement->location }}<br>
+                    @endif
+
+                    @if($announcement->public_contact)
+                        ☎ {{ $announcement->public_contact }}
+                    @endif
+                </p>
+            @endif
+
             <p class="anons__meta">
                 Annonce publiée le
                 {{ $announcement->published_at?->translatedFormat('d F Y') }}.

@@ -77,6 +77,8 @@ class AnnouncementController extends Controller
             'requester_name'  => ['required', 'string', 'max:120'],
             'requester_email' => ['required', 'email', 'max:190'],
             'requester_phone' => ['nullable', 'string', 'max:40'],
+            'location'        => ['nullable', 'string', 'max:120'],
+            'public_contact'  => ['nullable', 'string', 'max:120'],
         ]);
 
         $price = Announcement::priceFor($validated['type']);

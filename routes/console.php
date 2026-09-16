@@ -18,3 +18,11 @@ Schedule::command('articles:publish-scheduled')
 Schedule::command('newsletter:send --limit=25')
     ->everyMinute()
     ->withoutOverlapping();
+
+/*
+ * Diffusion Telegram : toutes les cinq minutes, par petits lots, pour ne
+ * pas heurter les limites de l'API ni inonder le canal.
+ */
+Schedule::command('telegram:publish --limit=3')
+    ->everyFiveMinutes()
+    ->withoutOverlapping();
