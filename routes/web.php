@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Front\AdClickController;
+use App\Http\Controllers\Front\AdReportController;
 use App\Http\Controllers\Front\ArticleController;
 use App\Http\Controllers\Front\AuthorController;
 use App\Http\Controllers\Front\CategoryController;
@@ -9,6 +10,7 @@ use App\Http\Controllers\Front\ContactController;
 use App\Http\Controllers\Front\DonationController;
 use App\Http\Controllers\Front\FeedController;
 use App\Http\Controllers\Front\HomeController;
+use App\Http\Controllers\Front\MediaKitController;
 use App\Http\Controllers\Front\NewsletterController;
 use App\Http\Controllers\Front\OgImageController;
 use App\Http\Controllers\Front\PageController;
@@ -55,6 +57,15 @@ Route::post('/contact', [ContactController::class, 'store'])
 
 Route::get('/reklam/{ad}/klik', AdClickController::class)
     ->name('ads.click');
+
+// Rapport de campagne, protégé par un jeton non devinable.
+Route::get('/reklam/rapo/{token}', AdReportController::class)
+    ->where('token', '[a-z0-9]{28}')
+    ->name('ads.report');
+
+// Dossier de presse : chiffres d’audience pour les annonceurs.
+Route::get('/kit-medya', [MediaKitController::class, 'index'])
+    ->name('media-kit');
 
 /*
 |--------------------------------------------------------------------------
@@ -139,6 +150,8 @@ Route::get('/robots.txt', function () {
         // Résultats de recherche : contenu mince, dupliqué par paramètre.
         'Disallow: /recherche',
         'Disallow: /*?q=',
+        // Rapports de campagne : liens privés remis aux annonceurs.
+        'Disallow: /reklam/',
         '',
         'Sitemap: '.route('sitemap'),
         'Sitemap: '.route('sitemap.news'),

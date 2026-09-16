@@ -74,7 +74,11 @@
      */
     $isSearch = request()->routeIs('search');
 
-    $robots = $isSearch
+    // Le rapport de campagne est une page privée remise à un annonceur :
+    // elle ne doit jamais atterrir dans un index.
+    $isPrivate = $isSearch || request()->routeIs('ads.report');
+
+    $robots = $isPrivate
         ? 'noindex, follow'
         : 'index, follow, max-image-preview:large, max-snippet:-1, '
             .'max-video-preview:-1';

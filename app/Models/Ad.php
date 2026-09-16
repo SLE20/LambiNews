@@ -6,6 +6,7 @@ use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Str;
 
 class Ad extends Model
 {
@@ -16,6 +17,7 @@ class Ad extends Model
     public const TYPE_ADSENSE = 'adsense';
 
     protected $fillable = [
+        'report_token',
         'name',
         'client_name',
         'client_email',
@@ -72,6 +74,21 @@ class Ad extends Model
             self::TYPE_HTML    => 'Code HTML de l’annonceur',
             self::TYPE_ADSENSE => 'Régie (AdSense, Ezoic…)',
         ];
+    }
+
+    protected static function booted(): void
+    {
+        static::creating(function (Ad $ad): void {
+            if (blank($ad->report_token)) {
+                $ad->report_token = Str::lower(Str::random(28));
+            }
+        });
+    }
+
+    /** Lien que l’annonceur peut consulter sans compte. */
+    public function getReportUrlAttribute(): string
+    {
+        return route('ads.report', $this->report_token);
     }
 
     public function dailyStats(): HasMany

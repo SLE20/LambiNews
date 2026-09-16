@@ -70,6 +70,14 @@ class AdCrudController extends CrudController
         CRUD::addColumn(['name' => 'ends_at', 'label' => 'Fin', 'type' => 'date']);
         CRUD::addColumn(['name' => 'weight', 'label' => 'Poids de rotation']);
         CRUD::addColumn(['name' => 'notes', 'label' => 'Notes']);
+
+        CRUD::addColumn([
+            'name'          => 'report_url',
+            'label'         => 'Lien de rapport pour le client',
+            'type'          => 'model_function',
+            'function_name' => 'getReportUrlAttribute',
+            'limit'         => 255,
+        ]);
     }
 
     protected function setupCreateOperation(): void
