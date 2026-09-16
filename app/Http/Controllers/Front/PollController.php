@@ -30,6 +30,8 @@ class PollController extends Controller
     {
         $polls = Poll::query()
             ->with('options')
+            // Un sondage à moins de deux choix n'est pas encore prêt.
+            ->has('options', '>=', 2)
             ->orderByDesc('is_active')
             ->latest()
             ->paginate(10);

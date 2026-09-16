@@ -84,6 +84,12 @@ Route::group([
         'PollOptionCrudController'
     );
 
+    // Remet un sondage à zéro après une phase d'essai.
+    Route::get(
+        'poll/{id}/reset',
+        [\App\Http\Controllers\Admin\PollCrudController::class, 'reset']
+    )->name('poll.reset');
+
     Route::crud(
         'newsletter-campaign',
         'NewsletterCampaignCrudController'

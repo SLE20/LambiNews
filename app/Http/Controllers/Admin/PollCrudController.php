@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Models\Poll;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\DB;
 
 class PollCrudController extends CrudController
 {
@@ -49,6 +51,17 @@ class PollCrudController extends CrudController
         ]);
 
         CRUD::addColumn(['name' => 'created_at', 'label' => 'Créé le', 'type' => 'datetime']);
+
+        CRUD::addColumn([
+            'name'  => 'reset_link',
+            'label' => 'Réinitialiser',
+            'type'  => 'closure',
+            'function' => fn ($entry) => '<a href="'
+                .backpack_url('poll/'.$entry->id.'/reset')
+                .'" onclick="return confirm(\'Effacer toutes les voix de ce sondage ?\')">'
+                .'Remettre à zéro</a>',
+            'escaped' => false,
+        ]);
 
         CRUD::orderBy('created_at', 'desc');
     }
@@ -213,5 +226,28 @@ class PollCrudController extends CrudController
     protected function setupUpdateOperation(): void
     {
         $this->setupCreateOperation();
+    }
+
+    /**
+     * Efface toutes les voix d'un sondage et remet les compteurs à zéro.
+     *
+     * Indispensable après une phase d'essai : sans cela, les personnes
+     * qui ont testé depuis la rédaction ont consommé leur quota et ne
+     * peuvent plus voter une fois le sondage réellement ouvert.
+     */
+    public function reset(int $id): RedirectResponse
+    {
+        abort_unless(backpack_user()?->isAdmin(), 403);
+
+        $poll = Poll::findOrFail($id);
+
+        $deleted = DB::table('poll_votes')->where('poll_id', $poll->id)->delete();
+
+        DB::table('poll_options')->where('poll_id', $poll->id)->update(['votes_count' => 0]);
+        DB::table('polls')->where('id', $poll->id)->update(['votes_count' => 0]);
+
+        return redirect()
+            ->to(backpack_url('poll'))
+            ->with('success', $deleted.' voix effacée(s). Le sondage repart de zéro.');
     }
 }
