@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class Subscriber extends Model
 {
@@ -11,6 +12,7 @@ class Subscriber extends Model
 
     protected $fillable = [
         'email',
+        'token',
         'is_active',
         'subscribed_at',
         'unsubscribed_at',
@@ -27,6 +29,16 @@ class Subscriber extends Model
 
     protected static function booted(): void
     {
+        /*
+         * Jeton de désabonnement, indispensable au lien « se désabonner »
+         * de chaque courriel.
+         */
+        static::creating(function (Subscriber $subscriber): void {
+            if (blank($subscriber->token)) {
+                $subscriber->token = Str::lower(Str::random(32));
+            }
+        });
+
         static::saving(function (Subscriber $subscriber) {
             if (!$subscriber->isDirty('is_active')) {
                 return;

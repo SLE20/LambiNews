@@ -149,6 +149,15 @@ Route::post(
     ->middleware('throttle:5,1')
     ->name('newsletter.store');
 
+// GET et POST : Gmail appelle ce lien en POST (List-Unsubscribe-Post).
+Route::match(
+    ['get', 'post'],
+    '/infolettre/dezabone/{token}',
+    [NewsletterController::class, 'unsubscribe']
+)
+    ->where('token', '[a-z0-9]{32}')
+    ->name('newsletter.unsubscribe');
+
 /*
 |--------------------------------------------------------------------------
 | RSS, sitemap et robots

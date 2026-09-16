@@ -83,6 +83,22 @@ Route::group([
         'poll-option',
         'PollOptionCrudController'
     );
+
+    Route::crud(
+        'newsletter-campaign',
+        'NewsletterCampaignCrudController'
+    );
+
+    // Déclenche l'envoi d'une infolettre préparée.
+    Route::get(
+        'newsletter-campaign/{id}/queue',
+        [\App\Http\Controllers\Admin\NewsletterCampaignCrudController::class, 'queue']
+    )->name('newsletter-campaign.queue');
+
+    Route::get(
+        'newsletter-campaign/{id}/retry',
+        [\App\Http\Controllers\Admin\NewsletterCampaignCrudController::class, 'retry']
+    )->name('newsletter-campaign.retry');
     Route::get('statistiques', [StatisticsController::class, 'index'])
     ->name('admin.statistics');
 });

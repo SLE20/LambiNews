@@ -10,3 +10,11 @@ Artisan::command('inspire', function () {
 Schedule::command('articles:publish-scheduled')
     ->everyMinute()
     ->withoutOverlapping();
+
+/*
+ * Infolettre : petites vagues régulières plutôt qu'un envoi massif, que
+ * l'hébergement mutualisé rejetterait au-delà de son quota horaire.
+ */
+Schedule::command('newsletter:send --limit=25')
+    ->everyMinute()
+    ->withoutOverlapping();

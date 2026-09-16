@@ -11,7 +11,14 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        /*
+         * Désabonnement en un clic : Gmail et Outlook appellent cette URL
+         * en POST depuis l'en-tête List-Unsubscribe-Post, sans jeton CSRF.
+         * La sécurité repose sur le jeton aléatoire présent dans l'URL.
+         */
+        $middleware->validateCsrfTokens(except: [
+            'infolettre/dezabone/*',
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

@@ -141,6 +141,12 @@
             :link="backpack_url('poll-option')"
         />
 
+        <x-backpack::menu-dropdown-item
+            title="Infolettres"
+            icon="la la-paper-plane"
+            :link="backpack_url('newsletter-campaign')"
+        />
+
     </x-backpack::menu-dropdown>
     <x-backpack::menu-item
     title="Statistiques"

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Subscriber;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class NewsletterController extends Controller
 {
@@ -42,5 +43,28 @@ class NewsletterController extends Controller
             'newsletter_success',
             'Merci ! Votre inscription à l’infolettre est confirmée.'
         );
+    }
+
+    /**
+     * Désabonnement en un clic depuis le courriel.
+     *
+     * Accepte GET et POST : Gmail et Outlook appellent cette URL en POST
+     * via l'en-tête List-Unsubscribe-Post, sans ouvrir de navigateur.
+     * La sécurité tient au jeton aléatoire contenu dans l'adresse.
+     */
+    public function unsubscribe(string $token): View
+    {
+        $subscriber = Subscriber::query()
+            ->where('token', $token)
+            ->firstOrFail();
+
+        if ($subscriber->is_active) {
+            $subscriber->forceFill([
+                'is_active'       => false,
+                'unsubscribed_at' => now(),
+            ])->save();
+        }
+
+        return view('front.newsletter-unsubscribed', compact('subscriber'));
     }
 }
