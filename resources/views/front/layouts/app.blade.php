@@ -176,24 +176,58 @@
         }
         .nav-support:hover { background: var(--primary-dark); color: #fff; }
 
-        /* ---------- Flash info ---------- */
+        /* ---------- Flash info : défilement continu ---------- */
+        .breaking-track {
+            display: flex;
+            width: max-content;
+            animation: breaking-scroll 60s linear infinite;
+        }
+        /* Laisse le temps de lire, et de cliquer. */
+        .breaking-news:hover .breaking-track { animation-play-state: paused; }
+
         .breaking-item {
-            display: none;
+            display: inline-flex;
             align-items: center;
-            gap: 12px;
-            min-width: 0;
-            overflow: hidden;
+            gap: 10px;
+            padding-right: 44px;
+            color: #d20a11;
             white-space: nowrap;
-            text-overflow: ellipsis;
+            font-weight: 600;
         }
-        .breaking-item.is-on { display: flex; }
-        .breaking-nav { display: flex; gap: 2px; flex: none; }
-        .breaking-nav button {
-            width: 28px; height: 28px; border: 0; border-radius: 6px;
-            background: rgba(255, 255, 255, .12); color: inherit;
-            font-size: 1rem; line-height: 1; cursor: pointer;
+        .breaking-item:hover { text-decoration: underline; }
+        .breaking-item::after {
+            content: "•";
+            margin-left: 34px;
+            color: rgba(210, 10, 17, .38);
         }
-        .breaking-nav button:hover { background: rgba(255, 255, 255, .24); }
+        .breaking-time { color: rgba(210, 10, 17, .62); font-weight: 700; }
+
+        @keyframes breaking-scroll {
+            from { transform: translateX(0); }
+            to   { transform: translateX(-50%); }
+        }
+
+        /* Respecte le réglage « animations réduites ». */
+        @media (prefers-reduced-motion: reduce) {
+            .breaking-track { animation: none; }
+        }
+
+        /*
+         * Garde-fou mobile.
+         *
+         * Plusieurs gabarits déclarent des pistes de grille « 1fr » dans
+         * leurs media queries. Or « 1fr » vaut minmax(auto, 1fr) : la
+         * piste refuse de descendre sous la largeur minimale de son
+         * contenu et élargit toute la page, ce qui rogne le côté droit
+         * sur téléphone. On contraint les blocs plutôt que de réécrire
+         * chaque gabarit ; :where() garde une spécificité nulle, donc
+         * aucune règle voulue n'est écrasée.
+         */
+        @media (max-width: 900px) {
+            main :where(div, section, article, aside, form, ul, ol) {
+                min-width: 0;
+            }
+        }
 
         /* ---------- Retour en haut ---------- */
         .back-to-top {
@@ -597,16 +631,16 @@
         */
 
         .breaking-news {
-            color: white;
-            background: var(--black-light);
-            border-top:
-                1px solid rgba(255, 255, 255, 0.08);
+            color: #d20a11;
+            background: #fff;
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
         }
 
         .breaking-news-inner {
             display: flex;
             align-items: center;
-            min-height: 46px;
+            min-height: 44px;
             overflow: hidden;
         }
 
@@ -614,40 +648,27 @@
             align-self: stretch;
             display: inline-flex;
             align-items: center;
+            gap: 6px;
             flex-shrink: 0;
             padding: 0 18px;
-            color: var(--black);
-            background: var(--primary);
+            color: #fff;
+            background: #d20a11;
             font-size: 12px;
             font-weight: 800;
             letter-spacing: 0.06em;
             text-transform: uppercase;
         }
 
-        .breaking-content {
-            display: flex;
-            align-items: center;
+        .breaking-viewport {
+            flex: 1;
             min-width: 0;
-            padding: 0 18px;
+            padding-left: 18px;
             overflow: hidden;
-        }
-
-        .breaking-content a {
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            font-size: 14px;
-            font-weight: 600;
-        }
-
-        .breaking-content a:hover {
-            color: var(--primary);
         }
 
         .breaking-time {
             flex-shrink: 0;
-            margin-right: 12px;
-            color: var(--primary);
+            color: rgba(210, 10, 17, 0.6);
             font-size: 12px;
             font-weight: 700;
         }
@@ -1608,32 +1629,30 @@
                 </span>
 
                 {{--
-                    Les dix titres sont tous rendus ; un seul est visible
-                    à la fois. Le défilement se fait en CSS/JS, sans
-                    recharger quoi que ce soit.
+                    Défilement continu : la liste est rendue deux fois et
+                    la piste se translate de moitié, ce qui donne une
+                    boucle sans saut visible.
                 --}}
-                <div class="breaking-content">
-                    @foreach($breakingArticles as $item)
-                        <a
-                            href="{{ route('articles.show', $item->slug) }}"
-                            class="breaking-item{{ $loop->first ? ' is-on' : '' }}"
-                        >
-                            <span class="breaking-time">
-                                {{ $item->published_at
-                                    ?->timezone('America/Port-au-Prince')
-                                    ->format('H:i') }}
-                            </span>
-                            {{ $item->title }}
-                        </a>
-                    @endforeach
-                </div>
-
-                @if($breakingArticles->count() > 1)
-                    <div class="breaking-nav">
-                        <button type="button" data-flash="-1" aria-label="Titre précédent">‹</button>
-                        <button type="button" data-flash="1" aria-label="Titre suivant">›</button>
+                <div class="breaking-viewport">
+                    <div class="breaking-track">
+                        @for($pass = 0; $pass < 2; $pass++)
+                            @foreach($breakingArticles as $item)
+                                <a
+                                    href="{{ route('articles.show', $item->slug) }}"
+                                    class="breaking-item"
+                                    @if($pass > 0) aria-hidden="true" tabindex="-1" @endif
+                                >
+                                    <span class="breaking-time">
+                                        {{ $item->published_at
+                                            ?->timezone('America/Port-au-Prince')
+                                            ->format('H:i') }}
+                                    </span>
+                                    {{ $item->title }}
+                                </a>
+                            @endforeach
+                        @endfor
                     </div>
-                @endif
+                </div>
 
             </div>
 
@@ -1685,46 +1704,6 @@
     >
         <span aria-hidden="true">↑</span>
     </button>
-
-    <script>
-    (function () {
-        // Défilement des titres du bandeau flash.
-        var bar = document.getElementById('flashbar');
-
-        if (bar) {
-            var items = bar.querySelectorAll('.breaking-item');
-
-            if (items.length > 1) {
-                var index = 0;
-                var timer = null;
-
-                var show = function (next) {
-                    items[index].classList.remove('is-on');
-                    index = (next + items.length) % items.length;
-                    items[index].classList.add('is-on');
-                };
-
-                var restart = function () {
-                    clearInterval(timer);
-                    timer = setInterval(function () { show(index + 1); }, 5000);
-                };
-
-                bar.querySelectorAll('[data-flash]').forEach(function (b) {
-                    b.addEventListener('click', function () {
-                        show(index + parseInt(b.dataset.flash, 10));
-                        restart();
-                    });
-                });
-
-                // Suspendu au survol, pour laisser le temps de lire.
-                bar.addEventListener('mouseenter', function () { clearInterval(timer); });
-                bar.addEventListener('mouseleave', restart);
-
-                restart();
-            }
-        }
-    })();
-    </script>
 
     <script>
     (function () {

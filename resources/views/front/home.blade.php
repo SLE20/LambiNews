@@ -253,11 +253,17 @@
     .hp__catdate { display: block; margin-top: 7px; font-size: .74rem; color: var(--muted); }
 
     @media (max-width: 1080px) {
-        .hp__grid { grid-template-columns: 1fr; }
+        /*
+         * minmax(0, 1fr) et non 1fr : une piste « 1fr » vaut
+         * minmax(auto, 1fr) et refuse de descendre sous la largeur
+         * minimale de son contenu, ce qui élargit toute la page.
+         */
+        .hp__grid { grid-template-columns: minmax(0, 1fr); }
+        .hp__news--desktop { display: none; }
         .hp__cats { grid-template-columns: repeat(2, minmax(0,1fr)); }
     }
     @media (max-width: 680px) {
-        .hp__lead { grid-template-columns: 1fr; }
+        .hp__lead { grid-template-columns: minmax(0, 1fr); }
         .hp__hero { min-height: 300px; }
         .hp__cats { grid-template-columns: repeat(2, minmax(0,1fr)); gap: 12px; }
         .hp__flashtag { padding: 9px 20px 9px 12px; font-size: .7rem; }
@@ -422,8 +428,11 @@
                 </div>
             @endif
 
-            {{-- Infolettre : même route que le pied de page. --}}
-            <div class="hp__panel hp__panel--dark hp__news">
+            {{--
+                Infolettre : masquée sur téléphone. L'inscription y est
+                pénible, et le formulaire du pied de page suffit.
+            --}}
+            <div class="hp__panel hp__panel--dark hp__news hp__news--desktop">
                 <h2 class="hp__paneltitle">✉️ Newsletter</h2>
 
                 <div class="hp__panelbody">
