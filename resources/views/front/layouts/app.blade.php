@@ -152,6 +152,22 @@
             height: auto;
         }
 
+        /* ---------- Bouton de soutien ---------- */
+        .nav-support {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 7px 16px;
+            margin-right: 6px;
+            border-radius: 999px;
+            background: var(--primary);
+            color: var(--black);
+            font-weight: 700;
+            font-size: .88rem;
+            white-space: nowrap;
+        }
+        .nav-support:hover { background: var(--primary-dark); color: #fff; }
+
         /* ---------- Emplacements publicitaires ---------- */
         .ad-slot {
             position: relative;
@@ -1390,6 +1406,23 @@
             {{-- ================================================= --}}
 
             <div class="navigation-menu">
+
+                {{--
+                    Raccourcis vers les pages qui rapportent. Placés avant
+                    les rubriques pour rester visibles : dans le pied de
+                    page, presque personne ne les voit.
+                --}}
+                <div class="nav-item nav-item--support">
+                    <a href="{{ route('donations.create') }}" class="nav-support">
+                        ♥ Soutenir
+                    </a>
+                </div>
+
+                <div class="nav-item">
+                    <a href="{{ route('announcements.index') }}" class="nav-link">
+                        Annonces
+                    </a>
+                </div>
 
                 @foreach(
                     $navigationCategories ?? []

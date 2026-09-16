@@ -52,12 +52,18 @@ class Poll extends Model
         return $this->hasMany(PollVote::class);
     }
 
-    /** Sondage ouvert au vote aujourd’hui. */
+    /**
+     * Sondage ouvert au vote aujourd’hui.
+     *
+     * Un sondage à moins de deux choix n’a rien à comparer : il est
+     * écarté plutôt que d’être affiché à moitié construit.
+     */
     public function scopeOpen(Builder $query): Builder
     {
         $today = now()->toDateString();
 
         return $query
+            ->has('options', '>=', 2)
             ->where('is_active', true)
             ->where(fn (Builder $q) => $q
                 ->whereNull('starts_at')->orWhereDate('starts_at', '<=', $today))

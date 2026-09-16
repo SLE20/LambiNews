@@ -419,6 +419,35 @@
     |--------------------------------------------------------------------------
     */
 
+    .support-box {
+        margin-bottom: 24px;
+        padding: 20px;
+        border-radius: var(--radius);
+        background: var(--black);
+        color: #fff;
+        text-align: center;
+    }
+    .support-box__title {
+        margin: 0 0 8px;
+        font-family: "Playfair Display", Georgia, serif;
+        font-size: 1.1rem;
+    }
+    .support-box__text {
+        margin: 0 0 14px;
+        font-size: .86rem;
+        color: rgba(255, 255, 255, .75);
+        line-height: 1.6;
+    }
+    .support-box__btn {
+        display: inline-block;
+        padding: 10px 22px;
+        border-radius: 999px;
+        background: var(--primary);
+        color: var(--black);
+        font-weight: 700;
+        font-size: .88rem;
+    }
+
     .sponsored-flag {
         display: flex;
         align-items: center;
@@ -1080,6 +1109,18 @@
 
         <div style="margin-bottom:24px">
             <x-latest-poll />
+        </div>
+
+        {{-- Appel au soutien, là où le lecteur vient de lire un article. --}}
+        <div class="support-box">
+            <p class="support-box__title">Soutenez notre travail</p>
+            <p class="support-box__text">
+                Lambi News est un média indépendant. Un don, même modeste,
+                finance le travail de terrain.
+            </p>
+            <a href="{{ route('donations.create') }}" class="support-box__btn">
+                Faire un don
+            </a>
         </div>
 
         {{-- À LA UNE --}}

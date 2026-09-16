@@ -4,16 +4,22 @@
     $poll     : le sondage
     $recorder : PollVoteRecorder, pour savoir si ce visiteur a déjà voté
     $compact  : version réduite pour la colonne de droite
+
+    Quand les choix portent une photo, l'affichage bascule en grille de
+    comparaison : c'est le cas d'usage « quel candidat ? », où l'on veut
+    voir les visages côte à côte.
 --}}
 @php
     $hasVoted   = $recorder->alreadyVoted($poll);
     $chosenId   = $hasVoted ? $recorder->votedOptionId($poll) : null;
     $closed     = $poll->isClosed();
-    $showResult = $hasVoted || $closed || ! $poll->hide_results_before_vote;
+    $showResult = $hasVoted || $closed;
     $total      = $poll->validVotes();
+    $withPhotos = $poll->options->contains(fn ($o) => filled($o->image));
+    $leaderId   = $poll->options->sortByDesc('votes_count')->first()?->id;
 @endphp
 
-<div class="poll{{ ($compact ?? false) ? ' poll--compact' : '' }}">
+<div class="poll{{ ($compact ?? false) ? ' poll--compact' : '' }}{{ $withPhotos ? ' poll--photos' : '' }}">
 
     <p class="poll__eyebrow">Sondage des lecteurs</p>
 
@@ -25,25 +31,67 @@
         <p class="poll__desc">{{ $poll->description }}</p>
     @endif
 
-    @if($hasVoted || $closed)
-        <div class="poll__results">
-            @foreach($poll->options as $option)
-                @php($pct = $poll->percentFor($option))
-                <div class="poll__row{{ $chosenId === $option->id ? ' is-mine' : '' }}">
-                    <div class="poll__rowhead">
-                        <span>{{ $option->label }}</span>
-                        <strong>{{ number_format($pct, 1, ',', ' ') }} %</strong>
+    @if($showResult)
+        {{-- ---------------- Résultats ---------------- --}}
+        @if($withPhotos)
+            <div class="poll__grid">
+                @foreach($poll->options as $option)
+                    @php($pct = $poll->percentFor($option))
+                    <figure class="poll__card{{ $chosenId === $option->id ? ' is-mine' : '' }}{{ $total > 0 && $leaderId === $option->id ? ' is-leader' : '' }}">
+                        <div class="poll__photo">
+                            @if($option->image)
+                                <img
+                                    src="{{ asset('storage/'.$option->image) }}"
+                                    alt="{{ $option->label }}"
+                                    loading="lazy"
+                                >
+                            @else
+                                <span class="poll__initials">
+                                    {{ \Illuminate\Support\Str::of($option->label)->substr(0, 2)->upper() }}
+                                </span>
+                            @endif
+                        </div>
+
+                        <figcaption>
+                            <strong class="poll__name">{{ $option->label }}</strong>
+                            @if($option->subtitle)
+                                <small>{{ $option->subtitle }}</small>
+                            @endif
+
+                            <span class="poll__pct">{{ number_format($pct, 1, ',', ' ') }} %</span>
+
+                            <div class="poll__track">
+                                <span class="poll__fill" style="width: {{ $pct }}%"></span>
+                            </div>
+
+                            <span class="poll__count">
+                                {{ number_format($option->votes_count, 0, ',', ' ') }} voix
+                            </span>
+                        </figcaption>
+                    </figure>
+                @endforeach
+            </div>
+        @else
+            <div class="poll__results">
+                @foreach($poll->options as $option)
+                    @php($pct = $poll->percentFor($option))
+                    <div class="poll__row{{ $chosenId === $option->id ? ' is-mine' : '' }}">
+                        <div class="poll__rowhead">
+                            <span>{{ $option->label }}</span>
+                            <strong>{{ number_format($pct, 1, ',', ' ') }} %</strong>
+                        </div>
+                        <div class="poll__track">
+                            <span class="poll__fill" style="width: {{ $pct }}%"></span>
+                        </div>
+                        <span class="poll__count">
+                            {{ number_format($option->votes_count, 0, ',', ' ') }} voix
+                        </span>
                     </div>
-                    <div class="poll__track">
-                        <span class="poll__fill" style="width: {{ $pct }}%"></span>
-                    </div>
-                    <span class="poll__count">
-                        {{ number_format($option->votes_count, 0, ',', ' ') }} voix
-                    </span>
-                </div>
-            @endforeach
-        </div>
+                @endforeach
+            </div>
+        @endif
     @else
+        {{-- ---------------- Vote ---------------- --}}
         <form
             method="POST"
             action="{{ route('polls.vote', $poll->slug) }}"
@@ -59,22 +107,58 @@
                 </label>
             </div>
 
-            @foreach($poll->options as $option)
-                <label class="poll__choice">
-                    <input
-                        type="radio"
-                        name="poll_option_id"
-                        value="{{ $option->id }}"
-                        required
-                    >
-                    <span>
-                        {{ $option->label }}
-                        @if($option->subtitle)
-                            <small>{{ $option->subtitle }}</small>
-                        @endif
-                    </span>
-                </label>
-            @endforeach
+            @if($withPhotos)
+                <div class="poll__grid">
+                    @foreach($poll->options as $option)
+                        <label class="poll__card poll__card--choice">
+                            <input
+                                type="radio"
+                                name="poll_option_id"
+                                value="{{ $option->id }}"
+                                required
+                            >
+
+                            <div class="poll__photo">
+                                @if($option->image)
+                                    <img
+                                        src="{{ asset('storage/'.$option->image) }}"
+                                        alt="{{ $option->label }}"
+                                        loading="lazy"
+                                    >
+                                @else
+                                    <span class="poll__initials">
+                                        {{ \Illuminate\Support\Str::of($option->label)->substr(0, 2)->upper() }}
+                                    </span>
+                                @endif
+                            </div>
+
+                            <figcaption>
+                                <strong class="poll__name">{{ $option->label }}</strong>
+                                @if($option->subtitle)
+                                    <small>{{ $option->subtitle }}</small>
+                                @endif
+                            </figcaption>
+                        </label>
+                    @endforeach
+                </div>
+            @else
+                @foreach($poll->options as $option)
+                    <label class="poll__choice">
+                        <input
+                            type="radio"
+                            name="poll_option_id"
+                            value="{{ $option->id }}"
+                            required
+                        >
+                        <span>
+                            {{ $option->label }}
+                            @if($option->subtitle)
+                                <small>{{ $option->subtitle }}</small>
+                            @endif
+                        </span>
+                    </label>
+                @endforeach
+            @endif
 
             <button type="submit" class="poll__submit">Voter</button>
         </form>

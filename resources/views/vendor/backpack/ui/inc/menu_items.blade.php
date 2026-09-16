@@ -100,6 +100,12 @@
         icon="la la-cog"
     >
         <x-backpack::menu-dropdown-item
+            title="Réglages du site"
+            icon="la la-sliders-h"
+            :link="backpack_url('site-setting')"
+        />
+
+        <x-backpack::menu-dropdown-item
             title="Utilisateurs"
             icon="la la-users"
             :link="backpack_url('user')"

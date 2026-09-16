@@ -28,7 +28,8 @@ class LatestPoll extends Component
 
     public function shouldRender(): bool
     {
-        return $this->poll !== null && $this->poll->options->isNotEmpty();
+        // Il faut au moins deux choix pour qu'il y ait un arbitrage.
+        return $this->poll !== null && $this->poll->options->count() >= 2;
     }
 
     public function render(): View

@@ -53,6 +53,64 @@
         border-top: 1px solid var(--border);
         font-size: .76rem; color: var(--muted); line-height: 1.5;
     }
+
+    /* ---------- Comparaison avec photos ---------- */
+    .poll__grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 14px;
+        margin: 16px 0 4px;
+    }
+    .poll--compact .poll__grid {
+        grid-template-columns: repeat(auto-fit, minmax(112px, 1fr));
+        gap: 10px;
+    }
+    .poll__card {
+        margin: 0;
+        padding: 12px;
+        border: 1.5px solid var(--border);
+        border-radius: 12px;
+        background: var(--background);
+        text-align: center;
+        position: relative;
+    }
+    .poll__card--choice { cursor: pointer; display: block; }
+    .poll__card--choice:hover { border-color: var(--primary); }
+    .poll__card--choice input {
+        position: absolute; top: 10px; left: 10px;
+        accent-color: var(--primary); width: 17px; height: 17px;
+    }
+    .poll__card--choice:has(input:checked) {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 2px rgba(216,169,34,.28);
+    }
+    .poll__photo {
+        width: 84px; height: 84px; margin: 0 auto 10px;
+        border-radius: 50%; overflow: hidden;
+        background: var(--border);
+        display: grid; place-items: center;
+    }
+    .poll--compact .poll__photo { width: 64px; height: 64px; }
+    .poll__photo img { width: 100%; height: 100%; object-fit: cover; }
+    .poll__initials {
+        font-weight: 700; font-size: 1.4rem; color: var(--muted);
+    }
+    .poll__name { display: block; font-size: .95rem; line-height: 1.3; }
+    .poll__card small {
+        display: block; color: var(--muted); font-size: .78rem; margin-top: 2px;
+    }
+    .poll__pct {
+        display: block; margin: 8px 0 6px;
+        font-size: 1.25rem; font-weight: 700; color: var(--primary-dark);
+    }
+    .poll__card.is-leader { border-color: var(--primary); background: #fdf8e9; }
+    .poll__card.is-mine::after {
+        content: "✓ votre choix";
+        display: block; margin-top: 8px;
+        font-size: .72rem; font-weight: 700; color: var(--primary-dark);
+    }
+    .poll__card .poll__track { margin-top: 2px; }
+
     .poll__flash {
         margin: 0 0 16px; padding: 12px 16px; border-radius: 10px;
         background: #eef7ee; border: 1px solid #cfe6cf; color: #245b28;

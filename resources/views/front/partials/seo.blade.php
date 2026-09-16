@@ -1,4 +1,5 @@
 @php
+    use App\Models\SiteSetting;
     use Illuminate\Pagination\LengthAwarePaginator;
     use Illuminate\Support\Str;
 
@@ -28,13 +29,29 @@
     $isAuthorPage   = request()->routeIs('authors.show') && isset($author);
     $isStaticPage   = request()->routeIs('pages.show') && isset($page);
 
-    $siteName = 'Lambi News';
-    $tagline  = 'Le citoyen au cœur de l’information';
+    /*
+     * Identité du média : modifiable dans Administration → Réglages du
+     * site, sans redéploiement.
+     */
+    $siteName = SiteSetting::get('site_name', 'Lambi News');
+    $tagline  = SiteSetting::get('tagline', 'Le citoyen au cœur de l’information');
 
     $defaultTitle = $siteName.' — '.$tagline;
 
-    $defaultDescription = 'Lambi News vous informe sur l’actualité '
-        .'nationale et internationale.';
+    $defaultDescription = SiteSetting::get(
+        'default_description',
+        'Lambi News vous informe sur l’actualité nationale et internationale.'
+    );
+
+    $socialProfiles = array_values(array_filter([
+        SiteSetting::get('facebook_url'),
+        SiteSetting::get('instagram_url'),
+        SiteSetting::get('tiktok_url'),
+        SiteSetting::get('telegram_url'),
+        SiteSetting::get('whatsapp_url'),
+    ]));
+
+    $twitterHandle = ltrim(SiteSetting::get('twitter_handle'), '@');
 
     /*
      * Titre et description réellement affichés par la page.
@@ -148,18 +165,14 @@
         'name'   => $siteName,
         'url'    => route('home'),
         'slogan' => $tagline,
-        'email'  => 'info.lambinews@gmail.com',
+        'email'  => SiteSetting::get('contact_email', 'info.lambinews@gmail.com'),
         'logo'   => [
             '@type'  => 'ImageObject',
             'url'    => asset('images/lambinews-embleme.jpg'),
             'width'  => 477,
             'height' => 419,
         ],
-        'sameAs' => [
-            'https://www.facebook.com/lambinews/',
-            'https://www.tiktok.com/@lambinews',
-            'https://www.instagram.com/info.lambinews/',
-        ],
+        'sameAs' => $socialProfiles,
     ];
 
     /*
@@ -377,6 +390,10 @@
 {{-- ============================================================= --}}
 
 <meta name="twitter:card" content="summary_large_image">
+@if($twitterHandle !== '')
+    {{-- Attention : @{{ }} est la séquence d'échappement de Blade. --}}
+    <meta name="twitter:site" content="{{ '@'.$twitterHandle }}">
+@endif
 <meta name="twitter:title" content="{{ $pageTitle }}">
 <meta name="twitter:description" content="{{ $pageDescription }}">
 <meta name="twitter:image" content="{{ $ogImage }}">

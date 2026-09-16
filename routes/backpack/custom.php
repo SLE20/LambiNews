@@ -99,6 +99,11 @@ Route::group([
         'newsletter-campaign/{id}/retry',
         [\App\Http\Controllers\Admin\NewsletterCampaignCrudController::class, 'retry']
     )->name('newsletter-campaign.retry');
+    Route::crud(
+        'site-setting',
+        'SiteSettingCrudController'
+    );
+
     Route::get('statistiques', [StatisticsController::class, 'index'])
     ->name('admin.statistics');
 });
