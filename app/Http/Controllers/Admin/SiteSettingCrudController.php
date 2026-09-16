@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Models\SiteSetting;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use App\Services\PayPalClient;
+use App\Services\WalCashClient;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 use Illuminate\Http\RedirectResponse;
 
@@ -51,10 +52,13 @@ class SiteSettingCrudController extends CrudController
             'name'  => 'action',
             'label' => ' ',
             'type'  => 'closure',
-            'function' => fn ($entry) => $entry->key === 'paypal_secret'
-                ? '<a class="btn btn-sm btn-outline-primary" href="'
-                    .backpack_url('site-setting/test-paypal').'">Tester PayPal</a>'
-                : '',
+            'function' => fn ($entry) => match ($entry->key) {
+                'paypal_secret' => '<a class="btn btn-sm btn-outline-primary" href="'
+                    .backpack_url('site-setting/test-paypal').'">Tester PayPal</a>',
+                'walcash_webhook_secret' => '<a class="btn btn-sm btn-outline-primary" href="'
+                    .backpack_url('site-setting/test-moncash').'">Tester MonCash</a>',
+                default => '',
+            },
             'escaped' => false,
         ]);
 
@@ -82,6 +86,20 @@ class SiteSettingCrudController extends CrudController
         return redirect()->to(backpack_url('site-setting'));
     }
 
+    /** Même vérification, côté WalCash Pay (MonCash). */
+    public function testMonCash(): RedirectResponse
+    {
+        abort_unless(backpack_user()?->isAdmin(), 403);
+
+        $result = WalCashClient::fromConfig()->check();
+
+        $result['ok']
+            ? \Alert::success('MonCash : '.$result['message'])->flash()
+            : \Alert::error('MonCash : '.$result['message'])->flash();
+
+        return redirect()->to(backpack_url('site-setting'));
+    }
+
     protected function setupUpdateOperation(): void
     {
         CRUD::setValidation(['value' => 'nullable|string|max:2000']);
@@ -90,6 +108,21 @@ class SiteSettingCrudController extends CrudController
         $type  = $entry->type ?? 'text';
 
         // Le mode PayPal est une liste fermée, pas un champ libre.
+        if (($entry->key ?? null) === 'walcash_mode') {
+            CRUD::addField([
+                'name'    => 'value',
+                'label'   => $entry->label,
+                'type'    => 'select_from_array',
+                'options' => [
+                    'test' => 'Test — paiements simulés (clé sk_test_)',
+                    'live' => 'Live — encaissement réel (clé sk_live_)',
+                ],
+                'hint'    => $entry->hint,
+            ]);
+
+            return;
+        }
+
         if (($entry->key ?? null) === 'paypal_mode') {
             CRUD::addField([
                 'name'    => 'value',

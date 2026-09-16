@@ -124,6 +124,18 @@
         />
 
         <x-backpack::menu-dropdown-item
+            title="Campagnes de financement"
+            icon="la la-bullseye"
+            :link="backpack_url('fundraiser')"
+        />
+
+        <x-backpack::menu-dropdown-item
+            title="Contributions"
+            icon="la la-donate"
+            :link="backpack_url('fundraiser-contribution')"
+        />
+
+        <x-backpack::menu-dropdown-item
             title="Publicités"
             icon="la la-ad"
             :link="backpack_url('ad')"

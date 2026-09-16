@@ -10,6 +10,8 @@ use App\Http\Controllers\Front\CommentController;
 use App\Http\Controllers\Front\ContactController;
 use App\Http\Controllers\Front\DonationController;
 use App\Http\Controllers\Front\FeedController;
+use App\Http\Controllers\Front\FundraiserController;
+use App\Http\Controllers\Front\WalCashWebhookController;
 use App\Http\Controllers\Front\HomeController;
 use App\Http\Controllers\Front\MediaKitController;
 use App\Http\Controllers\Front\NewsletterController;
@@ -121,6 +123,50 @@ Route::get('/reklam/rapo/{token}', AdReportController::class)
 // Dossier de presse : chiffres d’audience pour les annonceurs.
 Route::get('/kit-medya', [MediaKitController::class, 'index'])
     ->name('media-kit');
+
+/*
+|--------------------------------------------------------------------------
+| Kanpay finansman (GoFundMe)
+|--------------------------------------------------------------------------
+*/
+
+Route::get('/kanpay', [FundraiserController::class, 'index'])
+    ->name('fundraisers.index');
+
+Route::get('/kanpay/mesi/{reference}', [FundraiserController::class, 'thanks'])
+    ->name('fundraisers.thanks');
+
+Route::get('/kanpay/moncash/{reference}', [FundraiserController::class, 'moncashReturn'])
+    ->name('fundraisers.moncash.return');
+
+Route::post('/kanpay/{slug}/kontribye', [FundraiserController::class, 'contribute'])
+    ->middleware('throttle:10,1')
+    ->name('fundraisers.contribute');
+
+Route::post('/kanpay/{slug}/konfime', [FundraiserController::class, 'capture'])
+    ->middleware('throttle:10,1')
+    ->name('fundraisers.capture');
+
+// En dernier : ce motif attraperait sinon /kanpay/mesi.
+Route::get('/kanpay/{slug}', [FundraiserController::class, 'show'])
+    ->name('fundraisers.show');
+
+/*
+|--------------------------------------------------------------------------
+| Webhook WalCash Pay (MonCash)
+|--------------------------------------------------------------------------
+|
+| Signé en HMAC-SHA256 ; c'est la seule source de vérité pour un
+| paiement MonCash. Les deux adresses sont acceptées, la seconde parce
+| que c'est celle qu'attend le tableau de bord WalCash.
+|
+*/
+
+Route::post('/webhooks/walcash', WalCashWebhookController::class)
+    ->name('webhooks.walcash');
+
+Route::post('/webhooks/walcash.php', WalCashWebhookController::class)
+    ->name('webhooks.walcash.php');
 
 /*
 |--------------------------------------------------------------------------

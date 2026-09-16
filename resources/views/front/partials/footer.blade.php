@@ -163,6 +163,10 @@
                         Soutenir Lambi News
                     </a>
 
+                    <a href="{{ route('fundraisers.index') }}">
+                        Kanpay finansman
+                    </a>
+
                     <a href="{{ route('media-kit') }}">
                         Annoncer chez nous
                     </a>

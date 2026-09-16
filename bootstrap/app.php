@@ -18,6 +18,8 @@ return Application::configure(basePath: dirname(__DIR__))
          */
         $middleware->validateCsrfTokens(except: [
             'infolettre/dezabone/*',
+            // Webhook signé en HMAC : il ne peut pas porter de jeton CSRF.
+            'webhooks/*',
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

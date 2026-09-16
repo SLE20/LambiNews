@@ -106,6 +106,16 @@ Route::group([
         [\App\Http\Controllers\Admin\NewsletterCampaignCrudController::class, 'retry']
     )->name('newsletter-campaign.retry');
     Route::crud(
+        'fundraiser',
+        'FundraiserCrudController'
+    );
+
+    Route::crud(
+        'fundraiser-contribution',
+        'FundraiserContributionCrudController'
+    );
+
+    Route::crud(
         'site-setting',
         'SiteSettingCrudController'
     );
@@ -115,6 +125,12 @@ Route::group([
         'site-setting/test-paypal',
         [\App\Http\Controllers\Admin\SiteSettingCrudController::class, 'testPaypal']
     )->name('site-setting.test-paypal');
+
+    // Vérifie la clé WalCash Pay (MonCash).
+    Route::get(
+        'site-setting/test-moncash',
+        [\App\Http\Controllers\Admin\SiteSettingCrudController::class, 'testMonCash']
+    )->name('site-setting.test-moncash');
 
     Route::get('statistiques', [StatisticsController::class, 'index'])
     ->name('admin.statistics');
