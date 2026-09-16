@@ -9,6 +9,7 @@ use App\Models\Comment;
 use App\Models\ContactMessage;
 use App\Models\Page;
 use App\Models\Subscriber;
+use App\Services\AdServer;
 use Carbon\CarbonPeriod;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\View;
@@ -18,7 +19,12 @@ class AppServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
-        //
+        /*
+         * En singleton : AdServer retient les bannières déjà servies
+         * pendant la requête, pour ne pas compter deux impressions si un
+         * emplacement est rendu plusieurs fois dans la même page.
+         */
+        $this->app->singleton(AdServer::class);
     }
 
     public function boot(): void

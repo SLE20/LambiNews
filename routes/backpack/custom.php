@@ -58,6 +58,16 @@ Route::group([
         'subscriber',
         'SubscriberCrudController'
     );
+
+    Route::crud(
+        'donation',
+        'DonationCrudController'
+    );
+
+    Route::crud(
+        'ad',
+        'AdCrudController'
+    );
     Route::get('statistiques', [StatisticsController::class, 'index'])
     ->name('admin.statistics');
 });

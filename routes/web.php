@@ -1,13 +1,16 @@
 <?php
 
+use App\Http\Controllers\Front\AdClickController;
 use App\Http\Controllers\Front\ArticleController;
 use App\Http\Controllers\Front\AuthorController;
 use App\Http\Controllers\Front\CategoryController;
 use App\Http\Controllers\Front\CommentController;
 use App\Http\Controllers\Front\ContactController;
+use App\Http\Controllers\Front\DonationController;
 use App\Http\Controllers\Front\FeedController;
 use App\Http\Controllers\Front\HomeController;
 use App\Http\Controllers\Front\NewsletterController;
+use App\Http\Controllers\Front\OgImageController;
 use App\Http\Controllers\Front\PageController;
 use App\Http\Controllers\Front\SearchController;
 use App\Http\Controllers\Front\SitemapController;
@@ -46,6 +49,39 @@ Route::post('/contact', [ContactController::class, 'store'])
 
 /*
 |--------------------------------------------------------------------------
+| Clics publicitaires
+|--------------------------------------------------------------------------
+*/
+
+Route::get('/reklam/{ad}/klik', AdClickController::class)
+    ->name('ads.click');
+
+/*
+|--------------------------------------------------------------------------
+| Sipò / donasyon (PayPal)
+|--------------------------------------------------------------------------
+*/
+
+Route::get('/soutni', [DonationController::class, 'create'])
+    ->name('donations.create');
+
+Route::post('/soutni/kreye', [DonationController::class, 'store'])
+    ->middleware('throttle:10,1')
+    ->name('donations.store');
+
+Route::post('/soutni/konfime', [DonationController::class, 'capture'])
+    ->middleware('throttle:10,1')
+    ->name('donations.capture');
+
+Route::post('/soutni/anile', [DonationController::class, 'cancel'])
+    ->middleware('throttle:10,1')
+    ->name('donations.cancel');
+
+Route::get('/soutni/mesi/{reference}', [DonationController::class, 'thanks'])
+    ->name('donations.thanks');
+
+/*
+|--------------------------------------------------------------------------
 | Newsletter
 |--------------------------------------------------------------------------
 */
@@ -69,12 +105,20 @@ Route::get('/flux-rss.xml', [FeedController::class, 'index'])
 Route::get('/sitemap.xml', [SitemapController::class, 'index'])
     ->name('sitemap');
 
+Route::get('/sitemap-news.xml', [SitemapController::class, 'news'])
+    ->name('sitemap.news');
+
 Route::get('/robots.txt', function () {
     $content = implode("\n", [
         'User-agent: *',
         'Allow: /',
         'Disallow: /admin/',
+        // Résultats de recherche : contenu mince, dupliqué par paramètre.
+        'Disallow: /recherche',
+        'Disallow: /*?q=',
+        '',
         'Sitemap: '.route('sitemap'),
+        'Sitemap: '.route('sitemap.news'),
     ]);
 
     return response($content, 200)
@@ -118,6 +162,25 @@ Route::post(
 )
     ->middleware('throttle:3,1')
     ->name('comments.store');
+
+/*
+|--------------------------------------------------------------------------
+| Image de partage (Open Graph)
+|--------------------------------------------------------------------------
+|
+| 1200×630, le format attendu par Facebook, WhatsApp et LinkedIn.
+| {version} est une empreinte de l’article : elle force les réseaux
+| sociaux à régénérer l’aperçu quand le titre ou la photo changent.
+|
+*/
+
+Route::get(
+    '/og/{version}/{slug}.jpg',
+    [OgImageController::class, 'show']
+)
+    ->where('version', '[a-f0-9]{10}')
+    ->where('slug', '[A-Za-z0-9\-_]+')
+    ->name('og.image');
 
 /*
 |--------------------------------------------------------------------------

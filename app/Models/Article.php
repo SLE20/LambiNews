@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
+use App\Services\OgImageGenerator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -101,5 +102,19 @@ public function approvedComments(): HasMany
             ->where('status', 'published')
             ->whereNotNull('published_at')
             ->where('published_at', '<=', now());
+    }
+
+    /**
+     * URL de l’image de partage 1200×630 servie aux réseaux sociaux.
+     *
+     * L’empreinte contenue dans l’URL change avec le titre ou la photo,
+     * ce qui force Facebook et consorts à régénérer leur aperçu.
+     */
+    public function getOgImageUrlAttribute(): string
+    {
+        return route('og.image', [
+            'version' => OgImageGenerator::version($this),
+            'slug'    => $this->slug,
+        ]);
     }
 }

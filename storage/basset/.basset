@@ -1,134 +1,8 @@
 {
-    "https://cdn.datatables.net/2.1.8/js/dataTables.min.js": {
-        "asset_name": "https://cdn.datatables.net/2.1.8/js/dataTables.min.js",
-        "asset_path": "https://cdn.datatables.net/2.1.8/js/dataTables.min.js",
-        "asset_disk_path": "basset/cdn.datatables.net/2.1.8/js/dataTables.min.js",
-        "asset_attributes": []
-    },
-    "https://cdn.datatables.net/2.1.8/js/dataTables.bootstrap5.min.js": {
-        "asset_name": "https://cdn.datatables.net/2.1.8/js/dataTables.bootstrap5.min.js",
-        "asset_path": "https://cdn.datatables.net/2.1.8/js/dataTables.bootstrap5.min.js",
-        "asset_disk_path": "basset/cdn.datatables.net/2.1.8/js/dataTables.bootstrap5.min.js",
-        "asset_attributes": []
-    },
-    "https://cdn.datatables.net/responsive/3.0.3/js/dataTables.responsive.min.js": {
-        "asset_name": "https://cdn.datatables.net/responsive/3.0.3/js/dataTables.responsive.min.js",
-        "asset_path": "https://cdn.datatables.net/responsive/3.0.3/js/dataTables.responsive.min.js",
-        "asset_disk_path": "basset/cdn.datatables.net/responsive/3.0.3/js/dataTables.responsive.min.js",
-        "asset_attributes": []
-    },
-    "https://cdn.datatables.net/fixedheader/4.0.1/js/dataTables.fixedHeader.min.js": {
-        "asset_name": "https://cdn.datatables.net/fixedheader/4.0.1/js/dataTables.fixedHeader.min.js",
-        "asset_path": "https://cdn.datatables.net/fixedheader/4.0.1/js/dataTables.fixedHeader.min.js",
-        "asset_disk_path": "basset/cdn.datatables.net/fixedheader/4.0.1/js/dataTables.fixedHeader.min.js",
-        "asset_attributes": []
-    },
     "C:\\laragon\\www\\lambinews\\vendor/backpack/crud/src/resources/assets/img/spinner.svg": {
         "asset_name": "C:\\laragon\\www\\lambinews\\vendor/backpack/crud/src/resources/assets/img/spinner.svg",
         "asset_path": "C:\\laragon\\www\\lambinews\\vendor/backpack/crud/src/resources/assets/img/spinner.svg",
         "asset_disk_path": "basset/vendor/backpack/crud/src/resources/assets/img/spinner.svg",
-        "asset_attributes": []
-    },
-    "https://cdn.datatables.net/2.1.8/css/dataTables.bootstrap5.min.css": {
-        "asset_name": "https://cdn.datatables.net/2.1.8/css/dataTables.bootstrap5.min.css",
-        "asset_path": "https://cdn.datatables.net/2.1.8/css/dataTables.bootstrap5.min.css",
-        "asset_disk_path": "basset/cdn.datatables.net/2.1.8/css/dataTables.bootstrap5.min.css",
-        "asset_attributes": []
-    },
-    "https://cdn.datatables.net/responsive/3.0.3/css/responsive.dataTables.min.css": {
-        "asset_name": "https://cdn.datatables.net/responsive/3.0.3/css/responsive.dataTables.min.css",
-        "asset_path": "https://cdn.datatables.net/responsive/3.0.3/css/responsive.dataTables.min.css",
-        "asset_disk_path": "basset/cdn.datatables.net/responsive/3.0.3/css/responsive.dataTables.min.css",
-        "asset_attributes": []
-    },
-    "https://cdn.datatables.net/fixedheader/4.0.1/css/fixedHeader.dataTables.min.css": {
-        "asset_name": "https://cdn.datatables.net/fixedheader/4.0.1/css/fixedHeader.dataTables.min.css",
-        "asset_path": "https://cdn.datatables.net/fixedheader/4.0.1/css/fixedHeader.dataTables.min.css",
-        "asset_disk_path": "basset/cdn.datatables.net/fixedheader/4.0.1/css/fixedHeader.dataTables.min.css",
-        "asset_attributes": []
-    },
-    "https://cdn.jsdelivr.net/npm/summernote@0.9.1/dist/summernote-lite.min.css": {
-        "asset_name": "https://cdn.jsdelivr.net/npm/summernote@0.9.1/dist/summernote-lite.min.css",
-        "asset_path": "https://cdn.jsdelivr.net/npm/summernote@0.9.1/dist/summernote-lite.min.css",
-        "asset_disk_path": "basset/cdn.jsdelivr.net/npm/summernote@0.9.1/dist/summernote-lite.min.css",
-        "asset_attributes": []
-    },
-    "https://cdn.jsdelivr.net/npm/summernote@0.9.1/dist/font/summernote.woff2": {
-        "asset_name": "https://cdn.jsdelivr.net/npm/summernote@0.9.1/dist/font/summernote.woff2",
-        "asset_path": "https://cdn.jsdelivr.net/npm/summernote@0.9.1/dist/font/summernote.woff2",
-        "asset_disk_path": "basset/cdn.jsdelivr.net/npm/summernote@0.9.1/dist/font/summernote.woff2",
-        "asset_attributes": []
-    },
-    "https://cdn.jsdelivr.net/npm/summernote@0.9.1/dist/summernote-lite.min.js": {
-        "asset_name": "https://cdn.jsdelivr.net/npm/summernote@0.9.1/dist/summernote-lite.min.js",
-        "asset_path": "https://cdn.jsdelivr.net/npm/summernote@0.9.1/dist/summernote-lite.min.js",
-        "asset_disk_path": "basset/cdn.jsdelivr.net/npm/summernote@0.9.1/dist/summernote-lite.min.js",
-        "asset_attributes": []
-    },
-    "https://cdn.datatables.net/buttons/3.2.0/js/dataTables.buttons.min.js": {
-        "asset_name": "https://cdn.datatables.net/buttons/3.2.0/js/dataTables.buttons.min.js",
-        "asset_path": "https://cdn.datatables.net/buttons/3.2.0/js/dataTables.buttons.min.js",
-        "asset_disk_path": "basset/cdn.datatables.net/buttons/3.2.0/js/dataTables.buttons.min.js",
-        "asset_attributes": []
-    },
-    "https://cdn.datatables.net/buttons/3.2.0/js/buttons.bootstrap5.min.js": {
-        "asset_name": "https://cdn.datatables.net/buttons/3.2.0/js/buttons.bootstrap5.min.js",
-        "asset_path": "https://cdn.datatables.net/buttons/3.2.0/js/buttons.bootstrap5.min.js",
-        "asset_disk_path": "basset/cdn.datatables.net/buttons/3.2.0/js/buttons.bootstrap5.min.js",
-        "asset_attributes": []
-    },
-    "https://cdnjs.cloudflare.com/ajax/libs/jszip/2.5.0/jszip.min.js": {
-        "asset_name": "https://cdnjs.cloudflare.com/ajax/libs/jszip/2.5.0/jszip.min.js",
-        "asset_path": "https://cdnjs.cloudflare.com/ajax/libs/jszip/2.5.0/jszip.min.js",
-        "asset_disk_path": "basset/cdnjs.cloudflare.com/ajax/libs/jszip/2.5.0/jszip.min.js",
-        "asset_attributes": []
-    },
-    "https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.18/pdfmake.min.js": {
-        "asset_name": "https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.18/pdfmake.min.js",
-        "asset_path": "https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.18/pdfmake.min.js",
-        "asset_disk_path": "basset/cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.18/pdfmake.min.js",
-        "asset_attributes": []
-    },
-    "https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.18/vfs_fonts.js": {
-        "asset_name": "https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.18/vfs_fonts.js",
-        "asset_path": "https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.18/vfs_fonts.js",
-        "asset_disk_path": "basset/cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.18/vfs_fonts.js",
-        "asset_attributes": []
-    },
-    "https://cdn.datatables.net/buttons/3.2.0/js/buttons.html5.min.js": {
-        "asset_name": "https://cdn.datatables.net/buttons/3.2.0/js/buttons.html5.min.js",
-        "asset_path": "https://cdn.datatables.net/buttons/3.2.0/js/buttons.html5.min.js",
-        "asset_disk_path": "basset/cdn.datatables.net/buttons/3.2.0/js/buttons.html5.min.js",
-        "asset_attributes": []
-    },
-    "https://cdn.datatables.net/buttons/3.2.0/js/buttons.print.min.js": {
-        "asset_name": "https://cdn.datatables.net/buttons/3.2.0/js/buttons.print.min.js",
-        "asset_path": "https://cdn.datatables.net/buttons/3.2.0/js/buttons.print.min.js",
-        "asset_disk_path": "basset/cdn.datatables.net/buttons/3.2.0/js/buttons.print.min.js",
-        "asset_attributes": []
-    },
-    "https://cdn.datatables.net/buttons/3.2.0/js/buttons.colVis.min.js": {
-        "asset_name": "https://cdn.datatables.net/buttons/3.2.0/js/buttons.colVis.min.js",
-        "asset_path": "https://cdn.datatables.net/buttons/3.2.0/js/buttons.colVis.min.js",
-        "asset_disk_path": "basset/cdn.datatables.net/buttons/3.2.0/js/buttons.colVis.min.js",
-        "asset_attributes": []
-    },
-    "https://cdn.datatables.net/buttons/3.2.0/css/buttons.bootstrap5.min.css": {
-        "asset_name": "https://cdn.datatables.net/buttons/3.2.0/css/buttons.bootstrap5.min.css",
-        "asset_path": "https://cdn.datatables.net/buttons/3.2.0/css/buttons.bootstrap5.min.css",
-        "asset_disk_path": "basset/cdn.datatables.net/buttons/3.2.0/css/buttons.bootstrap5.min.css",
-        "asset_attributes": []
-    },
-    "https://cdn.jsdelivr.net/npm/urijs@1.19.11/src/URI.min.js": {
-        "asset_name": "https://cdn.jsdelivr.net/npm/urijs@1.19.11/src/URI.min.js",
-        "asset_path": "https://cdn.jsdelivr.net/npm/urijs@1.19.11/src/URI.min.js",
-        "asset_disk_path": "basset/cdn.jsdelivr.net/npm/urijs@1.19.11/src/URI.min.js",
-        "asset_attributes": []
-    },
-    "https://cdn.jsdelivr.net/npm/jquery-ui@1.13.2/dist/jquery-ui.min.js": {
-        "asset_name": "https://cdn.jsdelivr.net/npm/jquery-ui@1.13.2/dist/jquery-ui.min.js",
-        "asset_path": "https://cdn.jsdelivr.net/npm/jquery-ui@1.13.2/dist/jquery-ui.min.js",
-        "asset_disk_path": "basset/cdn.jsdelivr.net/npm/jquery-ui@1.13.2/dist/jquery-ui.min.js",
         "asset_attributes": []
     },
     "C:\\laragon\\www\\lambinews\\vendor/backpack/crud/src/resources/assets/libs/jquery.mjs.nestedSortable2.js": {
@@ -137,46 +11,76 @@
         "asset_disk_path": "basset/vendor/backpack/crud/src/resources/assets/libs/jquery.mjs.nestedSortable2.js",
         "asset_attributes": []
     },
-    "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/base16/dracula.min.css": {
-        "asset_name": "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/base16/dracula.min.css",
-        "asset_path": "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/base16/dracula.min.css",
-        "asset_disk_path": "basset/cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/base16/dracula.min.css",
-        "asset_attributes": []
-    },
-    "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js": {
-        "asset_name": "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js",
-        "asset_path": "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js",
-        "asset_disk_path": "basset/cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js",
-        "asset_attributes": []
-    },
-    "https://cdn.jsdelivr.net/npm/jquery@3.6.1/dist/jquery.min.js": {
-        "asset_name": "https://cdn.jsdelivr.net/npm/jquery@3.6.1/dist/jquery.min.js",
-        "asset_path": "https://cdn.jsdelivr.net/npm/jquery@3.6.1/dist/jquery.min.js",
-        "asset_disk_path": "basset/cdn.jsdelivr.net/npm/jquery@3.6.1/dist/jquery.min.js",
-        "asset_attributes": []
-    },
-    "https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js": {
-        "asset_name": "https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js",
-        "asset_path": "https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js",
-        "asset_disk_path": "basset/cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js",
-        "asset_attributes": []
-    },
-    "https://cdn.jsdelivr.net/npm/noty@3.2.0-beta-deprecated/lib/noty.min.js": {
-        "asset_name": "https://cdn.jsdelivr.net/npm/noty@3.2.0-beta-deprecated/lib/noty.min.js",
-        "asset_path": "https://cdn.jsdelivr.net/npm/noty@3.2.0-beta-deprecated/lib/noty.min.js",
-        "asset_disk_path": "basset/cdn.jsdelivr.net/npm/noty@3.2.0-beta-deprecated/lib/noty.min.js",
-        "asset_attributes": []
-    },
-    "https://cdn.jsdelivr.net/npm/sweetalert@2.1.2/dist/sweetalert.min.js": {
-        "asset_name": "https://cdn.jsdelivr.net/npm/sweetalert@2.1.2/dist/sweetalert.min.js",
-        "asset_path": "https://cdn.jsdelivr.net/npm/sweetalert@2.1.2/dist/sweetalert.min.js",
-        "asset_disk_path": "basset/cdn.jsdelivr.net/npm/sweetalert@2.1.2/dist/sweetalert.min.js",
-        "asset_attributes": []
-    },
     "C:\\laragon\\www\\lambinews\\vendor/backpack/crud/src/resources/assets/js/common.js": {
         "asset_name": "C:\\laragon\\www\\lambinews\\vendor/backpack/crud/src/resources/assets/js/common.js",
         "asset_path": "C:\\laragon\\www\\lambinews\\vendor/backpack/crud/src/resources/assets/js/common.js",
         "asset_disk_path": "basset/vendor/backpack/crud/src/resources/assets/js/common.js",
+        "asset_attributes": []
+    },
+    "C:\\laragon\\www\\lambinews\\vendor/backpack/crud/src/resources/assets/css/common.css": {
+        "asset_name": "C:\\laragon\\www\\lambinews\\vendor/backpack/crud/src/resources/assets/css/common.css",
+        "asset_path": "C:\\laragon\\www\\lambinews\\vendor/backpack/crud/src/resources/assets/css/common.css",
+        "asset_disk_path": "basset/vendor/backpack/crud/src/resources/assets/css/common.css",
+        "asset_attributes": []
+    },
+    "C:\\laragon\\www\\lambinews\\vendor/backpack/theme-tabler/resources/assets/js/tabler.js": {
+        "asset_name": "C:\\laragon\\www\\lambinews\\vendor/backpack/theme-tabler/resources/assets/js/tabler.js",
+        "asset_path": "C:\\laragon\\www\\lambinews\\vendor/backpack/theme-tabler/resources/assets/js/tabler.js",
+        "asset_disk_path": "basset/vendor/backpack/theme-tabler/resources/assets/js/tabler.js",
+        "asset_attributes": []
+    },
+    "C:\\laragon\\www\\lambinews\\vendor/backpack/theme-tabler/resources/assets/css/style.css": {
+        "asset_name": "C:\\laragon\\www\\lambinews\\vendor/backpack/theme-tabler/resources/assets/css/style.css",
+        "asset_path": "C:\\laragon\\www\\lambinews\\vendor/backpack/theme-tabler/resources/assets/css/style.css",
+        "asset_disk_path": "basset/vendor/backpack/theme-tabler/resources/assets/css/style.css",
+        "asset_attributes": []
+    },
+    "C:\\laragon\\www\\lambinews\\vendor/backpack/theme-tabler/resources/assets/css/color-adjustments.css": {
+        "asset_name": "C:\\laragon\\www\\lambinews\\vendor/backpack/theme-tabler/resources/assets/css/color-adjustments.css",
+        "asset_path": "C:\\laragon\\www\\lambinews\\vendor/backpack/theme-tabler/resources/assets/css/color-adjustments.css",
+        "asset_disk_path": "basset/vendor/backpack/theme-tabler/resources/assets/css/color-adjustments.css",
+        "asset_attributes": []
+    },
+    "C:\\laragon\\www\\lambinews\\vendor/backpack/theme-tabler/resources/assets/css/skins/backpack-color-palette.css": {
+        "asset_name": "C:\\laragon\\www\\lambinews\\vendor/backpack/theme-tabler/resources/assets/css/skins/backpack-color-palette.css",
+        "asset_path": "C:\\laragon\\www\\lambinews\\vendor/backpack/theme-tabler/resources/assets/css/skins/backpack-color-palette.css",
+        "asset_disk_path": "basset/vendor/backpack/theme-tabler/resources/assets/css/skins/backpack-color-palette.css",
+        "asset_attributes": []
+    },
+    "C:\\laragon\\www\\lambinews\\vendor/backpack/theme-tabler/resources/assets/css/skins/glass.css": {
+        "asset_name": "C:\\laragon\\www\\lambinews\\vendor/backpack/theme-tabler/resources/assets/css/skins/glass.css",
+        "asset_path": "C:\\laragon\\www\\lambinews\\vendor/backpack/theme-tabler/resources/assets/css/skins/glass.css",
+        "asset_disk_path": "basset/vendor/backpack/theme-tabler/resources/assets/css/skins/glass.css",
+        "asset_attributes": []
+    },
+    "C:\\laragon\\www\\lambinews\\vendor/backpack/theme-tabler/resources/assets/css/skins/fuzzy-background.css": {
+        "asset_name": "C:\\laragon\\www\\lambinews\\vendor/backpack/theme-tabler/resources/assets/css/skins/fuzzy-background.css",
+        "asset_path": "C:\\laragon\\www\\lambinews\\vendor/backpack/theme-tabler/resources/assets/css/skins/fuzzy-background.css",
+        "asset_disk_path": "basset/vendor/backpack/theme-tabler/resources/assets/css/skins/fuzzy-background.css",
+        "asset_attributes": []
+    },
+    "C:\\laragon\\www\\lambinews\\vendor/backpack/basset/tests/Helpers/basset-test.js": {
+        "asset_name": "C:\\laragon\\www\\lambinews\\vendor/backpack/basset/tests/Helpers/basset-test.js",
+        "asset_path": "C:\\laragon\\www\\lambinews\\vendor/backpack/basset/tests/Helpers/basset-test.js",
+        "asset_disk_path": "basset/vendor/backpack/basset/tests/Helpers/basset-test.js",
+        "asset_attributes": []
+    },
+    "https://www.gravatar.com/avatar/7f7afb3a7ed7aba8c3e5854c3eca18cbeec501d301411ac0986c0bfa19c807c5.jpg?s=80&d=blank&r=g": {
+        "asset_name": "https://www.gravatar.com/avatar/7f7afb3a7ed7aba8c3e5854c3eca18cbeec501d301411ac0986c0bfa19c807c5.jpg?s=80&d=blank&r=g",
+        "asset_path": "https://www.gravatar.com/avatar/7f7afb3a7ed7aba8c3e5854c3eca18cbeec501d301411ac0986c0bfa19c807c5.jpg?s=80&d=blank&r=g",
+        "asset_disk_path": "basset/www.gravatar.com/avatar/7f7afb3a7ed7aba8c3e5854c3eca18cbeec501d301411ac0986c0bfa19c807c5.jpg",
+        "asset_attributes": []
+    },
+    "https://www.gravatar.com/avatar/3a0a0f1d00e622094c019fe196ff5da62678988c676835e4f89872616707b1d5.jpg?s=80&d=blank&r=g": {
+        "asset_name": "https://www.gravatar.com/avatar/3a0a0f1d00e622094c019fe196ff5da62678988c676835e4f89872616707b1d5.jpg?s=80&d=blank&r=g",
+        "asset_path": "https://www.gravatar.com/avatar/3a0a0f1d00e622094c019fe196ff5da62678988c676835e4f89872616707b1d5.jpg?s=80&d=blank&r=g",
+        "asset_disk_path": "basset/www.gravatar.com/avatar/3a0a0f1d00e622094c019fe196ff5da62678988c676835e4f89872616707b1d5.jpg",
+        "asset_attributes": []
+    },
+    "https://cdn.jsdelivr.net/npm/summernote@0.9.1/dist/lang/summernote-fr-FR.min.js": {
+        "asset_name": "https://cdn.jsdelivr.net/npm/summernote@0.9.1/dist/lang/summernote-fr-FR.min.js",
+        "asset_path": "https://cdn.jsdelivr.net/npm/summernote@0.9.1/dist/lang/summernote-fr-FR.min.js",
+        "asset_disk_path": "basset/cdn.jsdelivr.net/npm/summernote@0.9.1/dist/lang/summernote-fr-FR.min.js",
         "asset_attributes": []
     },
     "https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.compat.css": {
@@ -251,10 +155,304 @@
         "asset_disk_path": "basset/cdnjs.cloudflare.com/ajax/libs/line-awesome/1.3.0/line-awesome/fonts/la-brands-400.ttf",
         "asset_attributes": []
     },
-    "C:\\laragon\\www\\lambinews\\vendor/backpack/crud/src/resources/assets/css/common.css": {
-        "asset_name": "C:\\laragon\\www\\lambinews\\vendor/backpack/crud/src/resources/assets/css/common.css",
-        "asset_path": "C:\\laragon\\www\\lambinews\\vendor/backpack/crud/src/resources/assets/css/common.css",
+    "/home/kali/lambinews-deploy/LambiNews/vendor/backpack/crud/src/resources/assets/css/common.css": {
+        "asset_name": "/home/kali/lambinews-deploy/LambiNews/vendor/backpack/crud/src/resources/assets/css/common.css",
+        "asset_path": "/home/kali/lambinews-deploy/LambiNews/vendor/backpack/crud/src/resources/assets/css/common.css",
         "asset_disk_path": "basset/vendor/backpack/crud/src/resources/assets/css/common.css",
+        "asset_attributes": []
+    },
+    "https://cdn.jsdelivr.net/npm/jquery@3.6.1/dist/jquery.min.js": {
+        "asset_name": "https://cdn.jsdelivr.net/npm/jquery@3.6.1/dist/jquery.min.js",
+        "asset_path": "https://cdn.jsdelivr.net/npm/jquery@3.6.1/dist/jquery.min.js",
+        "asset_disk_path": "basset/cdn.jsdelivr.net/npm/jquery@3.6.1/dist/jquery.min.js",
+        "asset_attributes": []
+    },
+    "https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js": {
+        "asset_name": "https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js",
+        "asset_path": "https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js",
+        "asset_disk_path": "basset/cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js",
+        "asset_attributes": []
+    },
+    "https://cdn.jsdelivr.net/npm/noty@3.2.0-beta-deprecated/lib/noty.min.js": {
+        "asset_name": "https://cdn.jsdelivr.net/npm/noty@3.2.0-beta-deprecated/lib/noty.min.js",
+        "asset_path": "https://cdn.jsdelivr.net/npm/noty@3.2.0-beta-deprecated/lib/noty.min.js",
+        "asset_disk_path": "basset/cdn.jsdelivr.net/npm/noty@3.2.0-beta-deprecated/lib/noty.min.js",
+        "asset_attributes": []
+    },
+    "https://cdn.jsdelivr.net/npm/sweetalert@2.1.2/dist/sweetalert.min.js": {
+        "asset_name": "https://cdn.jsdelivr.net/npm/sweetalert@2.1.2/dist/sweetalert.min.js",
+        "asset_path": "https://cdn.jsdelivr.net/npm/sweetalert@2.1.2/dist/sweetalert.min.js",
+        "asset_disk_path": "basset/cdn.jsdelivr.net/npm/sweetalert@2.1.2/dist/sweetalert.min.js",
+        "asset_attributes": []
+    },
+    "/home/kali/lambinews-deploy/LambiNews/vendor/backpack/crud/src/resources/assets/js/common.js": {
+        "asset_name": "/home/kali/lambinews-deploy/LambiNews/vendor/backpack/crud/src/resources/assets/js/common.js",
+        "asset_path": "/home/kali/lambinews-deploy/LambiNews/vendor/backpack/crud/src/resources/assets/js/common.js",
+        "asset_disk_path": "basset/vendor/backpack/crud/src/resources/assets/js/common.js",
+        "asset_attributes": []
+    },
+    "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/base16/dracula.min.css": {
+        "asset_name": "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/base16/dracula.min.css",
+        "asset_path": "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/base16/dracula.min.css",
+        "asset_disk_path": "basset/cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/base16/dracula.min.css",
+        "asset_attributes": []
+    },
+    "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js": {
+        "asset_name": "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js",
+        "asset_path": "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js",
+        "asset_disk_path": "basset/cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js",
+        "asset_attributes": []
+    },
+    "https://cdn.datatables.net/buttons/3.2.0/js/dataTables.buttons.min.js": {
+        "asset_name": "https://cdn.datatables.net/buttons/3.2.0/js/dataTables.buttons.min.js",
+        "asset_path": "https://cdn.datatables.net/buttons/3.2.0/js/dataTables.buttons.min.js",
+        "asset_disk_path": "basset/cdn.datatables.net/buttons/3.2.0/js/dataTables.buttons.min.js",
+        "asset_attributes": []
+    },
+    "https://cdn.datatables.net/buttons/3.2.0/js/buttons.bootstrap5.min.js": {
+        "asset_name": "https://cdn.datatables.net/buttons/3.2.0/js/buttons.bootstrap5.min.js",
+        "asset_path": "https://cdn.datatables.net/buttons/3.2.0/js/buttons.bootstrap5.min.js",
+        "asset_disk_path": "basset/cdn.datatables.net/buttons/3.2.0/js/buttons.bootstrap5.min.js",
+        "asset_attributes": []
+    },
+    "https://cdnjs.cloudflare.com/ajax/libs/jszip/2.5.0/jszip.min.js": {
+        "asset_name": "https://cdnjs.cloudflare.com/ajax/libs/jszip/2.5.0/jszip.min.js",
+        "asset_path": "https://cdnjs.cloudflare.com/ajax/libs/jszip/2.5.0/jszip.min.js",
+        "asset_disk_path": "basset/cdnjs.cloudflare.com/ajax/libs/jszip/2.5.0/jszip.min.js",
+        "asset_attributes": []
+    },
+    "https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.18/pdfmake.min.js": {
+        "asset_name": "https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.18/pdfmake.min.js",
+        "asset_path": "https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.18/pdfmake.min.js",
+        "asset_disk_path": "basset/cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.18/pdfmake.min.js",
+        "asset_attributes": []
+    },
+    "https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.18/vfs_fonts.js": {
+        "asset_name": "https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.18/vfs_fonts.js",
+        "asset_path": "https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.18/vfs_fonts.js",
+        "asset_disk_path": "basset/cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.18/vfs_fonts.js",
+        "asset_attributes": []
+    },
+    "https://cdn.datatables.net/buttons/3.2.0/js/buttons.html5.min.js": {
+        "asset_name": "https://cdn.datatables.net/buttons/3.2.0/js/buttons.html5.min.js",
+        "asset_path": "https://cdn.datatables.net/buttons/3.2.0/js/buttons.html5.min.js",
+        "asset_disk_path": "basset/cdn.datatables.net/buttons/3.2.0/js/buttons.html5.min.js",
+        "asset_attributes": []
+    },
+    "https://cdn.datatables.net/buttons/3.2.0/js/buttons.print.min.js": {
+        "asset_name": "https://cdn.datatables.net/buttons/3.2.0/js/buttons.print.min.js",
+        "asset_path": "https://cdn.datatables.net/buttons/3.2.0/js/buttons.print.min.js",
+        "asset_disk_path": "basset/cdn.datatables.net/buttons/3.2.0/js/buttons.print.min.js",
+        "asset_attributes": []
+    },
+    "https://cdn.datatables.net/buttons/3.2.0/js/buttons.colVis.min.js": {
+        "asset_name": "https://cdn.datatables.net/buttons/3.2.0/js/buttons.colVis.min.js",
+        "asset_path": "https://cdn.datatables.net/buttons/3.2.0/js/buttons.colVis.min.js",
+        "asset_disk_path": "basset/cdn.datatables.net/buttons/3.2.0/js/buttons.colVis.min.js",
+        "asset_attributes": []
+    },
+    "https://cdn.datatables.net/buttons/3.2.0/css/buttons.bootstrap5.min.css": {
+        "asset_name": "https://cdn.datatables.net/buttons/3.2.0/css/buttons.bootstrap5.min.css",
+        "asset_path": "https://cdn.datatables.net/buttons/3.2.0/css/buttons.bootstrap5.min.css",
+        "asset_disk_path": "basset/cdn.datatables.net/buttons/3.2.0/css/buttons.bootstrap5.min.css",
+        "asset_attributes": []
+    },
+    "https://cdn.jsdelivr.net/npm/urijs@1.19.11/src/URI.min.js": {
+        "asset_name": "https://cdn.jsdelivr.net/npm/urijs@1.19.11/src/URI.min.js",
+        "asset_path": "https://cdn.jsdelivr.net/npm/urijs@1.19.11/src/URI.min.js",
+        "asset_disk_path": "basset/cdn.jsdelivr.net/npm/urijs@1.19.11/src/URI.min.js",
+        "asset_attributes": []
+    },
+    "backpack/crud/fields/checklist-field.js": {
+        "asset_name": "backpack/crud/fields/checklist-field.js",
+        "asset_path": "/home/kali/lambinews-deploy/LambiNews/backpack/crud/fields/checklist-field.js",
+        "asset_disk_path": "basset/backpack/crud/fields/checklist-field-700ca04f.js",
+        "asset_attributes": []
+    },
+    "backpack/crud/fields/upload-field.css": {
+        "asset_name": "backpack/crud/fields/upload-field.css",
+        "asset_path": "/home/kali/lambinews-deploy/LambiNews/backpack/crud/fields/upload-field.css",
+        "asset_disk_path": "basset/backpack/crud/fields/upload-field-a2a6cc4b.css",
+        "asset_attributes": []
+    },
+    "backpack/crud/fields/upload-field.js": {
+        "asset_name": "backpack/crud/fields/upload-field.js",
+        "asset_path": "/home/kali/lambinews-deploy/LambiNews/backpack/crud/fields/upload-field.js",
+        "asset_disk_path": "basset/backpack/crud/fields/upload-field-dc2748fd.js",
+        "asset_attributes": []
+    },
+    "backpack/crud/fields/checkbox-field.js": {
+        "asset_name": "backpack/crud/fields/checkbox-field.js",
+        "asset_path": "/home/kali/lambinews-deploy/LambiNews/backpack/crud/fields/checkbox-field.js",
+        "asset_disk_path": "basset/backpack/crud/fields/checkbox-field-fb2f1b87.js",
+        "asset_attributes": []
+    },
+    "backpack/crud/fields/upload-multiple-field.css": {
+        "asset_name": "backpack/crud/fields/upload-multiple-field.css",
+        "asset_path": "/home/kali/lambinews-deploy/LambiNews/backpack/crud/fields/upload-multiple-field.css",
+        "asset_disk_path": "basset/backpack/crud/fields/upload-multiple-field-617744f1.css",
+        "asset_attributes": []
+    },
+    "backpack/crud/fields/upload-multiple-field.js": {
+        "asset_name": "backpack/crud/fields/upload-multiple-field.js",
+        "asset_path": "/home/kali/lambinews-deploy/LambiNews/backpack/crud/fields/upload-multiple-field.js",
+        "asset_disk_path": "basset/backpack/crud/fields/upload-multiple-field-0b9d9a6e.js",
+        "asset_attributes": []
+    },
+    "backpack/crud/fields/range-field.css": {
+        "asset_name": "backpack/crud/fields/range-field.css",
+        "asset_path": "/home/kali/lambinews-deploy/LambiNews/backpack/crud/fields/range-field.css",
+        "asset_disk_path": "basset/backpack/crud/fields/range-field-46de6e9b.css",
+        "asset_attributes": []
+    },
+    "backpack/crud/fields/range-field.js": {
+        "asset_name": "backpack/crud/fields/range-field.js",
+        "asset_path": "/home/kali/lambinews-deploy/LambiNews/backpack/crud/fields/range-field.js",
+        "asset_disk_path": "basset/backpack/crud/fields/range-field-48c3ddd3.js",
+        "asset_attributes": []
+    },
+    "backpack/crud/fields/checklist-dependency-field.js": {
+        "asset_name": "backpack/crud/fields/checklist-dependency-field.js",
+        "asset_path": "/home/kali/lambinews-deploy/LambiNews/backpack/crud/fields/checklist-dependency-field.js",
+        "asset_disk_path": "basset/backpack/crud/fields/checklist-dependency-field-82d5eb92.js",
+        "asset_attributes": []
+    },
+    "backpack/crud/fields/radio-field.js": {
+        "asset_name": "backpack/crud/fields/radio-field.js",
+        "asset_path": "/home/kali/lambinews-deploy/LambiNews/backpack/crud/fields/radio-field.js",
+        "asset_disk_path": "basset/backpack/crud/fields/radio-field-c6d473e7.js",
+        "asset_attributes": []
+    },
+    "backpack/crud/fields/switch-field.js": {
+        "asset_name": "backpack/crud/fields/switch-field.js",
+        "asset_path": "/home/kali/lambinews-deploy/LambiNews/backpack/crud/fields/switch-field.js",
+        "asset_disk_path": "basset/backpack/crud/fields/switch-field-0b3637a5.js",
+        "asset_attributes": []
+    },
+    "backpack/crud/fields/switch-field.css": {
+        "asset_name": "backpack/crud/fields/switch-field.css",
+        "asset_path": "/home/kali/lambinews-deploy/LambiNews/backpack/crud/fields/switch-field.css",
+        "asset_disk_path": "basset/backpack/crud/fields/switch-field-1920b81b.css",
+        "asset_attributes": []
+    },
+    "backpack/crud/fields/color.css": {
+        "asset_name": "backpack/crud/fields/color.css",
+        "asset_path": "/home/kali/lambinews-deploy/LambiNews/backpack/crud/fields/color.css",
+        "asset_disk_path": "basset/backpack/crud/fields/color-668fc406.css",
+        "asset_attributes": []
+    },
+    "backpack/crud/fields/color.js": {
+        "asset_name": "backpack/crud/fields/color.js",
+        "asset_path": "/home/kali/lambinews-deploy/LambiNews/backpack/crud/fields/color.js",
+        "asset_disk_path": "basset/backpack/crud/fields/color-0f0331ad.js",
+        "asset_attributes": []
+    },
+    "https://cdn.jsdelivr.net/npm/summernote@0.9.1/dist/summernote-lite.min.css": {
+        "asset_name": "https://cdn.jsdelivr.net/npm/summernote@0.9.1/dist/summernote-lite.min.css",
+        "asset_path": "https://cdn.jsdelivr.net/npm/summernote@0.9.1/dist/summernote-lite.min.css",
+        "asset_disk_path": "basset/cdn.jsdelivr.net/npm/summernote@0.9.1/dist/summernote-lite.min.css",
+        "asset_attributes": []
+    },
+    "https://cdn.jsdelivr.net/npm/summernote@0.9.1/dist/font/summernote.woff2": {
+        "asset_name": "https://cdn.jsdelivr.net/npm/summernote@0.9.1/dist/font/summernote.woff2",
+        "asset_path": "https://cdn.jsdelivr.net/npm/summernote@0.9.1/dist/font/summernote.woff2",
+        "asset_disk_path": "basset/cdn.jsdelivr.net/npm/summernote@0.9.1/dist/font/summernote.woff2",
+        "asset_attributes": []
+    },
+    "https://cdn.jsdelivr.net/npm/summernote@0.9.1/dist/summernote-lite.min.js": {
+        "asset_name": "https://cdn.jsdelivr.net/npm/summernote@0.9.1/dist/summernote-lite.min.js",
+        "asset_path": "https://cdn.jsdelivr.net/npm/summernote@0.9.1/dist/summernote-lite.min.js",
+        "asset_disk_path": "basset/cdn.jsdelivr.net/npm/summernote@0.9.1/dist/summernote-lite.min.js",
+        "asset_attributes": []
+    },
+    "backpack/crud/fields/summernote-field.css": {
+        "asset_name": "backpack/crud/fields/summernote-field.css",
+        "asset_path": "/home/kali/lambinews-deploy/LambiNews/backpack/crud/fields/summernote-field.css",
+        "asset_disk_path": "basset/backpack/crud/fields/summernote-field-f237af2d.css",
+        "asset_attributes": []
+    },
+    "backpack/crud/fields/summernote-field.js": {
+        "asset_name": "backpack/crud/fields/summernote-field.js",
+        "asset_path": "/home/kali/lambinews-deploy/LambiNews/backpack/crud/fields/summernote-field.js",
+        "asset_disk_path": "basset/backpack/crud/fields/summernote-field-588eb0ba.js",
+        "asset_attributes": []
+    },
+    "backpack/crud/buttons/delete-button.js": {
+        "asset_name": "backpack/crud/buttons/delete-button.js",
+        "asset_path": "/home/kali/lambinews-deploy/LambiNews/backpack/crud/buttons/delete-button.js",
+        "asset_disk_path": "basset/backpack/crud/buttons/delete-button-4e86f1f5.js",
+        "asset_attributes": []
+    },
+    "backpack/crud/buttons/quick-button.js": {
+        "asset_name": "backpack/crud/buttons/quick-button.js",
+        "asset_path": "/home/kali/lambinews-deploy/LambiNews/backpack/crud/buttons/quick-button.js",
+        "asset_disk_path": "basset/backpack/crud/buttons/quick-button-42417564.js",
+        "asset_attributes": []
+    },
+    "https://cdn.jsdelivr.net/npm/jquery-ui@1.13.2/dist/jquery-ui.min.js": {
+        "asset_name": "https://cdn.jsdelivr.net/npm/jquery-ui@1.13.2/dist/jquery-ui.min.js",
+        "asset_path": "https://cdn.jsdelivr.net/npm/jquery-ui@1.13.2/dist/jquery-ui.min.js",
+        "asset_disk_path": "basset/cdn.jsdelivr.net/npm/jquery-ui@1.13.2/dist/jquery-ui.min.js",
+        "asset_attributes": []
+    },
+    "/home/kali/lambinews-deploy/LambiNews/vendor/backpack/crud/src/resources/assets/libs/jquery.mjs.nestedSortable2.js": {
+        "asset_name": "/home/kali/lambinews-deploy/LambiNews/vendor/backpack/crud/src/resources/assets/libs/jquery.mjs.nestedSortable2.js",
+        "asset_path": "/home/kali/lambinews-deploy/LambiNews/vendor/backpack/crud/src/resources/assets/libs/jquery.mjs.nestedSortable2.js",
+        "asset_disk_path": "basset/vendor/backpack/crud/src/resources/assets/libs/jquery.mjs.nestedSortable2.js",
+        "asset_attributes": []
+    },
+    "backpack/crud/operations/list/bulk-actions-checkbox.js": {
+        "asset_name": "backpack/crud/operations/list/bulk-actions-checkbox.js",
+        "asset_path": "/home/kali/lambinews-deploy/LambiNews/backpack/crud/operations/list/bulk-actions-checkbox.js",
+        "asset_disk_path": "basset/backpack/crud/operations/list/bulk-actions-checkbox-04d043b1.js",
+        "asset_attributes": []
+    },
+    "https://cdn.datatables.net/2.1.8/js/dataTables.min.js": {
+        "asset_name": "https://cdn.datatables.net/2.1.8/js/dataTables.min.js",
+        "asset_path": "https://cdn.datatables.net/2.1.8/js/dataTables.min.js",
+        "asset_disk_path": "basset/cdn.datatables.net/2.1.8/js/dataTables.min.js",
+        "asset_attributes": []
+    },
+    "https://cdn.datatables.net/2.1.8/js/dataTables.bootstrap5.min.js": {
+        "asset_name": "https://cdn.datatables.net/2.1.8/js/dataTables.bootstrap5.min.js",
+        "asset_path": "https://cdn.datatables.net/2.1.8/js/dataTables.bootstrap5.min.js",
+        "asset_disk_path": "basset/cdn.datatables.net/2.1.8/js/dataTables.bootstrap5.min.js",
+        "asset_attributes": []
+    },
+    "https://cdn.datatables.net/responsive/3.0.3/js/dataTables.responsive.min.js": {
+        "asset_name": "https://cdn.datatables.net/responsive/3.0.3/js/dataTables.responsive.min.js",
+        "asset_path": "https://cdn.datatables.net/responsive/3.0.3/js/dataTables.responsive.min.js",
+        "asset_disk_path": "basset/cdn.datatables.net/responsive/3.0.3/js/dataTables.responsive.min.js",
+        "asset_attributes": []
+    },
+    "https://cdn.datatables.net/fixedheader/4.0.1/js/dataTables.fixedHeader.min.js": {
+        "asset_name": "https://cdn.datatables.net/fixedheader/4.0.1/js/dataTables.fixedHeader.min.js",
+        "asset_path": "https://cdn.datatables.net/fixedheader/4.0.1/js/dataTables.fixedHeader.min.js",
+        "asset_disk_path": "basset/cdn.datatables.net/fixedheader/4.0.1/js/dataTables.fixedHeader.min.js",
+        "asset_attributes": []
+    },
+    "/home/kali/lambinews-deploy/LambiNews/vendor/backpack/crud/src/resources/assets/img/spinner.svg": {
+        "asset_name": "/home/kali/lambinews-deploy/LambiNews/vendor/backpack/crud/src/resources/assets/img/spinner.svg",
+        "asset_path": "/home/kali/lambinews-deploy/LambiNews/vendor/backpack/crud/src/resources/assets/img/spinner.svg",
+        "asset_disk_path": "basset/vendor/backpack/crud/src/resources/assets/img/spinner.svg",
+        "asset_attributes": []
+    },
+    "https://cdn.datatables.net/2.1.8/css/dataTables.bootstrap5.min.css": {
+        "asset_name": "https://cdn.datatables.net/2.1.8/css/dataTables.bootstrap5.min.css",
+        "asset_path": "https://cdn.datatables.net/2.1.8/css/dataTables.bootstrap5.min.css",
+        "asset_disk_path": "basset/cdn.datatables.net/2.1.8/css/dataTables.bootstrap5.min.css",
+        "asset_attributes": []
+    },
+    "https://cdn.datatables.net/responsive/3.0.3/css/responsive.dataTables.min.css": {
+        "asset_name": "https://cdn.datatables.net/responsive/3.0.3/css/responsive.dataTables.min.css",
+        "asset_path": "https://cdn.datatables.net/responsive/3.0.3/css/responsive.dataTables.min.css",
+        "asset_disk_path": "basset/cdn.datatables.net/responsive/3.0.3/css/responsive.dataTables.min.css",
+        "asset_attributes": []
+    },
+    "https://cdn.datatables.net/fixedheader/4.0.1/css/fixedHeader.dataTables.min.css": {
+        "asset_name": "https://cdn.datatables.net/fixedheader/4.0.1/css/fixedHeader.dataTables.min.css",
+        "asset_path": "https://cdn.datatables.net/fixedheader/4.0.1/css/fixedHeader.dataTables.min.css",
+        "asset_disk_path": "basset/cdn.datatables.net/fixedheader/4.0.1/css/fixedHeader.dataTables.min.css",
         "asset_attributes": []
     },
     "https://cdn.jsdelivr.net/npm/@tabler/core@1.4.0/dist/js/tabler.min.js": {
@@ -266,10 +464,16 @@
             "crossorigin": "anonymous"
         }
     },
-    "C:\\laragon\\www\\lambinews\\vendor/backpack/theme-tabler/resources/assets/js/tabler.js": {
-        "asset_name": "C:\\laragon\\www\\lambinews\\vendor/backpack/theme-tabler/resources/assets/js/tabler.js",
-        "asset_path": "C:\\laragon\\www\\lambinews\\vendor/backpack/theme-tabler/resources/assets/js/tabler.js",
+    "/home/kali/lambinews-deploy/LambiNews/vendor/backpack/theme-tabler/resources/assets/js/tabler.js": {
+        "asset_name": "/home/kali/lambinews-deploy/LambiNews/vendor/backpack/theme-tabler/resources/assets/js/tabler.js",
+        "asset_path": "/home/kali/lambinews-deploy/LambiNews/vendor/backpack/theme-tabler/resources/assets/js/tabler.js",
         "asset_disk_path": "basset/vendor/backpack/theme-tabler/resources/assets/js/tabler.js",
+        "asset_attributes": []
+    },
+    "tabler-menu-javascript.js": {
+        "asset_name": "tabler-menu-javascript.js",
+        "asset_path": "/home/kali/lambinews-deploy/LambiNews/tabler-menu-javascript.js",
+        "asset_disk_path": "basset/tabler-menu-javascript-a4deab70.js",
         "asset_attributes": []
     },
     "https://cdn.jsdelivr.net/npm/@tabler/core@1.4.0/dist/css/tabler.min.css": {
@@ -281,58 +485,34 @@
             "crossorigin": "anonymous"
         }
     },
-    "C:\\laragon\\www\\lambinews\\vendor/backpack/theme-tabler/resources/assets/css/style.css": {
-        "asset_name": "C:\\laragon\\www\\lambinews\\vendor/backpack/theme-tabler/resources/assets/css/style.css",
-        "asset_path": "C:\\laragon\\www\\lambinews\\vendor/backpack/theme-tabler/resources/assets/css/style.css",
+    "/home/kali/lambinews-deploy/LambiNews/vendor/backpack/theme-tabler/resources/assets/css/style.css": {
+        "asset_name": "/home/kali/lambinews-deploy/LambiNews/vendor/backpack/theme-tabler/resources/assets/css/style.css",
+        "asset_path": "/home/kali/lambinews-deploy/LambiNews/vendor/backpack/theme-tabler/resources/assets/css/style.css",
         "asset_disk_path": "basset/vendor/backpack/theme-tabler/resources/assets/css/style.css",
         "asset_attributes": []
     },
-    "C:\\laragon\\www\\lambinews\\vendor/backpack/theme-tabler/resources/assets/css/color-adjustments.css": {
-        "asset_name": "C:\\laragon\\www\\lambinews\\vendor/backpack/theme-tabler/resources/assets/css/color-adjustments.css",
-        "asset_path": "C:\\laragon\\www\\lambinews\\vendor/backpack/theme-tabler/resources/assets/css/color-adjustments.css",
+    "/home/kali/lambinews-deploy/LambiNews/vendor/backpack/theme-tabler/resources/assets/css/color-adjustments.css": {
+        "asset_name": "/home/kali/lambinews-deploy/LambiNews/vendor/backpack/theme-tabler/resources/assets/css/color-adjustments.css",
+        "asset_path": "/home/kali/lambinews-deploy/LambiNews/vendor/backpack/theme-tabler/resources/assets/css/color-adjustments.css",
         "asset_disk_path": "basset/vendor/backpack/theme-tabler/resources/assets/css/color-adjustments.css",
         "asset_attributes": []
     },
-    "C:\\laragon\\www\\lambinews\\vendor/backpack/theme-tabler/resources/assets/css/skins/backpack-color-palette.css": {
-        "asset_name": "C:\\laragon\\www\\lambinews\\vendor/backpack/theme-tabler/resources/assets/css/skins/backpack-color-palette.css",
-        "asset_path": "C:\\laragon\\www\\lambinews\\vendor/backpack/theme-tabler/resources/assets/css/skins/backpack-color-palette.css",
+    "/home/kali/lambinews-deploy/LambiNews/vendor/backpack/theme-tabler/resources/assets/css/skins/backpack-color-palette.css": {
+        "asset_name": "/home/kali/lambinews-deploy/LambiNews/vendor/backpack/theme-tabler/resources/assets/css/skins/backpack-color-palette.css",
+        "asset_path": "/home/kali/lambinews-deploy/LambiNews/vendor/backpack/theme-tabler/resources/assets/css/skins/backpack-color-palette.css",
         "asset_disk_path": "basset/vendor/backpack/theme-tabler/resources/assets/css/skins/backpack-color-palette.css",
         "asset_attributes": []
     },
-    "C:\\laragon\\www\\lambinews\\vendor/backpack/theme-tabler/resources/assets/css/skins/glass.css": {
-        "asset_name": "C:\\laragon\\www\\lambinews\\vendor/backpack/theme-tabler/resources/assets/css/skins/glass.css",
-        "asset_path": "C:\\laragon\\www\\lambinews\\vendor/backpack/theme-tabler/resources/assets/css/skins/glass.css",
+    "/home/kali/lambinews-deploy/LambiNews/vendor/backpack/theme-tabler/resources/assets/css/skins/glass.css": {
+        "asset_name": "/home/kali/lambinews-deploy/LambiNews/vendor/backpack/theme-tabler/resources/assets/css/skins/glass.css",
+        "asset_path": "/home/kali/lambinews-deploy/LambiNews/vendor/backpack/theme-tabler/resources/assets/css/skins/glass.css",
         "asset_disk_path": "basset/vendor/backpack/theme-tabler/resources/assets/css/skins/glass.css",
         "asset_attributes": []
     },
-    "C:\\laragon\\www\\lambinews\\vendor/backpack/theme-tabler/resources/assets/css/skins/fuzzy-background.css": {
-        "asset_name": "C:\\laragon\\www\\lambinews\\vendor/backpack/theme-tabler/resources/assets/css/skins/fuzzy-background.css",
-        "asset_path": "C:\\laragon\\www\\lambinews\\vendor/backpack/theme-tabler/resources/assets/css/skins/fuzzy-background.css",
+    "/home/kali/lambinews-deploy/LambiNews/vendor/backpack/theme-tabler/resources/assets/css/skins/fuzzy-background.css": {
+        "asset_name": "/home/kali/lambinews-deploy/LambiNews/vendor/backpack/theme-tabler/resources/assets/css/skins/fuzzy-background.css",
+        "asset_path": "/home/kali/lambinews-deploy/LambiNews/vendor/backpack/theme-tabler/resources/assets/css/skins/fuzzy-background.css",
         "asset_disk_path": "basset/vendor/backpack/theme-tabler/resources/assets/css/skins/fuzzy-background.css",
-        "asset_attributes": []
-    },
-    "C:\\laragon\\www\\lambinews\\vendor/backpack/basset/tests/Helpers/basset-test.js": {
-        "asset_name": "C:\\laragon\\www\\lambinews\\vendor/backpack/basset/tests/Helpers/basset-test.js",
-        "asset_path": "C:\\laragon\\www\\lambinews\\vendor/backpack/basset/tests/Helpers/basset-test.js",
-        "asset_disk_path": "basset/vendor/backpack/basset/tests/Helpers/basset-test.js",
-        "asset_attributes": []
-    },
-    "https://www.gravatar.com/avatar/7f7afb3a7ed7aba8c3e5854c3eca18cbeec501d301411ac0986c0bfa19c807c5.jpg?s=80&d=blank&r=g": {
-        "asset_name": "https://www.gravatar.com/avatar/7f7afb3a7ed7aba8c3e5854c3eca18cbeec501d301411ac0986c0bfa19c807c5.jpg?s=80&d=blank&r=g",
-        "asset_path": "https://www.gravatar.com/avatar/7f7afb3a7ed7aba8c3e5854c3eca18cbeec501d301411ac0986c0bfa19c807c5.jpg?s=80&d=blank&r=g",
-        "asset_disk_path": "basset/www.gravatar.com/avatar/7f7afb3a7ed7aba8c3e5854c3eca18cbeec501d301411ac0986c0bfa19c807c5.jpg",
-        "asset_attributes": []
-    },
-    "https://www.gravatar.com/avatar/3a0a0f1d00e622094c019fe196ff5da62678988c676835e4f89872616707b1d5.jpg?s=80&d=blank&r=g": {
-        "asset_name": "https://www.gravatar.com/avatar/3a0a0f1d00e622094c019fe196ff5da62678988c676835e4f89872616707b1d5.jpg?s=80&d=blank&r=g",
-        "asset_path": "https://www.gravatar.com/avatar/3a0a0f1d00e622094c019fe196ff5da62678988c676835e4f89872616707b1d5.jpg?s=80&d=blank&r=g",
-        "asset_disk_path": "basset/www.gravatar.com/avatar/3a0a0f1d00e622094c019fe196ff5da62678988c676835e4f89872616707b1d5.jpg",
-        "asset_attributes": []
-    },
-    "https://cdn.jsdelivr.net/npm/summernote@0.9.1/dist/lang/summernote-fr-FR.min.js": {
-        "asset_name": "https://cdn.jsdelivr.net/npm/summernote@0.9.1/dist/lang/summernote-fr-FR.min.js",
-        "asset_path": "https://cdn.jsdelivr.net/npm/summernote@0.9.1/dist/lang/summernote-fr-FR.min.js",
-        "asset_disk_path": "basset/cdn.jsdelivr.net/npm/summernote@0.9.1/dist/lang/summernote-fr-FR.min.js",
         "asset_attributes": []
     }
 }

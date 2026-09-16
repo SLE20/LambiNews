@@ -111,6 +111,18 @@
             :link="backpack_url('subscriber')"
         />
 
+        <x-backpack::menu-dropdown-item
+            title="Dons"
+            icon="la la-hand-holding-heart"
+            :link="backpack_url('donation')"
+        />
+
+        <x-backpack::menu-dropdown-item
+            title="Publicités"
+            icon="la la-ad"
+            :link="backpack_url('ad')"
+        />
+
     </x-backpack::menu-dropdown>
     <x-backpack::menu-item
     title="Statistiques"

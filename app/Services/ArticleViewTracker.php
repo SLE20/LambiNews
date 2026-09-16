@@ -83,9 +83,15 @@ class ArticleViewTracker
                 'viewed_at' => now(),
             ]);
 
-            Article::query()
-    ->whereKey($article->id)
-    ->increment('views_count');
+            /*
+             * Compteur incrémenté via le query builder brut : l’increment()
+             * d’Eloquent met aussi « updated_at » à jour, ce qui ferait
+             * passer chaque simple lecture pour une modification de
+             * l’article (dateModified, lastmod du sitemap, aperçus sociaux).
+             */
+            DB::table('articles')
+                ->where('id', $article->id)
+                ->increment('views_count');
         });
     }
 

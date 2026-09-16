@@ -350,6 +350,8 @@
         </section>
     @endif
 
+    <x-ad-slot position="home_top" />
+
     <section>
         <div class="section-heading">
             <h2 class="section-title">

@@ -139,6 +139,31 @@
             height: auto;
         }
 
+        /* ---------- Emplacements publicitaires ---------- */
+        .ad-slot {
+            position: relative;
+            margin: 24px auto;
+            text-align: center;
+            max-width: 100%;
+            overflow: hidden;
+        }
+        .ad-slot img {
+            margin: 0 auto;
+            border-radius: 8px;
+        }
+        .ad-slot__label {
+            display: block;
+            margin-top: 4px;
+            font-size: .68rem;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+            color: var(--muted);
+            opacity: .75;
+        }
+        .ad-slot--in_article { margin: 32px auto; }
+        .ad-slot--sidebar_top,
+        .ad-slot--sidebar_bottom { margin: 0 0 24px; }
+
         button,
         input,
         textarea,
@@ -1514,7 +1539,11 @@
 
         <div class="container">
 
+            <x-ad-slot position="header" />
+
             @yield('content')
+
+            <x-ad-slot position="footer" />
 
         </div>
 
