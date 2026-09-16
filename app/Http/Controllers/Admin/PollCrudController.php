@@ -262,8 +262,8 @@ class PollCrudController extends CrudController
         DB::table('poll_options')->where('poll_id', $poll->id)->update(['votes_count' => 0]);
         DB::table('polls')->where('id', $poll->id)->update(['votes_count' => 0]);
 
-        return redirect()
-            ->to(backpack_url('poll'))
-            ->with('success', $deleted.' voix effacée(s). Le sondage repart de zéro.');
+        \Alert::success($deleted.' voix effacée(s). Le sondage repart de zéro.')->flash();
+
+        return redirect()->to(backpack_url('poll'));
     }
 }

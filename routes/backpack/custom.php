@@ -110,6 +110,12 @@ Route::group([
         'SiteSettingCrudController'
     );
 
+    // Vérifie les clés PayPal enregistrées.
+    Route::get(
+        'site-setting/test-paypal',
+        [\App\Http\Controllers\Admin\SiteSettingCrudController::class, 'testPaypal']
+    )->name('site-setting.test-paypal');
+
     Route::get('statistiques', [StatisticsController::class, 'index'])
     ->name('admin.statistics');
 });

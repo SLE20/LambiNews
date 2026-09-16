@@ -56,7 +56,7 @@ class AnnouncementController extends Controller
     {
         return view('front.announcements.create', [
             'catalogue'      => Announcement::catalogue(),
-            'paypalClientId' => config('services.paypal.client_id'),
+            'paypalClientId' => PayPalClient::publicClientId(),
             'paypalReady'    => PayPalClient::fromConfig()->isConfigured(),
             'displayDays'    => Announcement::DISPLAY_DAYS,
         ]);

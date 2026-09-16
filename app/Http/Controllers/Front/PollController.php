@@ -49,7 +49,7 @@ class PollController extends Controller
         $data = [
             'poll'           => $poll,
             'recorder'       => $recorder,
-            'paypalClientId' => config('services.paypal.client_id'),
+            'paypalClientId' => PayPalClient::publicClientId(),
             'paypalReady'    => PayPalClient::fromConfig()->isConfigured(),
         ];
 

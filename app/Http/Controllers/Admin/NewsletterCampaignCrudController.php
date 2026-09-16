@@ -158,9 +158,9 @@ class NewsletterCampaignCrudController extends CrudController
             'sent_at'      => null,
         ])->save();
 
-        return redirect()
-            ->to(backpack_url('newsletter-campaign'))
-            ->with('success', $reset.' envoi(s) remis en file.');
+        \Alert::success($reset.' envoi(s) remis en file.')->flash();
+
+        return redirect()->to(backpack_url('newsletter-campaign'));
     }
 
     /**
@@ -175,17 +175,17 @@ class NewsletterCampaignCrudController extends CrudController
         $campaign = NewsletterCampaign::findOrFail($id);
 
         if ($campaign->status !== NewsletterCampaign::STATUS_DRAFT) {
-            return redirect()
-                ->to(backpack_url('newsletter-campaign'))
-                ->with('error', 'Cette infolettre est déjà partie.');
+            \Alert::error('Cette infolettre est déjà partie.')->flash();
+
+            return redirect()->to(backpack_url('newsletter-campaign'));
         }
 
         $subscribers = Subscriber::query()->where('is_active', true)->get(['id']);
 
         if ($subscribers->isEmpty()) {
-            return redirect()
-                ->to(backpack_url('newsletter-campaign'))
-                ->with('error', 'Aucun abonné actif.');
+            \Alert::error('Aucun abonné actif.')->flash();
+
+            return redirect()->to(backpack_url('newsletter-campaign'));
         }
 
         $now = now();
@@ -206,9 +206,9 @@ class NewsletterCampaignCrudController extends CrudController
             'queued_at'        => $now,
         ])->save();
 
-        return redirect()
-            ->to(backpack_url('newsletter-campaign'))
-            ->with('success', 'Infolettre mise en file : '.$subscribers->count()
-                .' destinataires. L’envoi démarre dans la minute.');
+        \Alert::success('Infolettre mise en file : '.$subscribers->count()
+            .' destinataires. L’envoi démarre dans la minute.')->flash();
+
+        return redirect()->to(backpack_url('newsletter-campaign'));
     }
 }

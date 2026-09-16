@@ -26,13 +26,43 @@ class PayPalClient
     ) {
     }
 
+    /**
+     * Les clés saisies dans l'administration l'emportent sur celles du
+     * fichier .env : la rédaction n'a pas accès au serveur, mais doit
+     * pouvoir brancher PayPal elle-même.
+     */
     public static function fromConfig(): self
     {
+        $settings = \App\Models\SiteSetting::class;
+
         return new self(
-            config('services.paypal.client_id'),
-            config('services.paypal.secret'),
-            (string) config('services.paypal.mode', 'sandbox'),
+            $settings::get('paypal_client_id') ?: config('services.paypal.client_id'),
+            $settings::secret('paypal_secret') ?: config('services.paypal.secret'),
+            $settings::get('paypal_mode') ?: (string) config('services.paypal.mode', 'sandbox'),
         );
+    }
+
+    /** Identifiant public, transmis au SDK côté navigateur. */
+    public static function publicClientId(): string
+    {
+        return \App\Models\SiteSetting::get('paypal_client_id')
+            ?: (string) config('services.paypal.client_id');
+    }
+
+    /** Vérifie que les clés permettent réellement d'obtenir un jeton. */
+    public function check(): array
+    {
+        if (! $this->isConfigured()) {
+            return ['ok' => false, 'message' => 'Clés absentes.'];
+        }
+
+        try {
+            $this->accessToken();
+
+            return ['ok' => true, 'message' => 'Connexion réussie en mode '.$this->mode.'.'];
+        } catch (\Throwable $e) {
+            return ['ok' => false, 'message' => $e->getMessage()];
+        }
     }
 
     public function isConfigured(): bool

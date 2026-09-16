@@ -31,7 +31,7 @@ class DonationController extends Controller
             'minAmount'      => self::MIN_AMOUNT,
             'maxAmount'      => self::MAX_AMOUNT,
             'currency'       => self::CURRENCY,
-            'paypalClientId' => config('services.paypal.client_id'),
+            'paypalClientId' => PayPalClient::publicClientId(),
             'paypalReady'    => $paypal->isConfigured(),
             'totalRaised'    => Donation::completed()->sum('amount'),
             'donorCount'     => Donation::completed()->count(),
