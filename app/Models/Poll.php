@@ -15,6 +15,11 @@ class Poll extends Model
     protected $fillable = [
         'question',
         'slug',
+        'layout',
+        'headline',
+        'eyebrow',
+        'subtitle',
+        'hero_image',
         'description',
         'is_active',
         'starts_at',
@@ -88,6 +93,61 @@ class Poll extends Model
         $total = $this->validVotes();
 
         return $total < 1 ? 0.0 : round(($option->votes_count / $total) * 100, 1);
+    }
+
+    /** Jours restants avant la clôture, ou null si le sondage n'a pas de fin. */
+    public function daysLeft(): ?int
+    {
+        if (! $this->ends_at) {
+            return null;
+        }
+
+        return max(0, (int) now()->startOfDay()->diffInDays($this->ends_at, false));
+    }
+
+    /**
+     * Choix classés du plus voté au moins voté, avec pourcentage et
+     * couleur résolue — la même série alimente la liste et le camembert.
+     *
+     * @return \Illuminate\Support\Collection<int, array<string, mixed>>
+     */
+    public function ranked(): \Illuminate\Support\Collection
+    {
+        $total = max(1, $this->validVotes());
+
+        return $this->options
+            ->sortByDesc('votes_count')
+            ->values()
+            ->map(fn (PollOption $option, int $i) => [
+                'option'  => $option,
+                'percent' => round(($option->votes_count / $total) * 100, 1),
+                'color'   => $option->displayColor($i),
+            ]);
+    }
+
+    /**
+     * Titre du bandeau, dont le dernier mot est mis en couleur.
+     *
+     * Presque toujours un millésime (« SONDAJ PRÉZIDANSYÈL 2026 ») : le
+     * détacher visuellement est ce qui donne son allure à l'affiche.
+     */
+    public function headlineHtml(): string
+    {
+        $headline = trim((string) ($this->headline ?: $this->question));
+        $words    = preg_split('/\s+/u', $headline) ?: [];
+
+        if (count($words) < 2) {
+            return e($headline);
+        }
+
+        $last = array_pop($words);
+
+        return e(implode(' ', $words)).' <em>'.e($last).'</em>';
+    }
+
+    public function isShowcase(): bool
+    {
+        return $this->layout === 'showcase';
     }
 
     public function getStatusLabel(): string

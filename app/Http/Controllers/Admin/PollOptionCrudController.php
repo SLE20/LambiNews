@@ -62,7 +62,7 @@ class PollOptionCrudController extends CrudController
 
         CRUD::addField([
             'name'  => 'subtitle',
-            'label' => 'Précision (parti, fonction…)',
+            'label' => 'Parti ou fonction',
             'type'  => 'text',
         ]);
 
@@ -71,6 +71,22 @@ class PollOptionCrudController extends CrudController
             'label'     => 'Photo (facultative)',
             'type'      => 'upload',
             'withFiles' => ['disk' => 'public', 'path' => 'polls'],
+        ]);
+
+        CRUD::addField([
+            'name'  => 'color',
+            'label' => 'Couleur',
+            'type'  => 'color',
+            'hint'  => 'Fond de la carte, barre de résultat et part du '
+                .'camembert. Vide = couleur automatique.',
+        ]);
+
+        CRUD::addField([
+            'name'      => 'party_logo',
+            'label'     => 'Emblème du parti (facultatif)',
+            'type'      => 'upload',
+            'withFiles' => ['disk' => 'public', 'path' => 'polls'],
+            'hint'      => 'Petite pastille affichée à côté du parti.',
         ]);
 
         CRUD::addField([

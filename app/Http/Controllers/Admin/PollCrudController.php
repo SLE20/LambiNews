@@ -57,15 +57,64 @@ class PollCrudController extends CrudController
             'name'  => 'question',
             'label' => 'Question posée aux lecteurs',
             'type'  => 'text',
+            'tab'   => 'Sondage',
         ]);
 
         CRUD::addField([
             'name'  => 'description',
             'label' => 'Précision (facultatif)',
             'type'  => 'textarea',
+            'tab'   => 'Sondage',
         ]);
 
         CRUD::addField([
+            'name'    => 'layout',
+            'label'   => 'Présentation',
+            'type'    => 'select_from_array',
+            'options' => [
+                'standard' => 'Bloc simple (colonne d’article, liste)',
+                'showcase' => 'Affiche pleine page (bandeau + cartes + graphiques)',
+            ],
+            'default' => 'standard',
+            'tab'     => 'Affiche',
+        ]);
+
+        CRUD::addField([
+            'name'  => 'headline',
+            'label' => 'Titre du bandeau',
+            'type'  => 'text',
+            'hint'  => 'Ex. « Sondaj Prézidansyèl 2026 ». Le dernier mot '
+                .'s’affiche en rouge. Vide = la question est utilisée.',
+            'tab'   => 'Affiche',
+        ]);
+
+        CRUD::addField([
+            'name'    => 'eyebrow',
+            'label'   => 'Surtitre',
+            'type'    => 'text',
+            'hint'    => 'Petite ligne au-dessus du titre. Ex. « Votre avis compte ».',
+            'tab'     => 'Affiche',
+        ]);
+
+        CRUD::addField([
+            'name'  => 'subtitle',
+            'label' => 'Phrase d’accroche',
+            'type'  => 'text',
+            'hint'  => 'Affichée sous la question, dans le bandeau.',
+            'tab'   => 'Affiche',
+        ]);
+
+        CRUD::addField([
+            'name'      => 'hero_image',
+            'label'     => 'Image de fond du bandeau',
+            'type'      => 'upload',
+            'withFiles' => ['disk' => 'public', 'path' => 'polls'],
+            'hint'      => 'Format paysage, au moins 1600 px de large.',
+            'tab'       => 'Affiche',
+        ]);
+
+        CRUD::addField([
+            'tab'     => 'Sondage',
             'name'    => 'starts_at',
             'label'   => 'Ouverture',
             'type'    => 'date',
@@ -74,6 +123,7 @@ class PollCrudController extends CrudController
         ]);
 
         CRUD::addField([
+            'tab'     => 'Sondage',
             'name'    => 'ends_at',
             'label'   => 'Clôture',
             'type'    => 'date',
@@ -82,6 +132,7 @@ class PollCrudController extends CrudController
         ]);
 
         CRUD::addField([
+            'tab'     => 'Sondage',
             'name'    => 'is_active',
             'label'   => 'Actif',
             'type'    => 'checkbox',
@@ -90,6 +141,7 @@ class PollCrudController extends CrudController
         ]);
 
         CRUD::addField([
+            'tab'     => 'Sondage',
             'name'    => 'hide_results_before_vote',
             'label'   => 'Cacher les résultats avant le vote',
             'type'    => 'checkbox',
@@ -98,6 +150,7 @@ class PollCrudController extends CrudController
         ]);
 
         CRUD::addField([
+            'tab'   => 'Sondage',
             'name'  => 'options_help',
             'type'  => 'custom_html',
             'value' => '<div class="alert alert-info mb-0">Après avoir '

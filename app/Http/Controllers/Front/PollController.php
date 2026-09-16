@@ -30,7 +30,11 @@ class PollController extends Controller
             ->where('slug', $slug)
             ->firstOrFail();
 
-        return view('front.polls.show', compact('poll', 'recorder'));
+        // Deux présentations : la vitrine pleine page, ou le bloc simple.
+        return view(
+            $poll->isShowcase() ? 'front.polls.showcase' : 'front.polls.show',
+            compact('poll', 'recorder')
+        );
     }
 
     public function vote(
