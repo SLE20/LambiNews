@@ -10,637 +10,427 @@
     'Retrouvez toute l’actualité nationale et internationale sur Lambi News.'
 )
 
+@php
+    /*
+     * Découpage de la une : le premier article occupe le grand cadre,
+     * les trois suivants la colonne de droite.
+     */
+    $lead   = $featuredArticles->first();
+    $sideUp = $featuredArticles->skip(1)->take(3);
+
+    // Huit rubriques au plus dans la grille du bas.
+    $sections = $categorySections->take(8);
+
+    // Icônes tracées en SVG : aucun fichier ni police à charger.
+    $icons = [
+        'fb' => 'M13.5 21v-8h2.7l.4-3.1h-3.1V7.9c0-.9.25-1.5 1.55-1.5h1.65V3.6A22 22 0 0 0 14.3 3.5c-2.4 0-4 1.45-4 4.1v2.3H7.6V13h2.7v8h3.2Z',
+        'x'  => 'M17.7 3h3.3l-7.2 8.2L22 21h-6.4l-5-6.1L4.8 21H1.5l7.7-8.8L2 3h6.6l4.5 5.6L17.7 3Zm-1.2 16h1.8L7.6 4.9H5.7L16.5 19Z',
+        'yt' => 'M21.6 7.2s-.2-1.4-.8-2c-.75-.8-1.6-.8-2-.85C16 4.2 12 4.2 12 4.2h-.02s-4 0-6.8.2c-.4.05-1.25.05-2 .85-.6.6-.8 2-.8 2S2.2 8.8 2.2 10.5v1.6c0 1.6.2 3.3.2 3.3s.2 1.4.8 2c.75.8 1.75.78 2.2.86 1.6.15 6.8.2 6.8.2s4 0 6.8-.22c.4-.05 1.25-.05 2-.85.6-.6.8-2 .8-2s.2-1.65.2-3.3v-1.6c0-1.65-.2-3.3-.2-3.3ZM10 14.2V8.6l5.15 2.82L10 14.2Z',
+        'ig' => 'M12 2.2c3.2 0 3.6 0 4.85.07 1.17.05 1.8.25 2.23.42.56.22.96.48 1.38.9.42.42.68.82.9 1.38.17.42.37 1.06.42 2.23.06 1.26.07 1.64.07 4.83s0 3.57-.07 4.83c-.05 1.17-.25 1.8-.42 2.23-.22.56-.48.96-.9 1.38-.42.42-.82.68-1.38.9-.42.17-1.06.37-2.23.42-1.26.06-1.64.07-4.85.07s-3.6 0-4.85-.07c-1.17-.05-1.8-.25-2.23-.42-.56-.22-.96-.48-1.38-.9-.42-.42-.68-.82-.9-1.38-.17-.42-.37-1.06-.42-2.23C2.2 15.6 2.2 15.2 2.2 12s0-3.57.07-4.83c.05-1.17.25-1.8.42-2.23.22-.56.48-.96.9-1.38.42-.42.82-.68 1.38-.9.42-.17 1.06-.37 2.23-.42C8.4 2.2 8.8 2.2 12 2.2Zm0 5.16a4.64 4.64 0 1 0 0 9.28 4.64 4.64 0 0 0 0-9.28Zm0 7.65a3.01 3.01 0 1 1 0-6.02 3.01 3.01 0 0 1 0 6.02Zm5.9-7.83a1.08 1.08 0 1 1-2.17 0 1.08 1.08 0 0 1 2.17 0Z',
+        'tg' => 'M21.7 4.3c-.3-.25-.75-.3-1.2-.13L2.9 11c-.5.2-.8.6-.78 1.05.03.45.36.83.87.97l4.4 1.25 1.7 5.2c.1.32.36.55.7.6h.14c.3 0 .58-.14.76-.38l2.5-3.3 4.4 3.24c.2.15.44.23.68.23.13 0 .26-.02.38-.07.36-.14.62-.45.7-.83l3-13.6c.1-.44-.05-.87-.4-1.13ZM9.9 13.7l-.55 3.1-1.02-3.1 8-5.3-6.43 5.3Z',
+    ];
+
+    $socials = collect([
+        ['url' => \App\Models\SiteSetting::get('facebook_url'),  'label' => 'Facebook',  'class' => 'fb'],
+        ['url' => \App\Models\SiteSetting::get('twitter_handle') ? 'https://x.com/'.ltrim(\App\Models\SiteSetting::get('twitter_handle'), '@') : '', 'label' => 'X', 'class' => 'x'],
+        ['url' => \App\Models\SiteSetting::get('youtube_url'),   'label' => 'YouTube',   'class' => 'yt'],
+        ['url' => \App\Models\SiteSetting::get('instagram_url'), 'label' => 'Instagram', 'class' => 'ig'],
+        ['url' => \App\Models\SiteSetting::get('telegram_url'),  'label' => 'Telegram',  'class' => 'tg'],
+    ])->map(fn ($s) => $s + ['path' => $icons[$s['class']]])->all();
+@endphp
+
 @push('styles')
-    <style>
-        .popular-section {
-            margin: 65px 0;
-            padding: clamp(24px, 5vw, 38px);
-            color: white;
-            border-radius: var(--radius);
-            background:
-                radial-gradient(
-                    circle at 90% 10%,
-                    rgba(216, 169, 34, 0.22),
-                    transparent 32%
-                ),
-                var(--black);
-        }
+<style>
+    .hp { padding: 20px 0 60px; }
 
-        .popular-section .section-title {
-            color: white;
-        }
+    /* ---------------- Flash info ---------------- */
+    .hp__flash {
+        display: flex; align-items: stretch; gap: 0;
+        background: var(--surface); border: 1px solid var(--border);
+        border-radius: 10px; overflow: hidden; margin-bottom: 20px;
+    }
+    .hp__flashtag {
+        display: flex; align-items: center; gap: 7px;
+        padding: 11px 18px 11px 15px;
+        background: #e11d2e; color: #fff;
+        font-size: .76rem; font-weight: 800; letter-spacing: .06em;
+        text-transform: uppercase; white-space: nowrap;
+        clip-path: polygon(0 0, 100% 0, calc(100% - 12px) 100%, 0 100%);
+        padding-right: 26px;
+    }
+    .hp__flashitems {
+        flex: 1; min-width: 0; display: flex; align-items: center;
+        gap: 0; overflow: hidden;
+    }
+    .hp__flashitem {
+        display: none; align-items: center; gap: 10px;
+        padding: 0 16px; font-size: .88rem; white-space: nowrap;
+        overflow: hidden; text-overflow: ellipsis;
+    }
+    .hp__flashitem.is-on { display: flex; }
+    .hp__flashitem::after { content: "›"; color: var(--muted); }
+    .hp__flashnav { display: flex; align-items: center; border-left: 1px solid var(--border); }
+    .hp__flashbtn {
+        width: 34px; height: 100%; min-height: 40px; border: 0; cursor: pointer;
+        background: transparent; color: var(--muted); font-size: 1rem;
+    }
+    .hp__flashbtn:hover { color: var(--black); background: var(--background); }
 
-        .popular-section .section-link {
-            color: var(--primary);
-        }
+    /* ---------------- Disposition ---------------- */
+    .hp__grid {
+        display: grid; grid-template-columns: minmax(0, 1fr) 306px; gap: 22px;
+        align-items: start;
+    }
+    .hp__lead { display: grid; grid-template-columns: 1.22fr 1fr; gap: 16px; }
 
-        .popular-layout {
-            display: grid;
-            grid-template-columns:
-                minmax(0, 1.15fr)
-                minmax(300px, 0.85fr);
-            gap: 32px;
-        }
+    /* ---------------- Article vedette ---------------- */
+    .hp__hero {
+        position: relative; display: block; border-radius: 12px;
+        overflow: hidden; min-height: 430px; color: #fff; background: #12161f;
+    }
+    .hp__hero img {
+        position: absolute; inset: 0; width: 100%; height: 100%;
+        object-fit: cover;
+    }
+    .hp__hero::after {
+        content: ""; position: absolute; inset: 0;
+        background: linear-gradient(to top, rgba(6,10,18,.94) 8%, rgba(6,10,18,.72) 42%, rgba(6,10,18,.12) 100%);
+    }
+    .hp__herobody { display: block; position: relative; z-index: 2; padding: 26px; margin-top: auto; }
+    .hp__hero { display: flex; flex-direction: column; justify-content: flex-end; }
+    .hp__tag {
+        display: inline-block; vertical-align: top; padding: 4px 11px; border-radius: 4px;
+        background: var(--primary); color: var(--black);
+        font-size: .68rem; font-weight: 800; letter-spacing: .06em;
+        text-transform: uppercase; margin-bottom: 11px;
+    }
+    .hp__herotitle {
+        font-family: "Playfair Display", Georgia, serif;
+        font-size: clamp(1.4rem, 2.7vw, 2rem); line-height: 1.22; margin: 0 0 10px;
+    }
+    .hp__heroexcerpt {
+        margin: 0 0 14px; color: rgba(255,255,255,.82);
+        font-size: .93rem; line-height: 1.6;
+    }
+    .hp__meta {
+        display: flex; flex-wrap: wrap; gap: 16px;
+        font-size: .78rem; color: rgba(255,255,255,.7);
+    }
 
-        .popular-main {
-            overflow: hidden;
-            border-radius: 12px;
-            background: var(--black-light);
-        }
+    /* ---------------- Cartes empilées ---------------- */
+    .hp__stack { display: grid; grid-template-rows: repeat(3, 1fr); gap: 16px; }
+    .hp__card {
+        position: relative; display: flex; flex-direction: column;
+        justify-content: flex-end; border-radius: 12px; overflow: hidden;
+        min-height: 132px; color: #fff; background: #12161f;
+    }
+    .hp__card img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+    .hp__card::after {
+        content: ""; position: absolute; inset: 0;
+        background: linear-gradient(to top, rgba(6,10,18,.93) 12%, rgba(6,10,18,.35) 78%);
+    }
+    .hp__cardbody { display: block; position: relative; z-index: 2; padding: 14px; }
+    .hp__cardtitle {
+        display: block;
+        font-size: .95rem; font-weight: 700; line-height: 1.32; margin: 0 0 7px;
+    }
 
-        .popular-main-image {
-            width: 100%;
-            height: 250px;
-            object-fit: cover;
-        }
+    /* ---------------- Colonne de droite ---------------- */
+    .hp__panel {
+        background: var(--surface); border: 1px solid var(--border);
+        border-radius: 12px; overflow: hidden; margin-bottom: 18px;
+    }
+    .hp__panel--dark { background: #0d1320; border-color: #0d1320; color: #fff; }
+    .hp__paneltitle {
+        display: flex; align-items: center; gap: 9px;
+        margin: 0; padding: 15px 17px;
+        font-size: 1rem; font-weight: 800;
+        border-bottom: 1px solid var(--border);
+    }
+    .hp__panel--dark .hp__paneltitle { border-bottom-color: rgba(255,255,255,.12); }
+    .hp__panelbody { padding: 15px 17px; }
 
-        .popular-main-content {
-            padding: 24px;
-        }
+    .hp__most { display: grid; gap: 13px; padding: 14px 17px; }
+    .hp__mostitem { display: grid; grid-template-columns: 62px 1fr; gap: 11px; align-items: start; }
+    .hp__mostnum {
+        position: relative; border-radius: 8px; overflow: hidden;
+        aspect-ratio: 1/1; background: var(--border);
+    }
+    .hp__mostnum img { width: 100%; height: 100%; object-fit: cover; }
+    .hp__mostnum span {
+        position: absolute; left: 0; bottom: 0; z-index: 2;
+        padding: 1px 7px; background: var(--primary); color: var(--black);
+        font-size: .72rem; font-weight: 800;
+    }
+    .hp__mosttitle { display: block; font-size: .84rem; font-weight: 600; line-height: 1.38; }
+    .hp__mostviews { display: block; margin-top: 4px; font-size: .72rem; color: var(--muted); }
 
-        .popular-main h3 {
-            margin: 9px 0 12px;
-            font-family:
-                "Playfair Display",
-                Georgia,
-                serif;
-            font-size: clamp(25px, 4vw, 35px);
-            line-height: 1.18;
-        }
+    .hp__news input[type=email] {
+        width: 100%; padding: 11px 13px; border-radius: 8px; border: 0;
+        font: inherit; margin-bottom: 9px;
+    }
+    .hp__news button {
+        width: 100%; padding: 11px; border: 0; border-radius: 8px;
+        background: var(--primary); color: var(--black);
+        font: inherit; font-weight: 800; cursor: pointer;
+    }
+    .hp__news button:hover { background: var(--primary-dark); color: #fff; }
+    .hp__news p { margin: 0 0 12px; font-size: .86rem; color: rgba(255,255,255,.75); line-height: 1.6; }
 
-        .popular-main h3 a:hover {
-            color: var(--primary);
-        }
+    .hp__socials { display: flex; flex-wrap: wrap; gap: 9px; }
+    .hp__social {
+        width: 38px; height: 38px; border-radius: 9px;
+        display: grid; place-items: center; color: #fff;
+        font-size: .74rem; font-weight: 800;
+    }
+    .hp__social.fb { background: #1877f2; }
+    .hp__social.x  { background: #000; }
+    .hp__social.yt { background: #ff0000; }
+    .hp__social.ig { background: linear-gradient(45deg,#f09433,#dc2743,#bc1888); }
+    .hp__social.tg { background: #229ed9; }
 
-        .popular-list {
-            display: grid;
-        }
+    .hp__promo {
+        display: block; border-radius: 12px; overflow: hidden;
+        background: linear-gradient(120deg, #0d1320, #1b3a6b);
+        color: #fff; padding: 26px 22px; text-align: center;
+    }
+    .hp__promo strong {
+        display: block; font-family: "Playfair Display", Georgia, serif;
+        font-size: 1.25rem; line-height: 1.3; margin-bottom: 6px;
+    }
+    .hp__promo span { font-size: .86rem; color: rgba(255,255,255,.75); }
 
-        .popular-item {
-            display: grid;
-            grid-template-columns:
-                42px minmax(0, 1fr);
-            gap: 13px;
-            padding: 17px 0;
-            border-bottom:
-                1px solid rgba(255, 255, 255, 0.12);
-        }
+    /* ---------------- Grille des rubriques ---------------- */
+    .hp__cats {
+        display: grid; grid-template-columns: repeat(4, minmax(0,1fr));
+        gap: 16px; margin-top: 22px;
+    }
+    .hp__cat {
+        background: var(--surface); border: 1px solid var(--border);
+        border-radius: 12px; padding: 14px;
+    }
+    .hp__cathead {
+        display: flex; align-items: center; gap: 8px;
+        padding-bottom: 10px; margin-bottom: 12px;
+        border-bottom: 2px solid var(--border);
+        font-weight: 800; font-size: .95rem;
+    }
+    .hp__cathead::before {
+        content: ""; width: 4px; height: 17px; border-radius: 2px;
+        background: var(--primary);
+    }
+    .hp__catthumb {
+        display: block; border-radius: 8px; overflow: hidden;
+        aspect-ratio: 16/10; background: var(--border); margin-bottom: 10px;
+    }
+    .hp__catthumb img { width: 100%; height: 100%; object-fit: cover; }
+    .hp__cattitle { display: block; font-size: .88rem; font-weight: 600; line-height: 1.4; }
+    .hp__catdate { display: block; margin-top: 7px; font-size: .74rem; color: var(--muted); }
 
-        .popular-item:first-child {
-            padding-top: 0;
-        }
-
-        .popular-item:last-child {
-            border-bottom: 0;
-        }
-
-        .popular-number {
-            color: var(--primary);
-            font-family:
-                "Playfair Display",
-                Georgia,
-                serif;
-            font-size: 32px;
-            font-weight: 800;
-            line-height: 1;
-        }
-
-        .popular-item h3 {
-            margin: 0 0 7px;
-            font-family:
-                "Playfair Display",
-                Georgia,
-                serif;
-            font-size: 18px;
-            line-height: 1.3;
-        }
-
-        .popular-item h3 a:hover {
-            color: var(--primary);
-        }
-
-        .category-section {
-            margin-top: 68px;
-            padding-top: 34px;
-            border-top: 1px solid var(--border);
-        }
-
-        .category-feature-grid {
-            display: grid;
-            grid-template-columns:
-                minmax(0, 1.15fr)
-                minmax(0, 0.85fr);
-            gap: 26px;
-        }
-
-        .category-main {
-            overflow: hidden;
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            background: white;
-            box-shadow: var(--shadow);
-        }
-
-        .category-main-image {
-            width: 100%;
-            height: 330px;
-            object-fit: cover;
-        }
-
-        .category-main-content {
-            padding: 26px;
-        }
-
-        .category-main h3 {
-            margin: 8px 0 12px;
-            font-family:
-                "Playfair Display",
-                Georgia,
-                serif;
-            font-size: clamp(25px, 4vw, 35px);
-            line-height: 1.2;
-        }
-
-        .category-main h3 a:hover {
-            color: var(--primary-dark);
-        }
-
-        .category-side-list {
-            display: grid;
-            gap: 16px;
-        }
-
-        .category-side-item {
-            display: grid;
-            grid-template-columns:
-                130px minmax(0, 1fr);
-            overflow: hidden;
-            border: 1px solid var(--border);
-            border-radius: 11px;
-            background: white;
-        }
-
-        .category-side-image,
-        .category-side-item .image-placeholder {
-            width: 130px;
-            height: 125px;
-            min-height: 125px;
-            object-fit: cover;
-        }
-
-        .category-side-content {
-            padding: 14px;
-        }
-
-        .category-side-content h3 {
-            margin: 5px 0 8px;
-            font-family:
-                "Playfair Display",
-                Georgia,
-                serif;
-            font-size: 17px;
-            line-height: 1.25;
-        }
-
-        .category-side-content h3 a:hover {
-            color: var(--primary-dark);
-        }
-
-        @media (max-width: 850px) {
-            .popular-layout,
-            .category-feature-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        @media (max-width: 520px) {
-            .popular-section {
-                margin-inline: -12px;
-                border-radius: 0;
-            }
-
-            .category-side-item {
-                grid-template-columns:
-                    105px minmax(0, 1fr);
-            }
-
-            .category-side-image,
-            .category-side-item .image-placeholder {
-                width: 105px;
-            }
-        }
-    </style>
+    @media (max-width: 1080px) {
+        .hp__grid { grid-template-columns: 1fr; }
+        .hp__cats { grid-template-columns: repeat(2, minmax(0,1fr)); }
+    }
+    @media (max-width: 680px) {
+        .hp__lead { grid-template-columns: 1fr; }
+        .hp__hero { min-height: 300px; }
+        .hp__cats { grid-template-columns: repeat(2, minmax(0,1fr)); gap: 12px; }
+        .hp__flashtag { padding: 9px 20px 9px 12px; font-size: .7rem; }
+    }
+</style>
 @endpush
 
 @section('content')
-    @if($featuredArticles->isNotEmpty())
-        @php
-            $mainArticle = $featuredArticles->first();
+<div class="hp">
 
-            $secondaryArticles = $featuredArticles
-                ->skip(1)
-                ->take(4);
-        @endphp
-
-        <section>
-            <div class="section-heading">
-                <h1 class="section-title">
-                    À la une
-                </h1>
-
-                <span class="meta">
-                    Les informations essentielles du moment
-                </span>
-            </div>
-
-            <div class="hero-grid">
-                <article class="hero-card">
-                    <x-article-image
-                        :article="$mainArticle"
-                        class="hero-main-image"
-                        :eager="true"
-                        :width="1200"
-                        :height="675"
-                    />
-
-                    <div class="hero-overlay">
-                        <div class="hero-content">
-                            <a
-                                href="{{ route(
-                                    'categories.show',
-                                    $mainArticle->category->slug
-                                ) }}"
-                                class="category"
-                            >
-                                {{ $mainArticle->category->name }}
-                            </a>
-
-                            <h2 class="hero-title">
-                                <a
-                                    href="{{ route(
-                                        'articles.show',
-                                        $mainArticle->slug
-                                    ) }}"
-                                >
-                                    {{ $mainArticle->title }}
-                                </a>
-                            </h2>
-
-                            @if($mainArticle->excerpt)
-                                <p class="hero-excerpt">
-                                    {{ $mainArticle->excerpt }}
-                                </p>
-                            @endif
-
-                            <div
-                                class="meta"
-                                style="color: #ddd5c5;"
-                            >
-                                Par {{ $mainArticle->author->name }}
-                                ·
-                                {{ $mainArticle
-                                    ->published_at
-                                    ?->translatedFormat('d F Y') }}
-                            </div>
-                        </div>
-                    </div>
-                </article>
-
-                <div class="side-stories">
-                    @foreach($secondaryArticles as $article)
-                        <article class="side-story">
-                            <x-article-image
-                                :article="$article"
-                                :width="360"
-                                :height="240"
-                            />
-
-                            <div class="side-story-content">
-                                <a
-                                    href="{{ route(
-                                        'categories.show',
-                                        $article->category->slug
-                                    ) }}"
-                                    class="category"
-                                >
-                                    {{ $article->category->name }}
-                                </a>
-
-                                <h3>
-                                    <a
-                                        href="{{ route(
-                                            'articles.show',
-                                            $article->slug
-                                        ) }}"
-                                    >
-                                        {{ $article->title }}
-                                    </a>
-                                </h3>
-
-                                <div class="meta">
-                                    {{ $article
-                                        ->published_at
-                                        ?->translatedFormat('d M Y') }}
-                                </div>
-                            </div>
-                        </article>
-                    @endforeach
-                </div>
-            </div>
-        </section>
-    @endif
+    {{--
+        Pas de bandeau « flash » ici : le gabarit en affiche déjà un sous
+        la navigation, sur toutes les pages. En remettre un sur l'accueil
+        ferait doublon.
+    --}}
 
     <x-ad-slot position="home_top" />
 
-    <section>
-        <div class="section-heading">
-            <h2 class="section-title">
-                Dernières nouvelles
-            </h2>
+    <div class="hp__grid">
 
-            <a
-                href="{{ route('search') }}"
-                class="section-link"
-            >
-                Explorer toute l’actualité →
-            </a>
-        </div>
+        <div>
+            {{-- ---------------- La une ---------------- --}}
+            <div class="hp__lead">
 
-        @if($latestArticles->isEmpty())
-            <div class="empty-state">
-                <h2>
-                    Notre rédaction se prépare
-                </h2>
+                @if($lead)
+                    <a href="{{ route('articles.show', $lead->slug) }}" class="hp__hero">
+                        @if($lead->featured_image)
+                            <img src="{{ $lead->thumbUrl(1200) }}"
+                                 alt="{{ $lead->title }}" loading="eager" fetchpriority="high"
+                                 width="900" height="560" decoding="async">
+                        @endif
 
-                <p>
-                    Les premiers articles seront bientôt disponibles.
-                </p>
-            </div>
-        @else
-            <div class="articles-grid">
-                @foreach($latestArticles as $article)
-                    <article class="article-card">
-                        <x-article-image
-                            :article="$article"
-                            :width="600"
-                            :height="400"
-                        />
+                        <span class="hp__herobody">
+                            @if($lead->category)
+                                <span class="hp__tag">{{ $lead->category->name }}</span>
+                            @endif
 
-                        <div class="article-card-content">
-                            <a
-                                href="{{ route(
-                                    'categories.show',
-                                    $article->category->slug
-                                ) }}"
-                                class="category"
-                            >
-                                {{ $article->category->name }}
-                            </a>
+                            <h2 class="hp__herotitle">{{ $lead->title }}</h2>
 
-                            <h3>
-                                <a
-                                    href="{{ route(
-                                        'articles.show',
-                                        $article->slug
-                                    ) }}"
-                                >
-                                    {{ $article->title }}
-                                </a>
-                            </h3>
-
-                            @if($article->excerpt)
-                                <p>
-                                    {{ \Illuminate\Support\Str::limit(
-                                        $article->excerpt,
-                                        135
-                                    ) }}
+                            @if($lead->excerpt)
+                                <p class="hp__heroexcerpt">
+                                    {{ \Illuminate\Support\Str::limit(strip_tags($lead->excerpt), 165) }}
                                 </p>
                             @endif
 
-                            <div class="meta">
-                                Par {{ $article->author->name }}
-                                ·
-                                {{ $article
-                                    ->published_at
-                                    ?->diffForHumans() }}
-                            </div>
-                        </div>
-                    </article>
-                @endforeach
+                            <span class="hp__meta">
+                                <span>🗓 {{ $lead->published_at?->translatedFormat('d F Y') }}</span>
+                                @if($lead->views_count)
+                                    <span>👁 {{ number_format($lead->views_count, 0, ',', ' ') }} vues</span>
+                                @endif
+                            </span>
+                        </span>
+                    </a>
+                @endif
+
+                <div class="hp__stack">
+                    @foreach($sideUp as $article)
+                        <a href="{{ route('articles.show', $article->slug) }}" class="hp__card">
+                            @if($article->featured_image)
+                                <img src="{{ $article->thumbUrl(400) }}" alt="{{ $article->title }}"
+                                     loading="lazy" width="400" height="250" decoding="async">
+                            @endif
+
+                            <span class="hp__cardbody">
+                                @if($article->category)
+                                    <span class="hp__tag">{{ $article->category->name }}</span>
+                                @endif
+
+                                <span class="hp__cardtitle">{{ $article->title }}</span>
+
+                                <span class="hp__meta">
+                                    <span>🗓 {{ $article->published_at?->translatedFormat('d M Y') }}</span>
+                                </span>
+                            </span>
+                        </a>
+                    @endforeach
+                </div>
             </div>
 
-            <div style="margin-top: 38px;">
-                {{ $latestArticles->links() }}
-            </div>
-        @endif
-    </section>
-
-    @if($popularArticles->isNotEmpty())
-        @php
-            $mainPopular = $popularArticles->first();
-
-            $otherPopular = $popularArticles
-                ->skip(1);
-        @endphp
-
-        <section class="popular-section">
-            <div class="section-heading">
-                <h2 class="section-title">
-                    Les plus lus
-                </h2>
-
-                <span class="section-link">
-                    Tendances des 30 derniers jours
-                </span>
-            </div>
-
-            <div class="popular-layout">
-                <article class="popular-main">
-                    <x-article-image
-                        :article="$mainPopular"
-                        class="popular-main-image"
-                        :width="900"
-                        :height="560"
-                    />
-
-                    <div class="popular-main-content">
-                        <a
-                            href="{{ route(
-                                'categories.show',
-                                $mainPopular->category->slug
-                            ) }}"
-                            class="category"
-                        >
-                            {{ $mainPopular->category->name }}
+            {{-- ---------------- Rubriques ---------------- --}}
+            <div class="hp__cats">
+                @foreach($sections as $section)
+                    @php($top = $section->articles->first())
+                    <div class="hp__cat">
+                        <a href="{{ route('categories.show', $section->slug) }}" class="hp__cathead">
+                            {{ $section->name }}
                         </a>
 
-                        <h3>
-                            <a
-                                href="{{ route(
-                                    'articles.show',
-                                    $mainPopular->slug
-                                ) }}"
-                            >
-                                {{ $mainPopular->title }}
-                            </a>
-                        </h3>
+                        @if($top)
+                            <a href="{{ route('articles.show', $top->slug) }}">
+                                @if($top->featured_image)
+                                    <span class="hp__catthumb">
+                                        <img src="{{ $top->thumbUrl(400) }}" alt="{{ $top->title }}"
+                                             loading="lazy" width="400" height="250" decoding="async">
+                                    </span>
+                                @endif
 
-                        <div class="meta">
-                            {{ number_format(
-                                $mainPopular->views_count
-                            ) }}
-                            lecture(s)
-                        </div>
-                    </div>
-                </article>
-
-                <div class="popular-list">
-                    @foreach($otherPopular as $popular)
-                        <article class="popular-item">
-                            <span class="popular-number">
-                                {{ str_pad(
-                                    $loop->iteration + 1,
-                                    2,
-                                    '0',
-                                    STR_PAD_LEFT
-                                ) }}
-                            </span>
-
-                            <div>
-                                <h3>
-                                    <a
-                                        href="{{ route(
-                                            'articles.show',
-                                            $popular->slug
-                                        ) }}"
-                                    >
-                                        {{ $popular->title }}
-                                    </a>
-                                </h3>
-
-                                <div class="meta">
-                                    {{ number_format(
-                                        $popular->views_count
-                                    ) }}
-                                    lecture(s)
-                                </div>
-                            </div>
-                        </article>
-                    @endforeach
-                </div>
-            </div>
-        </section>
-    @endif
-
-    @foreach($categorySections as $categorySection)
-        @php
-            $categoryMainArticle =
-                $categorySection->articles->first();
-
-            $categorySideArticles =
-                $categorySection->articles
-                    ->skip(1)
-                    ->take(3);
-        @endphp
-
-        <section class="category-section">
-            <div class="section-heading">
-                <h2 class="section-title">
-                    {{ $categorySection->name }}
-                </h2>
-
-                <a
-                    href="{{ route(
-                        'categories.show',
-                        $categorySection->slug
-                    ) }}"
-                    class="section-link"
-                >
-                    Toute la rubrique →
-                </a>
-            </div>
-
-            <div class="category-feature-grid">
-                <article class="category-main">
-                    <x-article-image
-                        :article="$categoryMainArticle"
-                        class="category-main-image"
-                        :width="900"
-                        :height="560"
-                    />
-
-                    <div class="category-main-content">
-                        <span class="category">
-                            {{ $categorySection->name }}
-                        </span>
-
-                        <h3>
-                            <a
-                                href="{{ route(
-                                    'articles.show',
-                                    $categoryMainArticle->slug
-                                ) }}"
-                            >
-                                {{ $categoryMainArticle->title }}
-                            </a>
-                        </h3>
-
-                        @if($categoryMainArticle->excerpt)
-                            <p>
-                                {{ \Illuminate\Support\Str::limit(
-                                    $categoryMainArticle->excerpt,
-                                    180
-                                ) }}
-                            </p>
-                        @endif
-
-                        <div class="meta">
-                            Par
-                            {{ $categoryMainArticle->author->name }}
-                            ·
-                            {{ $categoryMainArticle
-                                ->published_at
-                                ?->translatedFormat('d F Y') }}
-                        </div>
-                    </div>
-                </article>
-
-                <div class="category-side-list">
-                    @foreach($categorySideArticles as $article)
-                        <article class="category-side-item">
-                            <x-article-image
-                                :article="$article"
-                                class="category-side-image"
-                                :width="360"
-                                :height="260"
-                            />
-
-                            <div class="category-side-content">
-                                <span class="category">
-                                    {{ $article->category->name }}
+                                <span class="hp__cattitle">
+                                    {{ \Illuminate\Support\Str::limit($top->title, 78) }}
                                 </span>
 
-                                <h3>
-                                    <a
-                                        href="{{ route(
-                                            'articles.show',
-                                            $article->slug
-                                        ) }}"
-                                    >
-                                        {{ $article->title }}
-                                    </a>
-                                </h3>
+                                <span class="hp__catdate">
+                                    🗓 {{ $top->published_at?->translatedFormat('d F Y') }}
+                                </span>
+                            </a>
+                        @endif
+                    </div>
+                @endforeach
+            </div>
+        </div>
 
-                                <div class="meta">
-                                    {{ $article
-                                        ->published_at
-                                        ?->translatedFormat('d M Y') }}
-                                </div>
-                            </div>
-                        </article>
-                    @endforeach
+        {{-- ---------------- Colonne de droite ---------------- --}}
+        <aside>
+
+            @if($popularArticles->isNotEmpty())
+                <div class="hp__panel">
+                    <h2 class="hp__paneltitle">🔥 Les plus lus</h2>
+
+                    <div class="hp__most">
+                        @foreach($popularArticles as $popular)
+                            <a href="{{ route('articles.show', $popular->slug) }}" class="hp__mostitem">
+                                <span class="hp__mostnum">
+                                    @if($popular->featured_image)
+                                        <img src="{{ $popular->thumbUrl(400) }}" alt=""
+                                             loading="lazy" width="120" height="120" decoding="async">
+                                    @endif
+                                    <span>{{ $loop->iteration }}</span>
+                                </span>
+
+                                <span>
+                                    <span class="hp__mosttitle">
+                                        {{ \Illuminate\Support\Str::limit($popular->title, 72) }}
+                                    </span>
+                                    <span class="hp__mostviews">
+                                        {{ number_format($popular->recent_views_count ?? $popular->views_count ?? 0, 0, ',', ' ') }} vues
+                                    </span>
+                                </span>
+                            </a>
+                        @endforeach
+                    </div>
+                </div>
+            @endif
+
+            {{-- Infolettre : même route que le pied de page. --}}
+            <div class="hp__panel hp__panel--dark hp__news">
+                <h2 class="hp__paneltitle">✉️ Newsletter</h2>
+
+                <div class="hp__panelbody">
+                    <p>
+                        Restez informé en temps réel ! Recevez les dernières
+                        actualités directement dans votre boîte mail.
+                    </p>
+
+                    @if(session('newsletter_success'))
+                        <p style="color:var(--primary)">{{ session('newsletter_success') }}</p>
+                    @endif
+
+                    <form method="POST" action="{{ route('newsletter.store') }}">
+                        @csrf
+                        <label class="sr-only" for="hp-news">Votre adresse e-mail</label>
+                        <input id="hp-news" type="email" name="email"
+                               placeholder="Votre adresse e-mail" required>
+                        <button type="submit">S’inscrire</button>
+                    </form>
                 </div>
             </div>
-        </section>
-    @endforeach
+
+            @php($socialLinks = collect($socials)->filter(fn ($s) => filled($s['url'])))
+
+            @if($socialLinks->isNotEmpty())
+                <div class="hp__panel hp__panel--dark">
+                    <h2 class="hp__paneltitle">Suivez-nous</h2>
+
+                    <div class="hp__panelbody">
+                        <div class="hp__socials">
+                            @foreach($socialLinks as $social)
+                                <a href="{{ $social['url'] }}" class="hp__social {{ $social['class'] }}"
+                                   target="_blank" rel="noopener" aria-label="{{ $social['label'] }}">
+                                    <svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true">
+                                        <path fill="currentColor" d="{{ $social['path'] }}"/>
+                                    </svg>
+                                </a>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+            @endif
+
+            {{-- Emplacement vendable ; à défaut, une invitation à soutenir. --}}
+            <x-ad-slot position="sidebar_top" />
+
+            <a href="{{ route('donations.create') }}" class="hp__promo">
+                <strong>Ensemble pour une information plus proche de vous</strong>
+                <span>Sipòte jounalis endepandan an Ayiti</span>
+            </a>
+
+            <x-ad-slot position="sidebar_bottom" />
+        </aside>
+    </div>
+</div>
 @endsection

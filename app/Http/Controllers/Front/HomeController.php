@@ -108,12 +108,23 @@ class HomeController extends Controller
          * Charge quatre publications pour chaque catégorie.
          */
         $categorySections->each(function (Category $category): void {
+            /*
+             * Rubrique et sous-rubriques : les articles sont le plus
+             * souvent rangés dans une sous-rubrique, si bien qu'une
+             * rubrique de premier niveau paraîtrait vide.
+             */
+            $categoryIds = $category->activeChildren()
+                ->pluck('id')
+                ->push($category->id)
+                ->unique()
+                ->values();
+
             $articles = Article::query()
                 ->with([
                     'category',
                     'author',
                 ])
-                ->where('category_id', $category->id)
+                ->whereIn('category_id', $categoryIds)
                 ->where('status', 'published')
                 ->where(function ($query): void {
                     $query->whereNull('published_at')

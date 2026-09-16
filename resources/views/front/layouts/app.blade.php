@@ -393,39 +393,25 @@
         |--------------------------------------------------------------------------
         */
 
+        /*
+         * Tuile d'accueil : repère fixe à gauche de la barre, comme dans
+         * la plupart des sites d'information.
+         */
         .home-link {
             position: relative;
             display: inline-flex;
             align-items: center;
+            justify-content: center;
             flex-shrink: 0;
+            width: 56px;
             min-height: 56px;
-            padding: 0 13px;
-            color: var(--primary);
-            font-size: 14px;
-            font-weight: 700;
-            white-space: nowrap;
-        }
-
-        .home-link::after {
-            position: absolute;
-            right: 13px;
-            bottom: 0;
-            left: 13px;
-            height: 3px;
             background: var(--primary);
-            content: "";
-            transform: scaleX(0);
-            transform-origin: center;
-            transition: transform 0.2s ease;
+            color: var(--black);
         }
 
-        .home-link:hover {
-            color: white;
-        }
+        .home-link:hover { background: var(--primary-dark); color: #fff; }
 
-        .home-link:hover::after {
-            transform: scaleX(1);
-        }
+        .home-link svg { display: block; }
 
 
         /*
@@ -1454,8 +1440,12 @@
             <a
                 href="{{ route('home') }}"
                 class="home-link"
+                aria-label="Accueil"
             >
-                Accueil
+                <svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true">
+                    <path fill="currentColor"
+                          d="M12 3.2 2.6 11h2.6v9.2h5.1v-5.6h3.4v5.6h5.1V11h2.6L12 3.2Z"/>
+                </svg>
             </a>
 
 
@@ -1465,17 +1455,17 @@
 
             <div class="navigation-menu">
 
-                {{-- Le bouton « Soutenir » est dans l'en-tête, près de la recherche. --}}
-                <div class="nav-item">
-                    <a href="{{ route('announcements.index') }}" class="nav-link">
-                        Annonces
-                    </a>
-                </div>
+                @php
+                    /*
+                     * Huit rubriques au plus dans la barre : au-delà elle
+                     * déborde et devient illisible sur un portable. Le reste
+                     * va sous « Plus », avec les pages de service.
+                     */
+                    $navPrimary = collect($navigationCategories ?? [])->take(8);
+                    $navOverflow = collect($navigationCategories ?? [])->slice(8);
+                @endphp
 
-                @foreach(
-                    $navigationCategories ?? []
-                    as $navigationCategory
-                )
+                @foreach($navPrimary as $navigationCategory)
 
                     <div class="nav-item">
 
@@ -1551,6 +1541,28 @@
                     </div>
 
                 @endforeach
+
+                {{-- Rubriques restantes et pages de service. --}}
+                <div class="nav-item">
+                    <a href="#" class="nav-link" aria-haspopup="true">
+                        Plus
+                        <span class="nav-arrow" aria-hidden="true">▾</span>
+                    </a>
+
+                    <div class="nav-dropdown">
+                        @foreach($navOverflow as $extra)
+                            <a href="{{ route('categories.show', $extra->slug) }}"
+                               class="nav-dropdown-link">{{ $extra->name }}</a>
+                        @endforeach
+
+                        <a href="{{ route('announcements.index') }}" class="nav-dropdown-link">Annonces</a>
+                        <a href="{{ route('polls.index') }}" class="nav-dropdown-link">Sondages</a>
+                        <a href="{{ route('fundraisers.index') }}" class="nav-dropdown-link">Kanpay finansman</a>
+                        <a href="{{ route('donations.create') }}" class="nav-dropdown-link">Soutenir</a>
+                        <a href="{{ route('media-kit') }}" class="nav-dropdown-link">Annoncer chez nous</a>
+                        <a href="{{ route('contact.create') }}" class="nav-dropdown-link">Contact</a>
+                    </div>
+                </div>
 
             </div>
 
