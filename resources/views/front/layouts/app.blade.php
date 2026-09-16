@@ -26,6 +26,7 @@
 
     @include('front.partials.seo')
 
+
     {{-- ========================================================= --}}
     {{-- FAVICONS --}}
     {{-- ========================================================= --}}
@@ -56,6 +57,7 @@
         href="{{ asset('images/apple-touch-icon.png') }}"
     >
 
+
     {{-- ========================================================= --}}
     {{-- POLICES --}}
     {{-- ========================================================= --}}
@@ -76,6 +78,7 @@
         rel="stylesheet"
     >
 
+
     {{-- ========================================================= --}}
     {{-- CSS --}}
     {{-- ========================================================= --}}
@@ -90,7 +93,9 @@
         href="{{ url('/css/mobile.css') }}"
     >
 
+
     <style>
+
         :root {
             --primary: #d8a922;
             --primary-dark: #a87b12;
@@ -150,6 +155,7 @@
             margin-inline: auto;
         }
 
+
         /*
         |--------------------------------------------------------------------------
         | Barre supérieure
@@ -178,6 +184,7 @@
             letter-spacing: 0.08em;
             text-transform: uppercase;
         }
+
 
         /*
         |--------------------------------------------------------------------------
@@ -211,6 +218,7 @@
             max-height: 112px;
             object-fit: contain;
         }
+
 
         /*
         |--------------------------------------------------------------------------
@@ -267,18 +275,19 @@
             transform: translateY(-1px);
         }
 
+
         /*
         |--------------------------------------------------------------------------
-        | Navigation
+        | Navigation principale
         |--------------------------------------------------------------------------
         */
 
         .navigation {
             position: sticky;
-            z-index: 50;
+            z-index: 100;
             top: 0;
             color: white;
-            background: rgba(8, 8, 8, 0.97);
+            background: rgba(8, 8, 8, 0.98);
             box-shadow:
                 0 8px 24px rgba(8, 8, 8, 0.14);
             backdrop-filter: blur(12px);
@@ -288,30 +297,34 @@
             display: flex;
             align-items: center;
             min-height: 56px;
-            gap: 30px;
-            overflow-x: auto;
-            scrollbar-width: none;
-            white-space: nowrap;
+            gap: 4px;
         }
 
-        .navigation-inner::-webkit-scrollbar {
-            display: none;
-        }
 
-        .navigation a {
+        /*
+        |--------------------------------------------------------------------------
+        | Accueil
+        |--------------------------------------------------------------------------
+        */
+
+        .home-link {
             position: relative;
             display: inline-flex;
             align-items: center;
+            flex-shrink: 0;
             min-height: 56px;
+            padding: 0 13px;
+            color: var(--primary);
             font-size: 14px;
             font-weight: 700;
+            white-space: nowrap;
         }
 
-        .navigation a::after {
+        .home-link::after {
             position: absolute;
-            right: 0;
+            right: 13px;
             bottom: 0;
-            left: 0;
+            left: 13px;
             height: 3px;
             background: var(--primary);
             content: "";
@@ -320,17 +333,171 @@
             transition: transform 0.2s ease;
         }
 
-        .navigation a:hover {
-            color: var(--primary);
+        .home-link:hover {
+            color: white;
         }
 
-        .navigation a:hover::after {
+        .home-link:hover::after {
             transform: scaleX(1);
         }
 
-        .home-link {
-            color: var(--primary);
+
+        /*
+        |--------------------------------------------------------------------------
+        | Conteneur des rubriques
+        |--------------------------------------------------------------------------
+        */
+
+        .navigation-menu {
+            display: flex;
+            align-items: center;
+            flex: 1;
+            min-width: 0;
+            min-height: 56px;
+            gap: 2px;
         }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Rubrique principale
+        |--------------------------------------------------------------------------
+        */
+
+        .nav-item {
+            position: relative;
+            display: flex;
+            align-items: center;
+            flex-shrink: 0;
+            min-height: 56px;
+        }
+
+        .nav-link {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            min-height: 56px;
+            padding: 0 12px;
+            color: white;
+            font-size: 14px;
+            font-weight: 700;
+            white-space: nowrap;
+            transition:
+                color 0.2s ease,
+                background 0.2s ease;
+        }
+
+        .nav-link::after {
+            position: absolute;
+            right: 12px;
+            bottom: 0;
+            left: 12px;
+            height: 3px;
+            background: var(--primary);
+            content: "";
+            transform: scaleX(0);
+            transform-origin: center;
+            transition: transform 0.2s ease;
+        }
+
+        .nav-item:hover > .nav-link,
+        .nav-item:focus-within > .nav-link {
+            color: var(--primary);
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        .nav-item:hover > .nav-link::after,
+        .nav-item:focus-within > .nav-link::after {
+            transform: scaleX(1);
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Flèche
+        |--------------------------------------------------------------------------
+        */
+
+        .nav-arrow {
+            display: inline-block;
+            color: var(--primary);
+            font-size: 9px;
+            line-height: 1;
+            transition: transform 0.2s ease;
+        }
+
+        .nav-item:hover .nav-arrow,
+        .nav-item:focus-within .nav-arrow {
+            transform: rotate(180deg);
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Sous-menu
+        |--------------------------------------------------------------------------
+        */
+
+        .nav-dropdown {
+            position: absolute;
+            z-index: 500;
+            top: 100%;
+            left: 0;
+            width: max-content;
+            min-width: 220px;
+            max-width: 320px;
+            padding: 7px 0;
+            visibility: hidden;
+            opacity: 0;
+            border-top: 3px solid var(--primary);
+            border-radius: 0 0 12px 12px;
+            background: #111111;
+            box-shadow:
+                0 18px 45px rgba(0, 0, 0, 0.32);
+            transform: translateY(8px);
+            transition:
+                visibility 0.18s ease,
+                opacity 0.18s ease,
+                transform 0.18s ease;
+        }
+
+        .nav-item:hover > .nav-dropdown,
+        .nav-item:focus-within > .nav-dropdown {
+            visibility: visible;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .nav-dropdown-link {
+            display: flex;
+            align-items: center;
+            min-height: 42px;
+            padding: 9px 17px;
+            color: #eeeeee;
+            border-bottom:
+                1px solid rgba(255, 255, 255, 0.06);
+            font-size: 13px;
+            font-weight: 600;
+            line-height: 1.3;
+            white-space: nowrap;
+            transition:
+                color 0.2s ease,
+                background 0.2s ease,
+                padding-left 0.2s ease;
+        }
+
+        .nav-dropdown-link:last-child {
+            border-bottom: 0;
+        }
+
+        .nav-dropdown-link:hover {
+            padding-left: 22px;
+            color: var(--primary);
+            background:
+                rgba(255, 255, 255, 0.06);
+        }
+
 
         /*
         |--------------------------------------------------------------------------
@@ -394,6 +561,7 @@
             font-weight: 700;
         }
 
+
         /*
         |--------------------------------------------------------------------------
         | Contenu général
@@ -443,6 +611,7 @@
         .section-link:hover {
             color: var(--black);
         }
+
 
         /*
         |--------------------------------------------------------------------------
@@ -544,6 +713,7 @@
             font-size: 17px;
         }
 
+
         /*
         |--------------------------------------------------------------------------
         | Articles secondaires
@@ -595,6 +765,7 @@
         .side-story h3 a:hover {
             color: var(--primary-dark);
         }
+
 
         /*
         |--------------------------------------------------------------------------
@@ -683,6 +854,7 @@
             font-size: 13px;
         }
 
+
         /*
         |--------------------------------------------------------------------------
         | Article
@@ -759,6 +931,7 @@
             max-width: 100%;
         }
 
+
         /*
         |--------------------------------------------------------------------------
         | État vide
@@ -781,6 +954,7 @@
                 serif;
         }
 
+
         /*
         |--------------------------------------------------------------------------
         | Accessibilité
@@ -798,7 +972,15 @@
             border: 0;
         }
 
+
+        /*
+        |--------------------------------------------------------------------------
+        | Tablettes
+        |--------------------------------------------------------------------------
+        */
+
         @media (max-width: 940px) {
+
             .hero-grid {
                 grid-template-columns: 1fr;
             }
@@ -815,7 +997,48 @@
             }
         }
 
+
+        /*
+        |--------------------------------------------------------------------------
+        | Navigation intermédiaire
+        |--------------------------------------------------------------------------
+        */
+
+        @media (max-width: 1150px) {
+
+            .navigation-inner {
+                overflow-x: auto;
+                overflow-y: hidden;
+                scrollbar-width: none;
+            }
+
+            .navigation-inner::-webkit-scrollbar {
+                display: none;
+            }
+
+            /*
+             * Le menu déroulant est désactivé lorsque
+             * la navigation devient horizontale.
+             */
+
+            .nav-dropdown {
+                display: none;
+            }
+
+            .nav-arrow {
+                display: none;
+            }
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Mobile
+        |--------------------------------------------------------------------------
+        */
+
         @media (max-width: 680px) {
+
             .container {
                 width: min(100% - 24px, 1220px);
             }
@@ -860,11 +1083,34 @@
 
             .navigation-inner {
                 min-height: 50px;
-                gap: 22px;
+                gap: 2px;
+                overflow-x: auto;
+                overflow-y: hidden;
             }
 
-            .navigation a {
+            .home-link {
                 min-height: 50px;
+                padding-inline: 10px;
+            }
+
+            .navigation-menu {
+                width: max-content;
+                min-height: 50px;
+            }
+
+            .nav-item {
+                min-height: 50px;
+            }
+
+            .nav-link {
+                min-height: 50px;
+                padding-inline: 11px;
+                font-size: 13px;
+            }
+
+            .nav-dropdown,
+            .nav-arrow {
+                display: none;
             }
 
             .breaking-label {
@@ -932,7 +1178,9 @@
             }
         }
 
+
         @media (max-width: 390px) {
+
             .container {
                 width: calc(100% - 18px);
             }
@@ -958,7 +1206,15 @@
             }
         }
 
+
+        /*
+        |--------------------------------------------------------------------------
+        | Réduction des animations
+        |--------------------------------------------------------------------------
+        */
+
         @media (prefers-reduced-motion: reduce) {
+
             *,
             *::before,
             *::after {
@@ -968,23 +1224,29 @@
                 animation-iteration-count: 1 !important;
             }
         }
+
     </style>
+
 
     @stack('styles')
 
 </head>
 
+
 <body>
+
 
     {{-- ========================================================= --}}
     {{-- BARRE SUPÉRIEURE --}}
     {{-- ========================================================= --}}
 
     <div class="topbar">
+
         <div class="container topbar-inner">
 
             <span>
-                {{ now('America/Port-au-Prince')->translatedFormat('l d F Y') }}
+                {{ now('America/Port-au-Prince')
+                    ->translatedFormat('l d F Y') }}
             </span>
 
             <span class="topbar-message">
@@ -992,7 +1254,9 @@
             </span>
 
         </div>
+
     </div>
+
 
     {{-- ========================================================= --}}
     {{-- EN-TÊTE --}}
@@ -1020,7 +1284,10 @@
 
             </a>
 
-            {{-- Recherche --}}
+
+            {{-- ================================================= --}}
+            {{-- RECHERCHE --}}
+            {{-- ================================================= --}}
 
             <form
                 action="{{ route('search') }}"
@@ -1052,7 +1319,9 @@
             </form>
 
         </div>
+
     </header>
+
 
     {{-- ========================================================= --}}
     {{-- NAVIGATION --}}
@@ -1065,6 +1334,11 @@
 
         <div class="container navigation-inner">
 
+
+            {{-- ================================================= --}}
+            {{-- ACCUEIL --}}
+            {{-- ================================================= --}}
+
             <a
                 href="{{ route('home') }}"
                 class="home-link"
@@ -1072,35 +1346,114 @@
                 Accueil
             </a>
 
-            @foreach(
-                $navigationCategories ?? []
-                as $navigationCategory
-            )
 
-                <a
-                    href="{{ route(
-                        'categories.show',
-                        $navigationCategory->slug
-                    ) }}"
-                >
-                    {{ $navigationCategory->name }}
-                </a>
+            {{-- ================================================= --}}
+            {{-- RUBRIQUES --}}
+            {{-- ================================================= --}}
 
-            @endforeach
+            <div class="navigation-menu">
+
+                @foreach(
+                    $navigationCategories ?? []
+                    as $navigationCategory
+                )
+
+                    <div class="nav-item">
+
+
+                        {{-- ===================================== --}}
+                        {{-- RUBRIQUE PRINCIPALE --}}
+                        {{-- ===================================== --}}
+
+                        <a
+                            href="{{ route(
+                                'categories.show',
+                                $navigationCategory->slug
+                            ) }}"
+                            class="nav-link"
+                        >
+
+                            {{ $navigationCategory->name }}
+
+
+                            {{-- Flèche uniquement si sous-rubriques --}}
+
+                            @if(
+                                $navigationCategory->children
+                                && $navigationCategory->children->isNotEmpty()
+                            )
+
+                                <span
+                                    class="nav-arrow"
+                                    aria-hidden="true"
+                                >
+                                    ▼
+                                </span>
+
+                            @endif
+
+                        </a>
+
+
+                        {{-- ===================================== --}}
+                        {{-- SOUS-RUBRIQUES --}}
+                        {{-- ===================================== --}}
+
+                        @if(
+                            $navigationCategory->children
+                            && $navigationCategory->children->isNotEmpty()
+                        )
+
+                            <div class="nav-dropdown">
+
+                                @foreach(
+                                    $navigationCategory->children
+                                    as $child
+                                )
+
+                                    <a
+                                        href="{{ route(
+                                            'categories.show',
+                                            $child->slug
+                                        ) }}"
+                                        class="nav-dropdown-link"
+                                    >
+
+                                        {{ $child->name }}
+
+                                    </a>
+
+                                @endforeach
+
+                            </div>
+
+                        @endif
+
+                    </div>
+
+                @endforeach
+
+            </div>
 
         </div>
 
     </nav>
 
+
     {{-- ========================================================= --}}
     {{-- DERNIÈRE MINUTE --}}
     {{-- ========================================================= --}}
 
-    @if(($breakingArticles ?? collect())->isNotEmpty())
+    @if(
+        ($breakingArticles ?? collect())
+            ->isNotEmpty()
+    )
 
         @php
+
             $breakingArticle =
                 $breakingArticles->first();
+
         @endphp
 
         <aside
@@ -1114,12 +1467,24 @@
                     Dernière minute
                 </span>
 
+
                 <div class="breaking-content">
 
+
+                    {{-- Heure Haïti --}}
+
                     <span class="breaking-time">
+
                         {{ $breakingArticle
-                            ->published_at?->format('H:i') }}
+                            ->published_at
+                            ?->timezone('America/Port-au-Prince')
+                            ->format('H:i')
+                        }}
+
                     </span>
+
+
+                    {{-- Article --}}
 
                     <a
                         href="{{ route(
@@ -1127,7 +1492,9 @@
                             $breakingArticle->slug
                         ) }}"
                     >
+
                         {{ $breakingArticle->title }}
+
                     </a>
 
                 </div>
@@ -1137,6 +1504,7 @@
         </aside>
 
     @endif
+
 
     {{-- ========================================================= --}}
     {{-- CONTENU --}}
@@ -1152,11 +1520,17 @@
 
     </main>
 
+
     {{-- ========================================================= --}}
     {{-- FOOTER --}}
     {{-- ========================================================= --}}
 
     @include('front.partials.footer')
+
+
+    {{-- ========================================================= --}}
+    {{-- SCRIPTS --}}
+    {{-- ========================================================= --}}
 
     @stack('scripts')
 
