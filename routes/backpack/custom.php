@@ -134,4 +134,8 @@ Route::group([
 
     Route::get('statistiques', [StatisticsController::class, 'index'])
     ->name('admin.statistics');
+
+    // Revenus : dons, annonces, votes payants, campagnes, publicité.
+    Route::get('revenus', [\App\Http\Controllers\Admin\RevenueController::class, 'index'])
+        ->name('admin.revenue');
 });

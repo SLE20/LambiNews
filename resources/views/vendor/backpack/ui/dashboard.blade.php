@@ -200,6 +200,11 @@
             </div>
         </div>
 
+        {{-- Revenus (administrateurs) --}}
+        @if(! empty($revenue))
+            @include('admin.partials.dashboard-revenue', ['revenue' => $revenue])
+        @endif
+
         {{-- États éditoriaux --}}
         <div class="row g-3 mb-4">
             <div class="col-6 col-md-4 col-xl">

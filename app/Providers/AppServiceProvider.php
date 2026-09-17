@@ -449,8 +449,40 @@ class AppServiceProvider extends ServiceProvider
 
                     'dashboardPermissions' =>
                         $dashboardPermissions,
+
+                    // Chiffres financiers : administrateurs seulement.
+                    'revenue' =>
+                        $isAdmin ? $this->dashboardRevenue() : null,
                 ]);
             }
         );
+    }
+
+    /**
+     * Résumé des revenus des 30 derniers jours pour l'accueil de
+     * l'administration. Une panne ici ne doit pas vider le tableau de
+     * bord entier : on renvoie null et le bloc ne s'affiche pas.
+     */
+    private function dashboardRevenue(): ?array
+    {
+        try {
+            $stats = new \App\Services\RevenueStats(
+                now()->subDays(29)->startOfDay(),
+                now()->endOfDay()
+            );
+
+            $total = $stats->total();
+
+            return [
+                'total'   => $total,
+                'growth'  => \App\Services\RevenueStats::growth($total, $stats->previous()->total()),
+                'streams' => $stats->byStream(),
+                'daily'   => $stats->daily(),
+            ];
+        } catch (\Throwable $e) {
+            report($e);
+
+            return null;
+        }
     }
 }

@@ -166,6 +166,11 @@
         />
 
     </x-backpack::menu-dropdown>
+<x-backpack::menu-item
+    title="Revenus"
+    icon="la la-coins"
+    :link="backpack_url('revenus')"
+/>
     <x-backpack::menu-item
     title="Statistiques"
     icon="la la-chart-line"
