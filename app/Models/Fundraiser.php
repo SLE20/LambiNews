@@ -17,7 +17,7 @@ class Fundraiser extends Model
     public const STATUS_CLOSED = 'closed';
 
     protected $fillable = [
-        'title', 'slug', 'summary', 'story', 'cover_image', 'beneficiary',
+        'title', 'slug', 'summary', 'story', 'cover_image', 'photo', 'beneficiary',
         'goal_amount', 'currency', 'status', 'is_featured', 'starts_at', 'ends_at',
     ];
 

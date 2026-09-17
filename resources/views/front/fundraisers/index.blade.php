@@ -25,13 +25,24 @@
             <div class="fr__grid">
                 @foreach($fundraisers as $fundraiser)
                     <a href="{{ route('fundraisers.show', $fundraiser->slug) }}" class="fr__card">
-                        @if($fundraiser->cover_image)
+                        @if($fundraiser->cover_image || $fundraiser->photo)
                             <span class="fr__cover">
-                                <img src="{{ asset('storage/'.$fundraiser->cover_image) }}" alt="" loading="lazy">
+                                @if($fundraiser->cover_image)
+                                    <img src="{{ asset('storage/'.$fundraiser->cover_image) }}"
+                                         alt="" loading="lazy">
+                                @endif
+
+                                @if($fundraiser->photo)
+                                    <span class="fr__photo">
+                                        <img src="{{ asset('storage/'.$fundraiser->photo) }}"
+                                             alt="{{ $fundraiser->beneficiary ?: $fundraiser->title }}"
+                                             loading="lazy">
+                                    </span>
+                                @endif
                             </span>
                         @endif
 
-                        <div class="fr__body">
+                        <div class="fr__body{{ $fundraiser->photo ? ' fr__body--offset' : '' }}">
                             <span class="fr__badge {{ $fundraiser->isOpen() ? '' : 'fr__badge--closed' }}">
                                 {{ $fundraiser->isOpen() ? 'An kou' : 'Fèmen' }}
                             </span>
@@ -59,6 +70,8 @@
                                     · rete {{ $fundraiser->daysLeft() }} jou
                                 @endif
                             </p>
+
+                            <span class="fr__more">Wè tout detay yo →</span>
                         </div>
                     </a>
                 @endforeach

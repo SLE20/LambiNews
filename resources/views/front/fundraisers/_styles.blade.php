@@ -19,9 +19,27 @@
         transition: border-color .15s, box-shadow .15s, transform .15s;
     }
     .fr__card:hover { border-color: var(--primary); box-shadow: var(--shadow); transform: translateY(-2px); }
-    .fr__cover { aspect-ratio: 16/9; background: var(--border); overflow: hidden; }
+    .fr__cover {
+        position: relative;
+        aspect-ratio: 16/9; background: var(--border); overflow: hidden;
+    }
     .fr__cover img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+    /*
+        Le portrait chevauche la bannière, comme un badge d'auteur : il
+        signe la campagne sans voler la place du titre. Le corps de la
+        carte compense d'autant pour ne pas passer dessous.
+    */
+    .fr__photo {
+        position: absolute; left: 16px; bottom: -26px; z-index: 2;
+        width: 62px; height: 62px; border-radius: 50%; overflow: hidden;
+        border: 3px solid var(--surface); background: var(--surface);
+        box-shadow: 0 2px 10px rgba(0,0,0,.18);
+    }
+    .fr__photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
     .fr__body { padding: 18px; }
+    .fr__body--offset { padding-top: 36px; }
     .fr__cardtitle {
         font-family: "Playfair Display", Georgia, serif;
         font-size: 1.12rem; line-height: 1.32; margin: 0 0 8px;
@@ -38,6 +56,11 @@
     .fr__raised { font-weight: 800; color: var(--primary-dark); }
     .fr__goal { color: var(--muted); }
     .fr__meta { margin-top: 10px; font-size: .78rem; color: var(--muted); }
+    .fr__more {
+        display: inline-block; margin-top: 12px;
+        font-size: .84rem; font-weight: 700; color: var(--primary-dark);
+    }
+    .fr__card:hover .fr__more { text-decoration: underline; }
     .fr__badge {
         display: inline-block; padding: 3px 10px; border-radius: 999px;
         font-size: .68rem; font-weight: 800; letter-spacing: .08em;
@@ -49,6 +72,20 @@
     .fr__detail { display: grid; grid-template-columns: minmax(0,1fr) 360px; gap: 28px; align-items: start; }
     .fr__hero { border-radius: var(--radius); overflow: hidden; margin-bottom: 22px; }
     .fr__hero img { width: 100%; display: block; }
+
+    /* En-tête de la page de campagne : portrait, titre, bénéficiaire. */
+    .fr__identity { display: flex; align-items: center; gap: 16px; margin-bottom: 8px; }
+    .fr__avatar {
+        width: 86px; height: 86px; border-radius: 50%; overflow: hidden; flex: none;
+        border: 3px solid var(--surface); background: var(--border);
+        box-shadow: 0 2px 12px rgba(0,0,0,.18);
+    }
+    .fr__avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+    @media (max-width: 560px) {
+        .fr__identity { gap: 12px; }
+        .fr__avatar { width: 64px; height: 64px; }
+    }
     .fr__story { font-size: 1rem; line-height: 1.8; white-space: pre-line; }
     .fr__panel {
         background: var(--surface); border: 1px solid var(--border);

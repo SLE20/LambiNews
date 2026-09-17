@@ -1108,6 +1108,10 @@
         <x-ad-slot position="sidebar_top" />
 
         <div style="margin-bottom:24px">
+            <x-featured-fundraiser />
+        </div>
+
+        <div style="margin-bottom:24px">
             <x-latest-poll />
         </div>
 

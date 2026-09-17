@@ -455,26 +455,13 @@
                 </div>
             </div>
 
-            @php($socialLinks = collect($socials)->filter(fn ($s) => filled($s['url'])))
-
-            @if($socialLinks->isNotEmpty())
-                <div class="hp__panel hp__panel--dark">
-                    <h2 class="hp__paneltitle">Suivez-nous</h2>
-
-                    <div class="hp__panelbody">
-                        <div class="hp__socials">
-                            @foreach($socialLinks as $social)
-                                <a href="{{ $social['url'] }}" class="hp__social {{ $social['class'] }}"
-                                   target="_blank" rel="noopener" aria-label="{{ $social['label'] }}">
-                                    <svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true">
-                                        <path fill="currentColor" d="{{ $social['path'] }}"/>
-                                    </svg>
-                                </a>
-                            @endforeach
-                        </div>
-                    </div>
-                </div>
-            @endif
+            {{--
+                La campagne en cours occupe cette place, plus utile ici
+                qu'un rappel des réseaux : le pied de page les liste déjà.
+            --}}
+            <div style="margin-bottom:18px">
+                <x-featured-fundraiser />
+            </div>
 
             {{-- Emplacement vendable ; à défaut, une invitation à soutenir. --}}
             <x-ad-slot position="sidebar_top" />

@@ -29,13 +29,30 @@
                     {{ $fundraiser->isOpen() ? 'An kou' : 'Fèmen' }}
                 </span>
 
-                <h1 class="fr__title" style="text-align:left;margin-top:12px">
-                    {{ $fundraiser->title }}
-                </h1>
+                <div class="fr__identity">
+                    @if($fundraiser->photo)
+                        <span class="fr__avatar">
+                            <img src="{{ asset('storage/'.$fundraiser->photo) }}"
+                                 alt="{{ $fundraiser->beneficiary ?: $fundraiser->title }}">
+                        </span>
+                    @endif
 
-                @if($fundraiser->beneficiary)
-                    <p class="fr__sub" style="margin-bottom:18px">
-                        Benefisyè : <strong>{{ $fundraiser->beneficiary }}</strong>
+                    <div>
+                        <h1 class="fr__title" style="text-align:left;margin:0">
+                            {{ $fundraiser->title }}
+                        </h1>
+
+                        @if($fundraiser->beneficiary)
+                            <p class="fr__sub" style="margin:6px 0 0">
+                                Benefisyè : <strong>{{ $fundraiser->beneficiary }}</strong>
+                            </p>
+                        @endif
+                    </div>
+                </div>
+
+                @if($fundraiser->summary)
+                    <p class="fr__lead" style="text-align:left;margin:0 0 20px">
+                        {{ $fundraiser->summary }}
                     </p>
                 @endif
 

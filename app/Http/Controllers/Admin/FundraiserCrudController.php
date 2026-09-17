@@ -89,6 +89,15 @@ class FundraiserCrudController extends CrudController
         ]);
 
         CRUD::addField([
+            'name'      => 'photo',
+            'label'     => 'Photo (portrait)',
+            'type'      => 'upload',
+            'withFiles' => ['disk' => 'public', 'path' => 'fundraisers'],
+            'hint'      => 'Le visage de la campagne : bénéficiaire, équipe, '
+                          .'ou l’objet financé. Affiché en rond sur la carte.',
+        ]);
+
+        CRUD::addField([
             'name'  => 'beneficiary',
             'label' => 'Bénéficiaire',
             'type'  => 'text',
