@@ -10,7 +10,7 @@ use App\Models\PartyQuestion;
 use App\Models\PoliticalParty;
 use App\Models\SiteSetting;
 use App\Models\VotingCenter;
-use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\View\View;
@@ -88,52 +88,53 @@ class ElectionController extends Controller
     }
 
     /**
-     * Recherche dans le répertoire des centres, côté serveur : la liste
-     * complète dépasse le millier de lignes, inutile de l'envoyer à un
-     * téléphone qui n'en affichera que quelques-unes.
+     * Répertoire complet des centres, en une fois.
+     *
+     * Environ 1 400 lignes, soit quelques dizaines de ko compressés : le
+     * navigateur filtre ensuite instantanément, même hors ligne, sans un
+     * aller-retour par frappe. Les clés sont courtes pour alléger.
      */
-    public function centers(Request $request): JsonResponse
+    public function centers(Request $request): Response
     {
-        $v = $request->validate([
-            'departement' => ['nullable', 'string', 'max:40'],
-            'commune'     => ['nullable', 'string', 'max:80'],
-            'section'     => ['nullable', 'string', 'max:120'],
-            'q'           => ['nullable', 'string', 'max:80'],
-            'page'        => ['nullable', 'integer', 'min:1'],
-        ]);
+        $version = Cache::remember('elections.centers_version', 600, fn () => md5(
+            VotingCenter::count().'|'.VotingCenter::max('updated_at')
+        ));
 
-        $query = VotingCenter::query()
-            ->when($v['departement'] ?? null, fn ($q, $d) => $q->where('department', $d))
-            ->when($v['commune'] ?? null, fn ($q, $c) => $q->where('commune', $c))
-            ->when($v['section'] ?? null, fn ($q, $s) => $q->where('section', $s))
-            ->when($v['q'] ?? null, function ($q, $term) {
-                $like = '%'.addcslashes($term, '%_\\').'%';
-                $q->where(fn ($w) => $w->where('name', 'like', $like)
-                    ->orWhere('address', 'like', $like)
-                    ->orWhere('commune', 'like', $like)
-                    ->orWhere('section', 'like', $like));
-            });
+        $etag = '"civ-'.$version.'"';
+        if ($request->header('If-None-Match') === $etag) {
+            return response('', 304)->header('ETag', $etag);
+        }
 
-        $communes = ($v['departement'] ?? null)
-            ? VotingCenter::where('department', $v['departement'])->distinct()->orderBy('commune')->pluck('commune')
-            : [];
+        $json = Cache::remember('elections.centers_json.'.$version, 3600, function () {
+            $rows = VotingCenter::query()
+                ->orderBy('department')->orderBy('commune')->orderBy('section')->orderBy('name')
+                ->get(['department', 'commune', 'section', 'name', 'address', 'source_page'])
+                ->map(fn ($c) => [
+                    'd' => $c->department,
+                    'c' => $c->commune,
+                    's' => $c->section,
+                    'n' => $c->name,
+                    'a' => $c->address,
+                    'p' => $c->source_page,
+                ]);
 
-        $sections = ($v['departement'] ?? null) && ($v['commune'] ?? null)
-            ? VotingCenter::where('department', $v['departement'])->where('commune', $v['commune'])
-                ->whereNotNull('section')->distinct()->orderBy('section')->pluck('section')
-            : [];
+            return json_encode(['total' => $rows->count(), 'centres' => $rows], JSON_UNESCAPED_UNICODE);
+        });
 
-        $page = $query->orderBy('department')->orderBy('commune')->orderBy('name')
-            ->paginate(12, ['id', 'department', 'commune', 'section', 'name', 'address']);
+        $headers = [
+            'Content-Type'  => 'application/json; charset=UTF-8',
+            'Cache-Control' => 'public, max-age=600',
+            'ETag'          => $etag,
+            'Vary'          => 'Accept-Encoding',
+        ];
 
-        return response()->json([
-            'total'    => $page->total(),
-            'page'     => $page->currentPage(),
-            'pages'    => $page->lastPage(),
-            'items'    => $page->items(),
-            'communes' => $communes,
-            'sections' => $sections,
-        ])->header('Cache-Control', 'public, max-age=300');
+        // L'hébergeur ne compresse pas le JSON émis par PHP : on le fait ici,
+        // ce qui divise le poids par huit sur un forfait mobile.
+        if (str_contains((string) $request->header('Accept-Encoding'), 'gzip') && function_exists('gzencode')) {
+            return response(gzencode($json, 6), 200, $headers + ['Content-Encoding' => 'gzip']);
+        }
+
+        return response($json, 200, $headers);
     }
 
     public function parties(Request $request): View

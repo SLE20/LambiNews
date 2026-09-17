@@ -262,6 +262,23 @@
                         <span>TikTok</span>
                     </a>
 
+                    @if(str_starts_with(\App\Models\SiteSetting::get('telegram_url', ''), 'https://'))
+                        <a
+                            href="{{ \App\Models\SiteSetting::get('telegram_url') }}"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="footer-social-link"
+                        >
+                            <span class="footer-social-icon">
+                                <svg viewBox="0 0 24 24" aria-hidden="true">
+                                    <path d="M21.9 4.6 18.7 19.7c-.2 1.1-.9 1.3-1.8.8l-4.9-3.6-2.4 2.3c-.3.3-.5.5-1 .5l.4-5 9.1-8.2c.4-.4-.1-.6-.6-.2L6.2 13.4l-4.8-1.5c-1-.3-1.1-1 .2-1.5L20.5 3.3c.9-.3 1.7.2 1.4 1.3Z"/>
+                                </svg>
+                            </span>
+
+                            <span>Telegram</span>
+                        </a>
+                    @endif
+
                     <a
                         href="mailto:info.lambinews@gmail.com"
                         class="footer-social-link"

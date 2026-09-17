@@ -8,6 +8,7 @@ use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
 class VotingCenterCrudController extends CrudController
@@ -56,6 +57,7 @@ class VotingCenterCrudController extends CrudController
         CRUD::addField(['name' => 'section', 'label' => 'Section communale', 'type' => 'text']);
         CRUD::addField(['name' => 'name', 'label' => 'Nom du centre', 'type' => 'text']);
         CRUD::addField(['name' => 'address', 'label' => 'Adresse', 'type' => 'text']);
+        CRUD::addField(['name' => 'source_page', 'label' => 'Page du document CEP', 'type' => 'number']);
     }
 
     protected function setupUpdateOperation(): void
@@ -75,7 +77,7 @@ class VotingCenterCrudController extends CrudController
      * Remplace toute la liste par le fichier fourni.
      *
      * Colonnes attendues (avec en-tête) : departement, commune, section,
-     * nom, adresse. Séparateur virgule ou point-virgule, UTF-8. Le fichier
+     * nom, adresse, et facultativement page (page du document du CEP). Séparateur virgule ou point-virgule, UTF-8. Le fichier
      * est entièrement validé avant d'effacer quoi que ce soit.
      */
     public function import(Request $request): RedirectResponse
@@ -96,6 +98,7 @@ class VotingCenterCrudController extends CrudController
             'section'    => ['section', 'section communale'],
             'name'       => ['nom', 'centre', 'name'],
             'address'    => ['adresse', 'address'],
+            'page'       => ['page', 'page source', 'pagesource', 'source_page'],
         ];
         $index = [];
         foreach ($aliases as $field => $names) {
@@ -139,6 +142,7 @@ class VotingCenterCrudController extends CrudController
                 'section'    => $get('section') ? mb_substr($get('section'), 0, 120) : null,
                 'name'       => mb_substr($get('name'), 0, 255),
                 'address'    => $get('address') ? mb_substr($get('address'), 0, 300) : null,
+                'source_page' => ctype_digit((string) $get('page')) ? (int) $get('page') : null,
                 'created_at' => $now,
                 'updated_at' => $now,
             ];
@@ -164,6 +168,11 @@ class VotingCenterCrudController extends CrudController
                 VotingCenter::insert($chunk);
             }
         });
+
+        // Le site public met la liste en cache : on la périme tout de suite.
+        foreach (['elections.center_counts', 'elections.centers_version'] as $key) {
+            Cache::forget($key);
+        }
 
         \Alert::success(count($rows).' centres importés.')->flash();
 

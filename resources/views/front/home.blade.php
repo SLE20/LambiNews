@@ -160,6 +160,31 @@
         font-size: .95rem; font-weight: 700; line-height: 1.32; margin: 0 0 7px;
     }
 
+    /* ---------------- Bandeau Élections ---------------- */
+    .hp__elections {
+        display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+        margin-bottom: 18px; padding: 12px 14px; border-radius: 12px; color: #fff;
+        background: radial-gradient(circle at 95% 0, rgba(216,169,34,.35), transparent 45%), #0d0d0d;
+    }
+    .hp__el-main { display: flex; align-items: center; gap: 12px; color: #fff; min-width: 0; }
+    .hp__el-main:hover { color: var(--primary); }
+    .hp__el-ico {
+        flex: none; width: 42px; height: 42px; border-radius: 10px; display: grid; place-items: center;
+        background: var(--primary); font-size: 1.3rem;
+    }
+    .hp__el-main b { display: block; font-size: 1rem; }
+    .hp__el-main small { display: block; font-size: .82rem; color: rgba(255,255,255,.75); }
+    .hp__el-links { display: flex; gap: 8px; flex-wrap: wrap; }
+    .hp__el-links a {
+        padding: 8px 12px; border-radius: 999px; font-size: .84rem; font-weight: 700;
+        background: rgba(255,255,255,.1); color: #fff; white-space: nowrap;
+    }
+    .hp__el-links a:hover { background: var(--primary); color: var(--black); }
+    @media (max-width: 560px) {
+        .hp__el-links { width: 100%; display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); }
+        .hp__el-links a { padding: 8px 6px; text-align: center; font-size: .78rem; }
+    }
+
     /* ---------------- Colonne de droite ---------------- */
     .hp__panel {
         background: var(--surface); border: 1px solid var(--border);
@@ -281,6 +306,28 @@
     --}}
 
     <x-ad-slot position="home_top" />
+
+    {{-- Bandeau Élections : visible dès l'arrivée, y compris sur téléphone. --}}
+    @php($nextElection = \App\Models\ElectionEvent::next())
+    <div class="hp__elections">
+        <a href="{{ route('elections.index') }}" class="hp__el-main">
+            <span class="hp__el-ico" aria-hidden="true">🗳</span>
+            <span>
+                <b>Élections 2026</b>
+                @if($nextElection)
+                    @php($d = (int) now()->startOfDay()->diffInDays($nextElection->starts_on, false))
+                    <small>{{ $nextElection->title }}{{ $d > 0 ? ' · dans '.$d.' jour'.($d > 1 ? 's' : '') : '' }}</small>
+                @else
+                    <small>Le guide du processus électoral</small>
+                @endif
+            </span>
+        </a>
+        <nav class="hp__el-links" aria-label="Élections">
+            <a href="{{ route('elections.calendar') }}">📅 Calendrier</a>
+            <a href="{{ route('elections.where') }}">📍 Où voter ?</a>
+            <a href="{{ route('elections.parties') }}">🚩 Partis</a>
+        </nav>
+    </div>
 
     <div class="hp__grid">
 
@@ -459,6 +506,8 @@
                 La campagne en cours occupe cette place, plus utile ici
                 qu'un rappel des réseaux : le pied de page les liste déjà.
             --}}
+            <x-telegram-cta />
+
             <x-election-countdown />
 
             <div style="margin-bottom:18px">

@@ -229,6 +229,57 @@
             }
         }
 
+
+        /* ---------- Élections dans la barre ---------- */
+        .nav-item--elections > .nav-link { color: var(--primary); }
+        .nav-more-dots { display: none; margin-left: 4px; }
+
+        /* ---------- Panneau « Plus » (tablette et mobile) ---------- */
+        .more-sheet { position: fixed; inset: 0; z-index: 9000; }
+        .more-sheet[hidden] { display: none; }
+        .more-sheet__backdrop {
+            position: absolute; inset: 0; background: rgba(0, 0, 0, .55);
+            opacity: 0; transition: opacity .25s ease;
+        }
+        .more-sheet__panel {
+            position: absolute; left: 0; right: 0; bottom: 0;
+            max-height: 82vh; overflow-y: auto; overscroll-behavior: contain;
+            padding: 8px 16px calc(18px + env(safe-area-inset-bottom));
+            border-radius: 20px 20px 0 0; background: #111; color: #fff;
+            transform: translateY(100%); transition: transform .3s cubic-bezier(.22, 1, .36, 1);
+        }
+        .more-sheet.is-open .more-sheet__backdrop { opacity: 1; }
+        .more-sheet.is-open .more-sheet__panel { transform: none; }
+        .more-sheet__head {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 12px 2px; border-bottom: 1px solid rgba(255, 255, 255, .1);
+        }
+        .more-sheet__head::before {
+            content: ""; position: absolute; top: 7px; left: 50%; width: 44px; height: 4px;
+            margin-left: -22px; border-radius: 4px; background: rgba(255, 255, 255, .25);
+        }
+        .more-sheet__head strong { font-size: 1.05rem; }
+        .more-sheet__close {
+            width: 38px; height: 38px; border: 0; border-radius: 50%;
+            background: rgba(255, 255, 255, .1); color: #fff; font-size: 1rem; cursor: pointer;
+        }
+        .more-sheet__feature {
+            display: flex; align-items: center; gap: 12px; margin: 14px 0 6px; padding: 14px;
+            border-radius: 14px; background: var(--primary); color: var(--black);
+        }
+        .more-sheet__feature > span:first-child { font-size: 1.8rem; }
+        .more-sheet__feature b { display: block; font-size: 1.02rem; }
+        .more-sheet__feature small { font-size: .82rem; }
+        .more-sheet__links { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 12px; }
+        .more-sheet__links a {
+            display: flex; align-items: center; min-height: 48px; padding: 0 4px;
+            border-bottom: 1px solid rgba(255, 255, 255, .08);
+            color: #fff; font-size: .95rem; font-weight: 600;
+        }
+        .more-sheet__links a:active { color: var(--primary); }
+        @media (max-width: 420px) { .more-sheet__links { grid-template-columns: minmax(0, 1fr); } }
+        @media (max-width: 1150px) { .nav-more-dots { display: inline; } }
+
         /* ---------- Retour en haut ---------- */
         /*
             Le bouton porte un anneau qui se remplit avec la lecture. Au
@@ -1563,7 +1614,40 @@
                      */
                     $navPrimary = collect($navigationCategories ?? [])->take(8);
                     $navOverflow = collect($navigationCategories ?? [])->slice(8);
+
+                    // Pages de service sous « Plus » — même liste pour le
+                    // menu déroulant (ordinateur) et le panneau (mobile).
+                    $navMore = collect($navOverflow)
+                        ->map(fn ($c) => [route('categories.show', $c->slug), $c->name])
+                        ->merge([
+                            [route('elections.index'), '🗳 Élections 2026'],
+                            [route('elections.calendar'), '📅 Calendrier électoral'],
+                            [route('elections.where'), '📍 Où voter ?'],
+                            [route('elections.parties'), '🚩 Partis et positions'],
+                            [route('announcements.index'), 'Annonces'],
+                            [route('polls.index'), 'Sondages'],
+                            [route('fundraisers.index'), 'Campagnes de financement'],
+                            [route('donations.create'), 'Soutenir'],
+                            [route('media-kit'), 'Annoncer chez nous'],
+                            [route('contact.create'), 'Contact'],
+                        ])->all();
                 @endphp
+
+                {{-- Élections : mis en avant pendant le cycle électoral. --}}
+                <div class="nav-item nav-item--elections">
+                    <a href="{{ route('elections.index') }}" class="nav-link">
+                        🗳 Élections
+                        <span class="nav-arrow" aria-hidden="true">▼</span>
+                    </a>
+                    <div class="nav-dropdown">
+                        <a href="{{ route('elections.index') }}" class="nav-dropdown-link">Vue d’ensemble</a>
+                        <a href="{{ route('elections.calendar') }}" class="nav-dropdown-link">Calendrier électoral</a>
+                        <a href="{{ route('elections.where') }}" class="nav-dropdown-link">Où voter ?</a>
+                        <a href="{{ route('elections.parties') }}" class="nav-dropdown-link">Partis et positions</a>
+                        <a href="{{ route('elections.cycle') }}" class="nav-dropdown-link">Cycle électoral</a>
+                        <a href="{{ route('polls.index') }}" class="nav-dropdown-link">Sondages</a>
+                    </div>
+                </div>
 
                 @foreach($navPrimary as $navigationCategory)
 
@@ -1644,25 +1728,17 @@
 
                 {{-- Rubriques restantes et pages de service. --}}
                 <div class="nav-item">
-                    <a href="#" class="nav-link" aria-haspopup="true">
+                    <a href="#more-sheet" class="nav-link" id="nav-more-toggle"
+                       aria-haspopup="true" aria-controls="more-sheet" aria-expanded="false">
                         Plus
                         <span class="nav-arrow" aria-hidden="true">▾</span>
+                        <span class="nav-more-dots" aria-hidden="true">☰</span>
                     </a>
 
                     <div class="nav-dropdown">
-                        @foreach($navOverflow as $extra)
-                            <a href="{{ route('categories.show', $extra->slug) }}"
-                               class="nav-dropdown-link">{{ $extra->name }}</a>
+                        @foreach($navMore as [$href, $label])
+                            <a href="{{ $href }}" class="nav-dropdown-link">{{ $label }}</a>
                         @endforeach
-
-                        <a href="{{ route('elections.index') }}" class="nav-dropdown-link"><strong>🗳 Élections 2026</strong></a>
-                        <a href="{{ route('elections.where') }}" class="nav-dropdown-link">Où voter ?</a>
-                        <a href="{{ route('announcements.index') }}" class="nav-dropdown-link">Annonces</a>
-                        <a href="{{ route('polls.index') }}" class="nav-dropdown-link">Sondages</a>
-                        <a href="{{ route('fundraisers.index') }}" class="nav-dropdown-link">Campagnes de financement</a>
-                        <a href="{{ route('donations.create') }}" class="nav-dropdown-link">Soutenir</a>
-                        <a href="{{ route('media-kit') }}" class="nav-dropdown-link">Annoncer chez nous</a>
-                        <a href="{{ route('contact.create') }}" class="nav-dropdown-link">Contact</a>
                     </div>
                 </div>
 
@@ -1671,6 +1747,33 @@
         </div>
 
     </nav>
+
+    <div class="more-sheet" id="more-sheet" hidden>
+        <div class="more-sheet__backdrop" data-close></div>
+        <div class="more-sheet__panel" role="dialog" aria-modal="true" aria-labelledby="more-sheet-title">
+            <div class="more-sheet__head">
+                <strong id="more-sheet-title">Plus</strong>
+                <button type="button" class="more-sheet__close" data-close aria-label="Fermer">✕</button>
+            </div>
+            <a href="{{ route('elections.index') }}" class="more-sheet__feature">
+                <span>🗳</span>
+                <span><b>Élections 2026</b><small>Calendrier, où voter, partis</small></span>
+            </a>
+            @if(str_starts_with(\App\Models\SiteSetting::get('telegram_url', ''), 'https://'))
+                <a href="{{ \App\Models\SiteSetting::get('telegram_url') }}" target="_blank" rel="noopener"
+                   class="more-sheet__feature" style="background:#229ed9;color:#fff;margin-top:0">
+                    <span>✈️</span>
+                    <span><b>Canal Telegram</b><small>Les infos en direct sur votre téléphone</small></span>
+                </a>
+            @endif
+            <nav class="more-sheet__links" aria-label="Autres pages">
+                @foreach($navMore as [$href, $label])
+                    @continue($href === route('elections.index'))
+                    <a href="{{ $href }}">{{ $label }}</a>
+                @endforeach
+            </nav>
+        </div>
+    </div>
 
 
     {{-- ========================================================= --}}
@@ -1886,6 +1989,51 @@
             });
         });
     })(window.jQuery);
+    </script>
+
+    <script>
+    (function () {
+        var toggle = document.getElementById('nav-more-toggle');
+        var sheet  = document.getElementById('more-sheet');
+        if (!toggle || !sheet) { return; }
+
+        // Le menu déroulant est masqué quand la barre défile : le panneau prend le relais.
+        var small = window.matchMedia('(max-width: 1150px)');
+        var lastFocus = null;
+
+        function open() {
+            lastFocus = document.activeElement;
+            sheet.hidden = false;
+            document.documentElement.style.overflow = 'hidden';
+            requestAnimationFrame(function () { sheet.classList.add('is-open'); });
+            toggle.setAttribute('aria-expanded', 'true');
+            var close = sheet.querySelector('.more-sheet__close');
+            if (close) { close.focus(); }
+        }
+
+        function close() {
+            sheet.classList.remove('is-open');
+            toggle.setAttribute('aria-expanded', 'false');
+            document.documentElement.style.overflow = '';
+            setTimeout(function () { sheet.hidden = true; }, 300);
+            if (lastFocus) { lastFocus.focus(); }
+        }
+
+        toggle.addEventListener('click', function (e) {
+            e.preventDefault();
+            if (small.matches) { open(); }
+        });
+
+        sheet.addEventListener('click', function (e) {
+            if (e.target.closest('[data-close]')) { close(); }
+        });
+
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape' && !sheet.hidden) { close(); }
+        });
+
+        small.addEventListener('change', function () { if (!small.matches && !sheet.hidden) { close(); } });
+    })();
     </script>
 
     @stack('scripts')

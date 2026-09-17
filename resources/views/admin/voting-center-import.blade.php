@@ -25,8 +25,8 @@
         <div class="card-body">
             <h2 class="h6">Format attendu</h2>
             <p class="mb-2">Une ligne d’en-tête, séparateur virgule ou point-virgule :</p>
-            <pre class="bg-light p-2 rounded mb-3">departement;commune;section;nom;adresse
-ARTIBONITE;GONAÏVES;VILLE;LYCÉE FABRE GEFFRARD;Rue Lamartinière</pre>
+            <pre class="bg-light p-2 rounded mb-3">departement;commune;section;nom;adresse;page
+ARTIBONITE;GONAÏVES;VILLE;LYCÉE FABRE GEFFRARD;Rue Lamartinière;3</pre>
             <p class="mb-1">Départements acceptés :</p>
             <p class="small text-muted mb-0">{{ implode(' · ', array_keys($departments)) }}</p>
         </div>

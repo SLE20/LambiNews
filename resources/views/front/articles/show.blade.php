@@ -1098,12 +1098,16 @@
 
         </article>
 
+        <x-telegram-cta variant="inline" />
+
         <x-ad-slot position="below_article" />
 
     </div>
 
 
     <aside class="article-sidebar">
+
+        <x-telegram-cta />
 
         <x-ad-slot position="sidebar_top" />
 

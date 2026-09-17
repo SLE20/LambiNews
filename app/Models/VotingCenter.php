@@ -27,7 +27,7 @@ class VotingCenter extends Model
         'SUD-EST'    => ['Sud-Est', 'Jacmel', 18.2340, -72.5350],
     ];
 
-    protected $fillable = ['department', 'commune', 'section', 'name', 'address'];
+    protected $fillable = ['department', 'commune', 'section', 'name', 'address', 'source_page'];
 
     public function departmentLabel(): string
     {
