@@ -230,27 +230,87 @@
         }
 
         /* ---------- Retour en haut ---------- */
+        /*
+            Le bouton porte un anneau qui se remplit avec la lecture. Au
+            clic, la page s'estompe sous un voile, une flèche dorée monte
+            pendant la remontée, puis le contenu revient en glissant.
+            Seule l'opacité touche la page entière : un transform ou un
+            filter sur un ancêtre casserait les éléments fixes et collants.
+        */
         .back-to-top {
             position: fixed;
             right: 18px;
             bottom: 18px;
             z-index: 60;
-            width: 46px;
-            height: 46px;
+            display: none;
+            width: 52px;
+            height: 52px;
+            padding: 0;
             border: 0;
             border-radius: 50%;
             background: var(--black);
             color: var(--primary);
-            font-size: 1.3rem;
-            line-height: 1;
             cursor: pointer;
-            box-shadow: 0 6px 20px rgba(0, 0, 0, .28);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, .3);
+            transition: transform .35s cubic-bezier(.34, 1.56, .64, 1), box-shadow .35s;
         }
-        .back-to-top:hover { background: var(--black-light); }
-        .back-to-top[hidden] { display: none; }
+        .back-to-top:hover {
+            transform: translateY(-4px) scale(1.06);
+            box-shadow: 0 14px 30px rgba(0, 0, 0, .35), 0 0 0 6px rgba(213, 165, 31, .18);
+        }
+        .back-to-top:focus-visible { outline: 3px solid var(--primary); outline-offset: 3px; }
+        .back-to-top__ring {
+            position: absolute; inset: 0; width: 100%; height: 100%;
+            transform: rotate(-90deg);
+        }
+        .back-to-top__ring circle { fill: none; stroke-width: 3; }
+        .back-to-top__track { stroke: rgba(255, 255, 255, .12); }
+        .back-to-top__progress {
+            stroke: var(--primary);
+            stroke-linecap: round;
+            stroke-dasharray: 144.5;
+            stroke-dashoffset: 144.5;
+        }
+        .back-to-top__arrow {
+            position: relative; display: block; width: 20px; height: 20px; margin: auto;
+            transition: transform .35s cubic-bezier(.34, 1.56, .64, 1);
+        }
+        .back-to-top:hover .back-to-top__arrow { transform: translateY(-3px); }
+
+        /* Voile de remontée */
+        .ttop-veil {
+            position: fixed; inset: 0; z-index: 9990;
+            display: none; pointer-events: none;
+            background:
+                radial-gradient(circle at 50% 60%, rgba(213, 165, 31, .22), transparent 55%),
+                linear-gradient(180deg, rgba(10, 10, 10, .55), rgba(10, 10, 10, .78));
+        }
+        .ttop-veil__flight {
+            position: absolute; left: 50%; bottom: 8%;
+            width: 64px; margin-left: -32px;
+            display: flex; flex-direction: column; align-items: center;
+        }
+        .ttop-veil__arrow {
+            width: 64px; height: 64px; border-radius: 50%;
+            display: grid; place-items: center;
+            background: var(--primary); color: var(--black);
+            box-shadow: 0 0 0 10px rgba(213, 165, 31, .18), 0 0 40px rgba(213, 165, 31, .65);
+        }
+        .ttop-veil__arrow svg { width: 28px; height: 28px; }
+        .ttop-veil__trail {
+            width: 3px; height: 140px; margin-top: 6px; border-radius: 3px;
+            background: linear-gradient(180deg, rgba(213, 165, 31, .9), transparent);
+        }
+
+        /* Le contenu revient en glissant vers le haut. */
+        @keyframes ttop-rise {
+            from { transform: translateY(34px); }
+            to   { transform: none; }
+        }
+        .ttop-rise { animation: ttop-rise .9s cubic-bezier(.22, 1, .36, 1) both; }
 
         @media (max-width: 680px) {
-            .back-to-top { right: 12px; bottom: 12px; width: 42px; height: 42px; }
+            .back-to-top { right: 12px; bottom: 12px; width: 46px; height: 46px; }
         }
 
         /* ---------- Emplacements publicitaires ---------- */
@@ -1700,30 +1760,130 @@
         id="back-to-top"
         class="back-to-top"
         aria-label="Retounen anlè paj la"
-        hidden
     >
-        <span aria-hidden="true">↑</span>
+        <svg class="back-to-top__ring" viewBox="0 0 52 52" aria-hidden="true">
+            <circle class="back-to-top__track" cx="26" cy="26" r="23"/>
+            <circle class="back-to-top__progress" cx="26" cy="26" r="23"/>
+        </svg>
+        <svg class="back-to-top__arrow" viewBox="0 0 24 24" aria-hidden="true">
+            <path fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"
+                  stroke-linejoin="round" d="M12 19V5M5 12l7-7 7 7"/>
+        </svg>
     </button>
 
-    <script>
-    (function () {
-        var btn = document.getElementById('back-to-top');
-        if (!btn) { return; }
+    <div class="ttop-veil" id="ttop-veil" aria-hidden="true">
+        <div class="ttop-veil__flight">
+            <span class="ttop-veil__arrow">
+                <svg viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.6"
+                     stroke-linecap="round" stroke-linejoin="round" d="M12 19V5M5 12l7-7 7 7"/></svg>
+            </span>
+            <span class="ttop-veil__trail"></span>
+        </div>
+    </div>
 
-        // Le bouton n'apparaît qu'une fois la page réellement parcourue.
-        function toggle() {
-            btn.hidden = window.scrollY < 480;
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"
+            integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+            crossorigin="anonymous"></script>
+
+    <script>
+    (function ($) {
+        if (!$) { return; }
+
+        // Courbes absentes de jQuery de base.
+        $.extend($.easing, {
+            ttopInOut: function (p) {
+                return p < .5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2;
+            },
+            ttopOut: function (p) {
+                return 1 - Math.pow(1 - p, 4);
+            }
+        });
+
+        var $win    = $(window);
+        var $root   = $('html');
+        var $btn    = $('#back-to-top');
+        var $veil   = $('#ttop-veil');
+        var $flight = $veil.find('.ttop-veil__flight');
+        var $ring   = $btn.find('.back-to-top__progress');
+        var $main   = $('main').first();
+        // Tout sauf le bouton, le voile et les scripts : c'est la page qui s'estompe.
+        var $page   = $('body').children().not('#back-to-top, #ttop-veil, script, style, noscript');
+        var RING    = 144.5;
+        var visible = false;
+        var busy    = false;
+
+        var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        function onScroll() {
+            var top = $win.scrollTop();
+            var max = $(document).height() - $win.height();
+            var ratio = max > 0 ? Math.min(1, top / max) : 0;
+
+            $ring.css('stroke-dashoffset', RING * (1 - ratio));
+
+            if (busy) { return; }
+
+            if (top > 480 && !visible) {
+                visible = true;
+                $btn.stop(true).fadeIn(reduce ? 0 : 600);
+            } else if (top <= 480 && visible) {
+                visible = false;
+                $btn.stop(true).fadeOut(reduce ? 0 : 600);
+            }
         }
 
-        window.addEventListener('scroll', toggle, { passive: true });
-        toggle();
+        $win.on('scroll resize', onScroll);
+        onScroll();
 
-        btn.addEventListener('click', function () {
-            // Respecte le réglage « animations réduites » du système.
-            var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-            window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
+        $btn.on('click', function () {
+            if (busy) { return; }
+
+            if (reduce) {
+                $win.scrollTop(0);
+                return;
+            }
+
+            busy = true;
+            var start    = $win.scrollTop();
+            // Plus on est bas, plus la remontée dure — sans jamais traîner.
+            var duration = Math.max(900, Math.min(1700, start * 0.35));
+
+            // Le défilement « smooth » du CSS contrarierait l'animation pas à pas.
+            $root.css('scroll-behavior', 'auto');
+
+            $btn.stop(true).fadeOut(250);
+            $flight.stop(true).css({ bottom: '8%', opacity: 0 });
+
+            // 1. La page s'estompe sous le voile. Seulement ce qui est
+            //    visible : fadeTo afficherait un menu ou une fenêtre cachés.
+            var $shown = $page.filter(':visible');
+
+            $veil.stop(true).fadeIn(420);
+            $flight.animate({ opacity: 1 }, 420);
+
+            $shown.stop(true).fadeTo(420, 0.12).promise().done(function () {
+                // 2. Remontée lente ; la flèche s'envole en même temps.
+                $flight.animate({ bottom: '112%' }, duration, 'ttopInOut');
+
+                $('html, body').stop(true).animate({ scrollTop: 0 }, duration, 'ttopInOut')
+                    .promise().done(function () {
+                        // 3. Le contenu revient en glissant.
+                        $main.removeClass('ttop-rise');
+                        void ($main[0] && $main[0].offsetWidth);
+                        $main.addClass('ttop-rise');
+
+                        $veil.fadeOut(650, 'ttopOut');
+                        $shown.fadeTo(800, 1, 'ttopOut').promise().done(function () {
+                            $shown.css('opacity', '');
+                            $root.css('scroll-behavior', '');
+                            setTimeout(function () { $main.removeClass('ttop-rise'); }, 950);
+                            visible = false;
+                            busy = false;
+                        });
+                    });
+            });
         });
-    })();
+    })(window.jQuery);
     </script>
 
     @stack('scripts')
