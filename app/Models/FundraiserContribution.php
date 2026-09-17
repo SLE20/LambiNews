@@ -52,7 +52,7 @@ class FundraiserContribution extends Model
     public function publicName(): string
     {
         return ($this->is_anonymous || blank($this->donor_name))
-            ? 'Yon donatè anonim'
+            ? 'Un donateur anonyme'
             : $this->donor_name;
     }
 

@@ -1,8 +1,8 @@
 @extends('front.layouts.app')
 
-@section('title', 'Mèsi pou sipò ou — Lambi News')
+@section('title', 'Merci pour votre soutien — Lambi News')
 
-@section('meta_description', 'Mèsi pou don ou bay Lambi News.')
+@section('meta_description', 'Merci pour votre don à Lambi News.')
 
 @push('styles')
 <style>
@@ -46,23 +46,23 @@
     <div class="mesi__wrap">
         <div class="mesi__mark" aria-hidden="true">✓</div>
 
-        <h1 class="mesi__title">Mèsi anpil{{ $donation->is_anonymous ? '' : ', '.$donation->donor_name }} !</h1>
+        <h1 class="mesi__title">Merci infiniment{{ $donation->is_anonymous ? '' : ', '.$donation->donor_name }} !</h1>
 
         <p class="mesi__amount">
             {{ number_format((float) $donation->amount, 2) }} {{ $donation->currency }}
         </p>
 
-        <p class="mesi__ref">Referans: {{ $donation->reference }}</p>
+        <p class="mesi__ref">Référence : {{ $donation->reference }}</p>
 
         <p class="mesi__text">
-            Don ou an byen resevwa. Li ale dirèkteman nan travay jounalis
-            Lambi News yo.
+            Votre don a bien été reçu. Il finance directement le travail
+            des journalistes de Lambi News.
             @if($donation->donor_email)
-                PayPal voye yon resi nan {{ $donation->donor_email }}.
+                Un reçu a été envoyé à {{ $donation->donor_email }}.
             @endif
         </p>
 
-        <a href="{{ route('home') }}" class="mesi__back">Retounen sou sit la</a>
+        <a href="{{ route('home') }}" class="mesi__back">Retour au site</a>
     </div>
 </section>
 @endsection

@@ -73,7 +73,7 @@ class FundraiserController extends Controller
         $fundraiser = Fundraiser::query()->live()->where('slug', $slug)->firstOrFail();
 
         if (! $fundraiser->isOpen()) {
-            return response()->json(['message' => 'Kanpay sa a fèmen.'], 422);
+            return response()->json(['message' => 'Cette campagne est clôturée.'], 422);
         }
 
         $validated = $request->validate([
@@ -124,7 +124,7 @@ class FundraiserController extends Controller
             $c->update(['status' => FundraiserContribution::STATUS_FAILED]);
 
             return response()->json([
-                'message' => 'Nou pa rive kontakte MonCash. Tanpri eseye ankò.',
+                'message' => 'Impossible de joindre MonCash. Veuillez réessayer.',
             ], 502);
         }
 
@@ -153,7 +153,7 @@ class FundraiserController extends Controller
             $c->update(['status' => FundraiserContribution::STATUS_FAILED]);
 
             return response()->json([
-                'message' => 'Nou pa rive kontakte PayPal. Tanpri eseye ankò.',
+                'message' => 'Impossible de joindre PayPal. Veuillez réessayer.',
             ], 502);
         }
 
@@ -184,12 +184,12 @@ class FundraiserController extends Controller
             Log::error('PayPal fundraiser capture: '.$e->getMessage());
 
             return response()->json([
-                'message' => 'Peman an pa pase. Okenn kòb pa pran sou kont ou.',
+                'message' => 'Le paiement n’a pas abouti. Aucun montant n’a été prélevé.',
             ], 502);
         }
 
         if (data_get($payload, 'status') !== 'COMPLETED') {
-            return response()->json(['message' => 'PayPal pa konfime peman an.'], 422);
+            return response()->json(['message' => 'PayPal n’a pas confirmé le paiement.'], 422);
         }
 
         self::confirm($c, (string) data_get($payload, 'purchase_units.0.payments.captures.0.id'));
@@ -207,7 +207,7 @@ class FundraiserController extends Controller
             : redirect()
                 ->route('fundraisers.show', $c->fundraiser->slug)
                 ->with('fundraiser_status',
-                    'Nou ap tann konfimasyon MonCash la. Referans ou: '.$c->reference);
+                    'Nous attendons la confirmation de MonCash. Votre référence : '.$c->reference);
     }
 
     public function thanks(string $reference): View

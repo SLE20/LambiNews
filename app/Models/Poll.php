@@ -168,8 +168,8 @@ class Poll extends Model
     public function identityLabel(): string
     {
         return $this->identifiesByIp()
-            ? 'pa koneksyon'
-            : 'pa aparèy';
+            ? 'par connexion'
+            : 'par appareil';
     }
 
     public function allowsMultipleVotes(): bool

@@ -1,7 +1,7 @@
 @extends('front.layouts.app')
 
-@section('title', 'Mèsi pou kontribisyon ou — Lambi News')
-@section('meta_description', 'Mèsi pou sipò ou nan kanpay la.')
+@section('title', 'Merci pour votre contribution — Lambi News')
+@section('meta_description', 'Merci pour votre soutien à la campagne.')
 
 @push('styles')
     @include('front.fundraisers._styles')
@@ -15,12 +15,12 @@
                         background:var(--primary);color:var(--black);display:grid;
                         place-items:center;font-size:1.9rem;font-weight:700">✓</div>
 
-            <h1 class="fr__title" style="font-size:1.7rem">Mèsi anpil !</h1>
+            <h1 class="fr__title" style="font-size:1.7rem">Merci infiniment !</h1>
 
             <p class="fr__big">{{ $contribution->getFormattedAmount() }}</p>
             <p class="fr__sub">
-                pou « {{ $contribution->fundraiser->title }} »<br>
-                peye ak {{ $contribution->getProviderLabel() }}
+                pour « {{ $contribution->fundraiser->title }} »<br>
+                payé avec {{ $contribution->getProviderLabel() }}
             </p>
 
             <p style="margin:18px 0;padding:8px 16px;display:inline-block;border-radius:999px;
@@ -32,7 +32,7 @@
             <p>
                 <a href="{{ route('fundraisers.show', $contribution->fundraiser->slug) }}"
                    class="fr__submit" style="display:inline-block;width:auto;padding:12px 26px;
-                          text-decoration:none">Retounen sou kanpay la</a>
+                          text-decoration:none">Retour à la campagne</a>
             </p>
         </div>
     </div>

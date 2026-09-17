@@ -468,7 +468,7 @@
 
             <a href="{{ route('donations.create') }}" class="hp__promo">
                 <strong>Ensemble pour une information plus proche de vous</strong>
-                <span>Sipòte jounalis endepandan an Ayiti</span>
+                <span>Soutenez le journalisme indépendant en Haïti</span>
             </a>
 
             <x-ad-slot position="sidebar_bottom" />

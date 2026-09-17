@@ -89,7 +89,7 @@ class AnnouncementController extends Controller
         $price = Announcement::priceFor($validated['type']);
 
         if ($price === null) {
-            return response()->json(['message' => 'Kategori sa a pa egziste.'], 422);
+            return response()->json(['message' => 'Cette catégorie n’existe pas.'], 422);
         }
 
         $announcement = Announcement::create([
@@ -132,7 +132,7 @@ class AnnouncementController extends Controller
             Log::error('PayPal announcement createOrder: '.$e->getMessage());
 
             return response()->json([
-                'message' => 'Nou pa rive kontakte PayPal. Tanpri eseye ankò.',
+                'message' => 'Impossible de joindre PayPal. Veuillez réessayer.',
             ], 502);
         }
 
@@ -164,12 +164,12 @@ class AnnouncementController extends Controller
             Log::error('PayPal announcement captureOrder: '.$e->getMessage());
 
             return response()->json([
-                'message' => 'Peman an pa pase. Okenn kòb pa pran sou kont ou.',
+                'message' => 'Le paiement n’a pas abouti. Aucun montant n’a été prélevé.',
             ], 502);
         }
 
         if (data_get($payload, 'status') !== 'COMPLETED') {
-            return response()->json(['message' => 'PayPal pa konfime peman an.'], 422);
+            return response()->json(['message' => 'PayPal n’a pas confirmé le paiement.'], 422);
         }
 
         $announcement->update([

@@ -60,22 +60,22 @@ Route::post('/contact', [ContactController::class, 'store'])
 |--------------------------------------------------------------------------
 */
 
-Route::get('/sondaj', [PollController::class, 'index'])
+Route::get('/sondages', [PollController::class, 'index'])
     ->name('polls.index');
 
-Route::get('/sondaj/{slug}', [PollController::class, 'show'])
+Route::get('/sondages/{slug}', [PollController::class, 'show'])
     ->name('polls.show');
 
-Route::post('/sondaj/{slug}/vote', [PollController::class, 'vote'])
+Route::post('/sondages/{slug}/vote', [PollController::class, 'vote'])
     ->middleware('throttle:20,1')
     ->name('polls.vote');
 
 // Sondage payant : commande PayPal puis capture.
-Route::post('/sondaj/{slug}/peman', [PollController::class, 'payStart'])
+Route::post('/sondages/{slug}/paiement', [PollController::class, 'payStart'])
     ->middleware('throttle:15,1')
     ->name('polls.pay.start');
 
-Route::post('/sondaj/{slug}/peman/konfime', [PollController::class, 'payCapture'])
+Route::post('/sondages/{slug}/paiement/confirmer', [PollController::class, 'payCapture'])
     ->middleware('throttle:15,1')
     ->name('polls.pay.capture');
 
@@ -85,25 +85,25 @@ Route::post('/sondaj/{slug}/peman/konfime', [PollController::class, 'payCapture'
 |--------------------------------------------------------------------------
 */
 
-Route::get('/anons', [AnnouncementController::class, 'index'])
+Route::get('/annonces', [AnnouncementController::class, 'index'])
     ->name('announcements.index');
 
-Route::get('/anons/pibliye', [AnnouncementController::class, 'create'])
+Route::get('/annonces/publier', [AnnouncementController::class, 'create'])
     ->name('announcements.create');
 
-Route::post('/anons/kreye', [AnnouncementController::class, 'store'])
+Route::post('/annonces/creer', [AnnouncementController::class, 'store'])
     ->middleware('throttle:10,1')
     ->name('announcements.store');
 
-Route::post('/anons/konfime', [AnnouncementController::class, 'capture'])
+Route::post('/annonces/confirmer', [AnnouncementController::class, 'capture'])
     ->middleware('throttle:10,1')
     ->name('announcements.capture');
 
-Route::get('/anons/mesi/{reference}', [AnnouncementController::class, 'thanks'])
+Route::get('/annonces/merci/{reference}', [AnnouncementController::class, 'thanks'])
     ->name('announcements.thanks');
 
 // En dernier : ce motif attraperait sinon /anons/pibliye.
-Route::get('/anons/{slug}', [AnnouncementController::class, 'show'])
+Route::get('/annonces/{slug}', [AnnouncementController::class, 'show'])
     ->name('announcements.show');
 
 /*
@@ -112,16 +112,16 @@ Route::get('/anons/{slug}', [AnnouncementController::class, 'show'])
 |--------------------------------------------------------------------------
 */
 
-Route::get('/reklam/{ad}/klik', AdClickController::class)
+Route::get('/publicite/{ad}/clic', AdClickController::class)
     ->name('ads.click');
 
 // Rapport de campagne, protégé par un jeton non devinable.
-Route::get('/reklam/rapo/{token}', AdReportController::class)
+Route::get('/publicite/rapport/{token}', AdReportController::class)
     ->where('token', '[a-z0-9]{28}')
     ->name('ads.report');
 
 // Dossier de presse : chiffres d’audience pour les annonceurs.
-Route::get('/kit-medya', [MediaKitController::class, 'index'])
+Route::get('/kit-media', [MediaKitController::class, 'index'])
     ->name('media-kit');
 
 /*
@@ -130,25 +130,25 @@ Route::get('/kit-medya', [MediaKitController::class, 'index'])
 |--------------------------------------------------------------------------
 */
 
-Route::get('/kanpay', [FundraiserController::class, 'index'])
+Route::get('/campagnes', [FundraiserController::class, 'index'])
     ->name('fundraisers.index');
 
-Route::get('/kanpay/mesi/{reference}', [FundraiserController::class, 'thanks'])
+Route::get('/campagnes/merci/{reference}', [FundraiserController::class, 'thanks'])
     ->name('fundraisers.thanks');
 
-Route::get('/kanpay/moncash/{reference}', [FundraiserController::class, 'moncashReturn'])
+Route::get('/campagnes/moncash/{reference}', [FundraiserController::class, 'moncashReturn'])
     ->name('fundraisers.moncash.return');
 
-Route::post('/kanpay/{slug}/kontribye', [FundraiserController::class, 'contribute'])
+Route::post('/campagnes/{slug}/contribuer', [FundraiserController::class, 'contribute'])
     ->middleware('throttle:10,1')
     ->name('fundraisers.contribute');
 
-Route::post('/kanpay/{slug}/konfime', [FundraiserController::class, 'capture'])
+Route::post('/campagnes/{slug}/confirmer', [FundraiserController::class, 'capture'])
     ->middleware('throttle:10,1')
     ->name('fundraisers.capture');
 
 // En dernier : ce motif attraperait sinon /kanpay/mesi.
-Route::get('/kanpay/{slug}', [FundraiserController::class, 'show'])
+Route::get('/campagnes/{slug}', [FundraiserController::class, 'show'])
     ->name('fundraisers.show');
 
 /*
@@ -174,22 +174,22 @@ Route::post('/webhooks/walcash.php', WalCashWebhookController::class)
 |--------------------------------------------------------------------------
 */
 
-Route::get('/soutni', [DonationController::class, 'create'])
+Route::get('/soutenir', [DonationController::class, 'create'])
     ->name('donations.create');
 
-Route::post('/soutni/kreye', [DonationController::class, 'store'])
+Route::post('/soutenir/creer', [DonationController::class, 'store'])
     ->middleware('throttle:10,1')
     ->name('donations.store');
 
-Route::post('/soutni/konfime', [DonationController::class, 'capture'])
+Route::post('/soutenir/confirmer', [DonationController::class, 'capture'])
     ->middleware('throttle:10,1')
     ->name('donations.capture');
 
-Route::post('/soutni/anile', [DonationController::class, 'cancel'])
+Route::post('/soutenir/annuler', [DonationController::class, 'cancel'])
     ->middleware('throttle:10,1')
     ->name('donations.cancel');
 
-Route::get('/soutni/mesi/{reference}', [DonationController::class, 'thanks'])
+Route::get('/soutenir/merci/{reference}', [DonationController::class, 'thanks'])
     ->name('donations.thanks');
 
 /*
@@ -208,7 +208,7 @@ Route::post(
 // GET et POST : Gmail appelle ce lien en POST (List-Unsubscribe-Post).
 Route::match(
     ['get', 'post'],
-    '/infolettre/dezabone/{token}',
+    '/infolettre/desabonnement/{token}',
     [NewsletterController::class, 'unsubscribe']
 )
     ->where('token', '[a-z0-9]{32}')
@@ -261,6 +261,7 @@ Route::get('/robots.txt', function () {
         'Disallow: /recherche',
         'Disallow: /*?q=',
         // Rapports de campagne : liens privés remis aux annonceurs.
+        'Disallow: /publicite/',
         'Disallow: /reklam/',
         '',
         'Sitemap: '.route('sitemap'),
@@ -319,7 +320,7 @@ Route::post(
 |
 */
 
-Route::get('/vinyet/{width}/{slug}.jpg', ThumbnailController::class)
+Route::get('/vignettes/{width}/{slug}.jpg', ThumbnailController::class)
     ->where('width', '[0-9]{3,4}')
     ->where('slug', '[A-Za-z0-9\-_]+')
     ->name('thumbnail');
@@ -369,3 +370,47 @@ Route::get(
     '/pages/{slug}',
     [PageController::class, 'show']
 )->name('pages.show');
+
+/*
+|--------------------------------------------------------------------------
+| Anciennes adresses en créole
+|--------------------------------------------------------------------------
+|
+| Les adresses publiques sont passées en français. Les anciennes restent
+| en service : liens déjà partagés, pages en cache, rapports envoyés aux
+| annonceurs, liens de désinscription dans les infolettres déjà parties.
+|
+| Les pages redirigent en 301 pour transmettre leur référencement. Le
+| clic publicitaire, la vignette et la désinscription sont servis
+| directement : un clic ne doit pas coûter un aller-retour, et Gmail
+| appelle la désinscription en POST, qu'une redirection casserait.
+|
+*/
+
+Route::permanentRedirect('/sondaj', '/sondages');
+Route::get('/sondaj/{slug}', fn (string $slug) => redirect()->route('polls.show', $slug, 301));
+
+Route::permanentRedirect('/anons', '/annonces');
+Route::permanentRedirect('/anons/pibliye', '/annonces/publier');
+Route::get('/anons/mesi/{reference}', fn (string $reference) => redirect()->route('announcements.thanks', $reference, 301));
+Route::get('/anons/{slug}', fn (string $slug) => redirect()->route('announcements.show', $slug, 301));
+
+Route::permanentRedirect('/kanpay', '/campagnes');
+Route::get('/kanpay/mesi/{reference}', fn (string $reference) => redirect()->route('fundraisers.thanks', $reference, 301));
+Route::get('/kanpay/moncash/{reference}', fn (string $reference) => redirect()->route('fundraisers.moncash.return', $reference, 301));
+Route::get('/kanpay/{slug}', fn (string $slug) => redirect()->route('fundraisers.show', $slug, 301));
+
+Route::permanentRedirect('/soutni', '/soutenir');
+Route::get('/soutni/mesi/{reference}', fn (string $reference) => redirect()->route('donations.thanks', $reference, 301));
+
+Route::permanentRedirect('/kit-medya', '/kit-media');
+
+Route::get('/reklam/{ad}/klik', AdClickController::class)->whereNumber('ad');
+Route::get('/reklam/rapo/{token}', fn (string $token) => redirect()->route('ads.report', $token, 301));
+
+Route::get('/vinyet/{width}/{slug}.jpg', ThumbnailController::class)
+    ->where('width', '[0-9]{3,4}')
+    ->where('slug', '[A-Za-z0-9\-_]+');
+
+Route::match(['get', 'post'], '/infolettre/dezabone/{token}', [NewsletterController::class, 'unsubscribe'])
+    ->where('token', '[a-z0-9]{32}');

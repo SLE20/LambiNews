@@ -20,7 +20,7 @@
             <span>
                 <strong>MonCash</strong>
                 <small>
-                    Peye ak telefòn ou an Ayiti
+                    Payez avec votre téléphone en Haïti
                     @if(($currency ?? 'USD') !== 'HTG')
                         — <span data-htg data-rate="{{ $rate }}">—</span>
                     @endif
@@ -37,8 +37,8 @@
             <span class="paymethod__pp" aria-hidden="true">PP</span>
 
             <span>
-                <strong>PayPal / kat bankè</strong>
-                <small>Visa, Mastercard — pou dyaspora a</small>
+                <strong>PayPal / carte bancaire</strong>
+                <small>Visa, Mastercard — pour la diaspora</small>
             </span>
         </label>
     @endif

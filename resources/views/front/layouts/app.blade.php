@@ -1657,7 +1657,7 @@
 
                         <a href="{{ route('announcements.index') }}" class="nav-dropdown-link">Annonces</a>
                         <a href="{{ route('polls.index') }}" class="nav-dropdown-link">Sondages</a>
-                        <a href="{{ route('fundraisers.index') }}" class="nav-dropdown-link">Kanpay finansman</a>
+                        <a href="{{ route('fundraisers.index') }}" class="nav-dropdown-link">Campagnes de financement</a>
                         <a href="{{ route('donations.create') }}" class="nav-dropdown-link">Soutenir</a>
                         <a href="{{ route('media-kit') }}" class="nav-dropdown-link">Annoncer chez nous</a>
                         <a href="{{ route('contact.create') }}" class="nav-dropdown-link">Contact</a>
@@ -1759,7 +1759,7 @@
         type="button"
         id="back-to-top"
         class="back-to-top"
-        aria-label="Retounen anlè paj la"
+        aria-label="Retour en haut de la page"
     >
         <svg class="back-to-top__ring" viewBox="0 0 52 52" aria-hidden="true">
             <circle class="back-to-top__track" cx="26" cy="26" r="23"/>

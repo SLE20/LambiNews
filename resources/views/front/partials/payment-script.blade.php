@@ -15,7 +15,7 @@
 
         targets.forEach(function (el) {
             var htg = value * parseFloat(el.dataset.rate || '0');
-            el.textContent = 'faktire ' + htg.toLocaleString('fr-FR', {
+            el.textContent = 'facturé ' + htg.toLocaleString('fr-FR', {
                 minimumFractionDigits: 0, maximumFractionDigits: 0
             }) + ' HTG';
         });

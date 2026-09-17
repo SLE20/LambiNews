@@ -1,11 +1,11 @@
 @extends('front.layouts.app')
 
-@section('title', 'Sipòte Lambi News')
+@section('title', 'Soutenir Lambi News')
 
 @section(
     'meta_description',
-    'Ede Lambi News kontinye bay enfòmasyon endepandan. '
-    .'Yon don an sekirite ak PayPal oswa kat bankè.'
+    'Aidez Lambi News à poursuivre une information indépendante. '
+    .'Un don sécurisé par MonCash, PayPal ou carte bancaire.'
 )
 
 @push('styles')
@@ -97,33 +97,33 @@
     <div class="don__wrap">
 
         <header class="don__head">
-            <p class="don__eyebrow">Sipòte jounalis endepandan</p>
-            <h1 class="don__title">Ede nou kontinye enfòme</h1>
+            <p class="don__eyebrow">Soutenez le journalisme indépendant</p>
+            <h1 class="don__title">Aidez-nous à continuer d’informer</h1>
             <p class="don__lead">
-                Lambi News se yon medya endepandan. Chak don ede nou kouvri
-                depans yo: ekipman, entènèt, ebèjman, epi travay jounalis yo
-                sou teren an.
+                Lambi News est un média indépendant. Chaque don nous aide à couvrir
+                nos dépenses : matériel, internet, hébergement et travail des
+                journalistes sur le terrain.
             </p>
 
             @if($donorCount > 0)
                 <p class="don__counter">
                     <strong>{{ number_format($totalRaised, 2) }} USD</strong>
-                    ranmase gras a
+                    récoltés grâce à
                     <strong>{{ $donorCount }}</strong>
-                    {{ $donorCount > 1 ? 'donatè' : 'donatè' }}
+                    {{ $donorCount > 1 ? 'donateurs' : 'donateur' }}
                 </p>
             @endif
         </header>
 
         @if(! $paypalReady && ! $moncashReady)
             <p class="don__alert">
-                Sistèm peman an poko konfigire. Tanpri retounen pita.
+                Le paiement n’est pas encore configuré. Merci de revenir plus tard.
             </p>
         @else
 
         <form id="don-form" class="don__card" novalidate>
             <fieldset class="don__field">
-                <legend class="don__label">Chwazi yon montan (USD)</legend>
+                <legend class="don__label">Choisissez un montant (USD)</legend>
 
                 <div class="don__amounts">
                     @foreach($presets as $preset)
@@ -136,7 +136,7 @@
                 </div>
 
                 <label class="don__custom">
-                    <span>Lòt montan</span>
+                    <span>Autre montant</span>
                     <input
                         type="number"
                         id="don-amount"
@@ -152,18 +152,18 @@
 
             <div class="don__grid">
                 <label class="don__label">
-                    Non ou <span class="don__opt">(opsyonèl)</span>
+                    Votre nom <span class="don__opt">(facultatif)</span>
                     <input type="text" name="donor_name" maxlength="120">
                 </label>
 
                 <label class="don__label">
-                    Imèl <span class="don__opt">(pou resi a)</span>
+                    E-mail <span class="don__opt">(pour le reçu)</span>
                     <input type="email" name="donor_email" maxlength="190">
                 </label>
             </div>
 
             <label class="don__label">
-                Yon mesaj <span class="don__opt">(opsyonèl)</span>
+                Un message <span class="don__opt">(facultatif)</span>
                 <textarea name="message" rows="3" maxlength="500"></textarea>
             </label>
 
@@ -173,7 +173,7 @@
 
             <label class="don__check">
                 <input type="checkbox" name="is_anonymous" value="1">
-                <span>Kenbe don mwen an anonim</span>
+                <span>Garder mon don anonyme</span>
             </label>
 
             <p class="don__error" id="don-error" hidden></p>
@@ -181,12 +181,12 @@
             <div id="paypal-buttons" class="don__paypal"></div>
 
             <button type="button" class="don__moncash" id="don-moncash" hidden>
-                Kontinye ak MonCash
+                Continuer avec MonCash
             </button>
 
             <p class="don__secure">
-                Peman an fèt sou sèvè PayPal. Lambi News pa janm wè ni estoke
-                nimewo kat ou.
+                Le paiement s’effectue sur les serveurs sécurisés du prestataire.
+                Lambi News ne voit ni ne conserve jamais votre numéro de carte.
             </p>
         </form>
 
@@ -220,7 +220,7 @@
         var form = document.getElementById('don-form');
         var data = new FormData(form);
         mc.disabled = true;
-        mc.textContent = 'Ap prepare peman an…';
+        mc.textContent = 'Préparation du paiement…';
 
         fetch(@json(route('donations.store')), {
             method: 'POST',
@@ -239,7 +239,7 @@
             })
         }).then(function (r) {
             return r.json().then(function (d) {
-                if (!r.ok) { throw new Error(d.message || 'Yon erè rive.'); }
+                if (!r.ok) { throw new Error(d.message || 'Une erreur est survenue.'); }
                 return d;
             });
         }).then(function (d) {
@@ -249,7 +249,7 @@
             err.textContent = e.message;
             err.hidden = false;
             mc.disabled = false;
-            mc.textContent = 'Kontinye ak MonCash';
+            mc.textContent = 'Continuer avec MonCash';
         });
     });
 
@@ -308,7 +308,7 @@
         }).then(function (response) {
             return response.json().then(function (data) {
                 if (!response.ok) {
-                    throw new Error(data.message || 'Yon erè rive.');
+                    throw new Error(data.message || 'Une erreur est survenue.');
                 }
                 return data;
             });
@@ -316,7 +316,7 @@
     }
 
     if (!window.paypalSdk) {
-        showError('Nou pa rive chaje PayPal. Verifye koneksyon ou.');
+        showError('Impossible de charger PayPal. Vérifiez votre connexion.');
         return;
     }
 
@@ -358,7 +358,7 @@
         },
 
         onError: function () {
-            showError('PayPal rankontre yon pwoblèm. Tanpri eseye ankò.');
+            showError('PayPal a rencontré un problème. Veuillez réessayer.');
         }
     }).render('#paypal-buttons');
 })();

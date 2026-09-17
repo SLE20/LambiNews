@@ -1,6 +1,6 @@
 @extends('front.layouts.app')
 
-@section('title', $fundraiser->title.' — Kanpay — Lambi News')
+@section('title', $fundraiser->title.' — Campagne — Lambi News')
 @section('meta_description', \Illuminate\Support\Str::limit($fundraiser->summary ?: $fundraiser->title, 160))
 
 @push('styles')
@@ -26,7 +26,7 @@
                 @endif
 
                 <span class="fr__badge {{ $fundraiser->isOpen() ? '' : 'fr__badge--closed' }}">
-                    {{ $fundraiser->isOpen() ? 'An kou' : 'Fèmen' }}
+                    {{ $fundraiser->isOpen() ? 'En cours' : 'Clôturée' }}
                 </span>
 
                 <div class="fr__identity">
@@ -44,7 +44,7 @@
 
                         @if($fundraiser->beneficiary)
                             <p class="fr__sub" style="margin:6px 0 0">
-                                Benefisyè : <strong>{{ $fundraiser->beneficiary }}</strong>
+                                Bénéficiaire : <strong>{{ $fundraiser->beneficiary }}</strong>
                             </p>
                         @endif
                     </div>
@@ -66,7 +66,7 @@
                 <div class="fr__panel">
                     <p class="fr__big">{{ $fundraiser->formatted((float) $fundraiser->raised_amount) }}</p>
                     <p class="fr__sub">
-                        ranmase sou yon objektif
+                        récoltés sur un objectif de
                         {{ $fundraiser->formatted((float) $fundraiser->goal_amount) }}
                     </p>
 
@@ -75,10 +75,10 @@
                     </div>
 
                     <div class="fr__stats">
-                        <span><b>{{ number_format($fundraiser->rawPercent(), 0) }} %</b> atenn</span>
-                        <span><b>{{ $fundraiser->contributions_count }}</b> kontribisyon</span>
+                        <span><b>{{ number_format($fundraiser->rawPercent(), 0) }} %</b> atteint</span>
+                        <span><b>{{ $fundraiser->contributions_count }}</b> contribution(s)</span>
                         @if($fundraiser->daysLeft() !== null)
-                            <span><b>{{ $fundraiser->daysLeft() }}</b> jou</span>
+                            <span><b>{{ $fundraiser->daysLeft() }}</b> jour(s) restant(s)</span>
                         @endif
                     </div>
                 </div>
@@ -86,16 +86,16 @@
                 {{-- ---------- Contribuer ---------- --}}
                 @if($fundraiser->isOpen())
                     <div class="fr__panel">
-                        <h2 style="margin:0 0 14px;font-size:1.1rem">Bay yon kontribisyon</h2>
+                        <h2 style="margin:0 0 14px;font-size:1.1rem">Faire une contribution</h2>
 
                         @if(! $paypalReady && ! $moncashReady)
                             <p class="fr__err">
-                                Sistèm peman an poko konfigire. Tanpri retounen pita.
+                                Le paiement n’est pas encore configuré. Merci de revenir plus tard.
                             </p>
                         @else
                             <form id="fr-form" novalidate>
                                 <label class="fr__label">
-                                    Montan ({{ $fundraiser->currency }})
+                                    Montant ({{ $fundraiser->currency }})
                                 </label>
 
                                 <div class="fr__chips">
@@ -116,9 +116,9 @@
                                             <span>
                                                 <strong>MonCash</strong>
                                                 <small>
-                                                    Peye ak telefòn ou an Ayiti
+                                                    Payez avec votre téléphone en Haïti
                                                     @if($fundraiser->currency !== 'HTG')
-                                                        — faktire an goud
+                                                        — facturé en gourdes
                                                         (<span id="fr-htg">—</span>)
                                                     @endif
                                                 </small>
@@ -131,43 +131,43 @@
                                             <input type="radio" name="provider" value="paypal"
                                                    {{ $moncashReady ? '' : 'checked' }}>
                                             <span>
-                                                <strong>PayPal / kat bankè</strong>
-                                                <small>Pou dyaspora a</small>
+                                                <strong>PayPal / carte bancaire</strong>
+                                                <small>Pour la diaspora</small>
                                             </span>
                                         </label>
                                     @endif
                                 </div>
 
                                 <label class="fr__label">
-                                    Non ou <span class="fr__opt">(opsyonèl)</span>
+                                    Votre nom <span class="fr__opt">(facultatif)</span>
                                     <input type="text" name="donor_name" maxlength="120">
                                 </label>
 
                                 <label class="fr__label" style="margin-top:12px">
-                                    Imèl <span class="fr__opt">(pou resi a)</span>
+                                    E-mail <span class="fr__opt">(pour le reçu)</span>
                                     <input type="email" name="donor_email" maxlength="190">
                                 </label>
 
                                 <label class="fr__label" style="margin-top:12px">
-                                    Telefòn <span class="fr__opt">(pou MonCash)</span>
+                                    Téléphone <span class="fr__opt">(pour MonCash)</span>
                                     <input type="tel" name="donor_phone" maxlength="40">
                                 </label>
 
                                 <label class="fr__label" style="margin-top:12px">
-                                    Yon mesaj <span class="fr__opt">(opsyonèl)</span>
+                                    Un message <span class="fr__opt">(facultatif)</span>
                                     <textarea name="message" rows="2" maxlength="500"></textarea>
                                 </label>
 
                                 <label style="display:flex;gap:9px;align-items:center;margin:12px 0;font-size:.88rem">
                                     <input type="checkbox" name="is_anonymous" value="1"
                                            style="width:17px;height:17px;accent-color:var(--primary)">
-                                    Kenbe kontribisyon mwen an anonim
+                                    Garder ma contribution anonyme
                                 </label>
 
                                 <p class="fr__err" id="fr-err" hidden></p>
 
                                 <button type="submit" class="fr__submit" id="fr-submit">
-                                    Kontribye
+                                    Contribuer
                                 </button>
 
                                 {{-- Les boutons PayPal ne se rendent qu'au besoin. --}}
@@ -175,8 +175,8 @@
                             </form>
 
                             <p class="fr__sub" style="margin-top:12px;text-align:center">
-                                Peman an fèt sou paj sekirize founisè a. Lambi News
-                                pa janm wè nimewo kat ou.
+                                Le paiement s’effectue sur la page sécurisée du prestataire.
+                                Lambi News ne voit jamais votre numéro de carte.
                             </p>
                         @endif
                     </div>
@@ -185,7 +185,7 @@
                 {{-- ---------- Derniers soutiens ---------- --}}
                 @if($contributors->isNotEmpty())
                     <div class="fr__panel">
-                        <h2 style="margin:0 0 14px;font-size:1rem">Dènye sipò yo</h2>
+                        <h2 style="margin:0 0 14px;font-size:1rem">Derniers soutiens</h2>
 
                         <div class="fr__donors">
                             @foreach($contributors as $contributor)
@@ -282,7 +282,7 @@
             return r.json().then(function (data) {
                 if (!r.ok) {
                     var first = data.errors ? data.errors[Object.keys(data.errors)[0]][0] : null;
-                    throw new Error(first || data.message || 'Yon erè rive.');
+                    throw new Error(first || data.message || 'Une erreur est survenue.');
                 }
                 return data;
             });
@@ -298,21 +298,21 @@
         // MonCash : le serveur crée le paiement et renvoie l'adresse de règlement.
         if (body.provider === 'moncash') {
             submit.disabled = true;
-            submit.textContent = 'Ap prepare peman an…';
+            submit.textContent = 'Préparation du paiement…';
 
             post('{{ route('fundraisers.contribute', $fundraiser->slug) }}', body)
                 .then(function (res) { window.location.href = res.checkout_url; })
                 .catch(function (err) {
                     showErr(err.message);
                     submit.disabled = false;
-                    submit.textContent = 'Kontribye';
+                    submit.textContent = 'Contribuer';
                 });
 
             return;
         }
 
         // PayPal : on affiche ses boutons, qui pilotent la suite.
-        if (!window.paypalSdk) { showErr('Nou pa rive chaje PayPal.'); return; }
+        if (!window.paypalSdk) { showErr('Impossible de charger PayPal.'); return; }
 
         submit.hidden = true;
         ppBox.hidden = false;
@@ -336,7 +336,7 @@
                     .catch(function (e) { showErr(e.message); });
             },
 
-            onError: function () { showErr('PayPal rankontre yon pwoblèm.'); }
+            onError: function () { showErr('PayPal a rencontré un problème.'); }
         }).render('#fr-paypal');
     });
 })();

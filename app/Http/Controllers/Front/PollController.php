@@ -21,11 +21,11 @@ class PollController extends Controller
 {
     /** Messages rendus au lecteur selon l'issue du vote. */
     private const MESSAGES = [
-        PollVoteRecorder::RESULT_OK       => 'Mèsi, vòt ou an anrejistre.',
-        PollVoteRecorder::RESULT_ALREADY  => 'Ou deja vote nan sondaj sa a. Yon sèl vòt pa koneksyon.',
-        PollVoteRecorder::RESULT_QUOTA    => 'Ou fin itilize tout vòt ou yo nan sondaj sa a.',
-        PollVoteRecorder::RESULT_TOO_FAST => 'Vòt la pa pase. Tanpri eseye ankò.',
-        PollVoteRecorder::RESULT_CLOSED   => 'Sondaj sa a fèmen.',
+        PollVoteRecorder::RESULT_OK       => 'Merci, votre vote a été enregistré.',
+        PollVoteRecorder::RESULT_ALREADY  => 'Vous avez déjà voté à ce sondage. Un seul vote par connexion.',
+        PollVoteRecorder::RESULT_QUOTA    => 'Vous avez utilisé tous vos votes pour ce sondage.',
+        PollVoteRecorder::RESULT_TOO_FAST => 'Le vote n’a pas été enregistré. Veuillez réessayer.',
+        PollVoteRecorder::RESULT_CLOSED   => 'Ce sondage est clôturé.',
     ];
 
     public function index(PollVoteRecorder $recorder): View
@@ -78,7 +78,7 @@ class PollController extends Controller
         if ($result['status'] === PollVoteRecorder::RESULT_PAYMENT) {
             return redirect()
                 ->route('polls.show', $poll->slug)
-                ->with('poll_status', 'Sondaj sa a peyan : '.$poll->formattedPrice().' pou chak vòt.');
+                ->with('poll_status', 'Ce sondage est payant : '.$poll->formattedPrice().' par vote.');
         }
 
         return redirect()
@@ -99,12 +99,12 @@ class PollController extends Controller
         $poll = Poll::query()->where('slug', $slug)->firstOrFail();
 
         if (! $poll->isPaid()) {
-            return response()->json(['message' => 'Sondaj sa a pa peyan.'], 422);
+            return response()->json(['message' => 'Ce sondage n’est pas payant.'], 422);
         }
 
         if (($refusal = $recorder->guard($poll, $request)) !== null) {
             return response()->json([
-                'message' => self::MESSAGES[$refusal] ?? 'Vòt la pa pase.',
+                'message' => self::MESSAGES[$refusal] ?? 'Le vote n’a pas été enregistré.',
             ], 422);
         }
 
@@ -127,7 +127,7 @@ class PollController extends Controller
                 (float) $price,
                 $poll->currency ?: 'USD',
                 'VOTE-'.$vote->id,
-                'Lambi News — vòt: '.$option->label,
+                'Lambi News — vote : '.$option->label,
                 'paypal_order_id',
                 ['poll' => $poll->slug]
             );
@@ -149,14 +149,14 @@ class PollController extends Controller
                 $price,
                 $poll->currency ?: 'USD',
                 'VOTE-'.$vote->id,
-                'Lambi News — vòt: '.$option->label
+                'Lambi News — vote : '.$option->label
             );
         } catch (Throwable $e) {
             Log::error('PayPal poll createOrder: '.$e->getMessage());
             $vote->delete();
 
             return response()->json([
-                'message' => 'Nou pa rive kontakte PayPal. Tanpri eseye ankò.',
+                'message' => 'Impossible de joindre PayPal. Veuillez réessayer.',
             ], 502);
         }
 
@@ -190,12 +190,12 @@ class PollController extends Controller
             Log::error('PayPal poll captureOrder: '.$e->getMessage());
 
             return response()->json([
-                'message' => 'Peman an pa pase. Okenn kòb pa pran sou kont ou.',
+                'message' => 'Le paiement n’a pas abouti. Aucun montant n’a été prélevé.',
             ], 502);
         }
 
         if (data_get($payload, 'status') !== 'COMPLETED') {
-            return response()->json(['message' => 'PayPal pa konfime peman an.'], 422);
+            return response()->json(['message' => 'PayPal n’a pas confirmé le paiement.'], 422);
         }
 
         $vote->forceFill([

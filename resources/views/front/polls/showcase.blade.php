@@ -350,19 +350,19 @@
             {{-- Les règles sont annoncées avant le vote, pas découvertes après. --}}
             <p class="sx__rules">
                 @if($isPaid)
-                    <span class="sx__pill">{{ $poll->formattedPrice() }} pa vòt</span>
+                    <span class="sx__pill">{{ $poll->formattedPrice() }} par vote</span>
                 @endif
 
                 <span class="sx__pill">
                     @if($poll->allowsMultipleVotes())
-                        {{ $poll->voteQuota() }} vòt {{ $poll->identityLabel() }}
+                        {{ $poll->voteQuota() }} votes {{ $poll->identityLabel() }}
                     @else
-                        Yon sèl vòt {{ $poll->identityLabel() }}
+                        Un seul vote {{ $poll->identityLabel() }}
                     @endif
                 </span>
 
                 @if($canVote && $poll->allowsMultipleVotes())
-                    <span class="sx__pill sx__pill--soft">Rete {{ $remaining }} vòt pou ou</span>
+                    <span class="sx__pill sx__pill--soft">Il vous reste {{ $remaining }} vote(s)</span>
                 @endif
             </p>
         </div>
@@ -376,7 +376,7 @@
 
         {{-- ---------------- Candidats ---------------- --}}
         <section>
-            <h2 class="sx__h2">👥 Kandida yo</h2>
+            <h2 class="sx__h2">👥 Les candidats</h2>
 
             <form method="POST" action="{{ route('polls.vote', $poll->slug) }}">
                 @csrf
@@ -446,10 +446,10 @@
 
             @if($canVote && $isPaid)
                 <div class="sx__paybox" id="sx-paybox" hidden>
-                    <h3>Peye vòt ou an : <span id="sx-payfor"></span></h3>
+                    <h3>Payer votre vote : <span id="sx-payfor"></span></h3>
                     <p>
-                        {{ $poll->formattedPrice() }} pa vòt. Vòt ou an konte
-                        sèlman apre peman an konfime.
+                        {{ $poll->formattedPrice() }} par vote. Votre vote n’est compté
+                        qu’après confirmation du paiement.
                     </p>
                     @include('front.partials.payment-methods', [
                         'currency' => $poll->currency ?: 'USD',
@@ -460,13 +460,13 @@
                     <div id="sx-paypal"></div>
 
                     <button type="button" class="sx__vote" id="sx-moncash" hidden
-                            style="margin-top:8px">Kontinye ak MonCash</button>
+                            style="margin-top:8px">Continuer avec MonCash</button>
                 </div>
 
                 @if(! $paypalReady && ! $moncashReady)
                     <p class="sx__payerr" style="margin-top:16px">
-                        Sistèm peman an poko konfigire : sondaj peyan an pa ka
-                        resevwa vòt pou kounye a.
+                        Le paiement n’est pas encore configuré : ce sondage payant
+                        ne peut pas recevoir de votes pour le moment.
                     </p>
                 @endif
             @endif
@@ -478,14 +478,14 @@
                 <div class="sx__live">
                     <span class="sx__badge">LIVE</span>
                     <span class="sx__livelabel">
-                        {{ $closed ? 'Sondaj fèmen' : 'Sondaj an kou' }}
+                        {{ $closed ? 'Sondage clôturé' : 'Sondage en cours' }}
                     </span>
                 </div>
 
                 <div class="sx__stat">
                     <span class="sx__ico">👤</span>
                     <span>
-                        <small>Total patisipan</small>
+                        <small>Total des participants</small>
                         <strong>{{ number_format($total, 0, ',', ' ') }}</strong>
                     </span>
                 </div>
@@ -494,7 +494,7 @@
                     <div class="sx__stat">
                         <span class="sx__ico">📅</span>
                         <span>
-                            <small>Dat limit</small>
+                            <small>Date limite</small>
                             <strong>{{ $poll->ends_at->translatedFormat('d F Y') }}</strong>
                         </span>
                     </div>
@@ -502,19 +502,19 @@
                     <div class="sx__stat">
                         <span class="sx__ico">⏱</span>
                         <span>
-                            <small>Rete sèlman</small>
-                            <strong>{{ $daysLeft }} jou</strong>
+                            <small>Il reste</small>
+                            <strong>{{ $daysLeft }} jour(s)</strong>
                         </span>
                     </div>
                 @endif
             </div>
 
             <div class="sx__panel">
-                <h2 class="sx__h2" style="font-size:.95rem;margin-bottom:14px">📊 Rezilta sondaj la</h2>
+                <h2 class="sx__h2" style="font-size:.95rem;margin-bottom:14px">📊 Résultats du sondage</h2>
 
                 @if($total < 1)
                     <p style="color:#64748b;font-size:.86rem;margin:0">
-                        Poko gen vòt. Rezilta yo parèt depi premye patisipan an.
+                        Aucun vote pour l’instant. Les résultats s’affichent dès le premier participant.
                     </p>
                 @else
                     <div class="sx__res">
@@ -524,7 +524,7 @@
                                     <span class="sx__resname">{{ $row['option']->label }}</span>
                                     <span class="sx__respct">{{ number_format($row['percent'], 0, ',', ' ') }}%</span>
                                     <span class="sx__resvotes">
-                                        {{ number_format($row['option']->votes_count, 0, ',', ' ') }} vòt
+                                        {{ number_format($row['option']->votes_count, 0, ',', ' ') }} vote(s)
                                     </span>
                                 </div>
                                 <div class="sx__bar">
@@ -561,7 +561,7 @@
                                 <text x="85" y="82" text-anchor="middle" class="sx__center"
                                       font-size="19">100%</text>
                                 <text x="85" y="99" text-anchor="middle" class="sx__centersub">
-                                    {{ number_format($total, 0, ',', ' ') }} vòt
+                                    {{ number_format($total, 0, ',', ' ') }} votes
                                 </text>
                             </g>
                         </svg>
@@ -581,17 +581,17 @@
         </aside>
 
         <div class="sx__cta">
-            <h2>Ansanm pou yon pi bon demen</h2>
+            <h2>Ensemble pour un avenir meilleur</h2>
             <p>
-                Vòt ou se vwa ou. Patisipe nan sondaj la epi ede nou konprann
-                preferans sitwayen ayisyen yo.
+                Votre vote est votre voix. Participez au sondage et aidez-nous à
+                comprendre les préférences des citoyens haïtiens.
             </p>
         </div>
 
         <p class="sx__note">
-            Sondaj enfòmèl, rezève pou lektè Lambi News. Se pa yon ankèt
-            syantifik : rezilta yo pa reprezante tout popilasyon an. Yon sèl
-            vòt pa moun.
+            Sondage informel, réservé aux lecteurs de Lambi News. Ce n’est pas une
+            enquête scientifique : les résultats ne représentent pas l’ensemble de la
+            population. Un seul vote par personne.
         </p>
 
     </div>
@@ -631,7 +631,7 @@
     mc.addEventListener('click', function () {
         if (!chosen) { return; }
         mc.disabled = true;
-        mc.textContent = 'Ap prepare peman an…';
+        mc.textContent = 'Préparation du paiement…';
 
         fetch(@json(route('polls.pay.start', $poll->slug)), {
             method: 'POST',
@@ -647,14 +647,14 @@
             })
         }).then(function (r) {
             return r.json().then(function (d) {
-                if (!r.ok) { throw new Error(d.message || 'Yon erè rive.'); }
+                if (!r.ok) { throw new Error(d.message || 'Une erreur est survenue.'); }
                 return d;
             });
         }).then(function (d) {
             window.location.href = d.checkout_url;
         }).catch(function (e) {
             err.textContent = e.message; err.hidden = false;
-            mc.disabled = false; mc.textContent = 'Kontinye ak MonCash';
+            mc.disabled = false; mc.textContent = 'Continuer avec MonCash';
         });
     });
 
@@ -691,7 +691,7 @@
             body: JSON.stringify(body)
         }).then(function (r) {
             return r.json().then(function (d) {
-                if (!r.ok) { throw new Error(d.message || 'Yon erè rive.'); }
+                if (!r.ok) { throw new Error(d.message || 'Une erreur est survenue.'); }
                 return d;
             });
         });
@@ -729,7 +729,7 @@
                 },
 
                 onError: function () {
-                    showErr('PayPal rankontre yon pwoblèm. Tanpri eseye ankò.');
+                    showErr('PayPal a rencontré un problème. Veuillez réessayer.');
                 }
             }).render('#sx-paypal');
         });

@@ -63,7 +63,7 @@ class Donation extends Model
     public function getPublicNameAttribute(): string
     {
         if ($this->is_anonymous || blank($this->donor_name)) {
-            return 'Yon donatè anonim';
+            return 'Un donateur anonyme';
         }
 
         return $this->donor_name;

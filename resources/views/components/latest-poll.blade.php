@@ -31,13 +31,13 @@
             <span class="pteaser__label">
                 {{ \Illuminate\Support\Str::limit($teaser->label, 24) }}
                 @if($others > 0)
-                    <small>+{{ $others }} lòt chwa</small>
+                    <small>+{{ $others }} autres choix</small>
                 @endif
             </span>
         </span>
     @endif
 
-    <span class="pteaser__cta">Ale vote →</span>
+    <span class="pteaser__cta">Aller voter →</span>
 </a>
 
 <style>

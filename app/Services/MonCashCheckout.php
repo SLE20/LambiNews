@@ -36,7 +36,7 @@ class MonCashCheckout
         if (! $client->isConfigured()) {
             return [
                 'ok'      => false,
-                'message' => 'MonCash poko konfigire. Chwazi yon lòt mwayen.',
+                'message' => 'MonCash n’est pas encore configuré. Choisissez un autre moyen de paiement.',
             ];
         }
 
@@ -54,7 +54,7 @@ class MonCashCheckout
 
             return [
                 'ok'      => false,
-                'message' => 'Nou pa rive kontakte MonCash. Tanpri eseye ankò.',
+                'message' => 'Impossible de joindre MonCash. Veuillez réessayer.',
             ];
         }
 

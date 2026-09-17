@@ -31,7 +31,7 @@
         <span class="pcard__eyebrow">Sondage des lecteurs</span>
 
         @if($closed)
-            <span class="pcard__state pcard__state--closed">Fèmen</span>
+            <span class="pcard__state pcard__state--closed">Clôturé</span>
         @else
             <span class="pcard__state">
                 <i></i> An kou
@@ -73,25 +73,25 @@
         @endforeach
 
         @if($remaining > 0)
-            <span class="pcard__more">+{{ $remaining }} lòt chwa</span>
+            <span class="pcard__more">+{{ $remaining }} autres choix</span>
         @endif
     </div>
 
     <div class="pcard__foot">
         <span class="pcard__meta">
-            {{ number_format($total, 0, ',', ' ') }} patisipasyon{{ $total > 1 ? 's' : '' }}
+            {{ number_format($total, 0, ',', ' ') }} participation{{ $total > 1 ? 's' : '' }}
 
             @if(! $closed && $daysLeft !== null)
-                · rete {{ $daysLeft }} jou
+                · {{ $daysLeft }} jour(s) restant(s)
             @endif
 
             @if($poll->isPaid())
-                · {{ $poll->formattedPrice() }} pa vòt
+                · {{ $poll->formattedPrice() }} par vote
             @endif
         </span>
 
         <span class="pcard__cta">
-            {{ $closed ? 'Wè rezilta yo' : 'Vote kounye a' }} →
+            {{ $closed ? 'Voir les résultats' : 'Voter maintenant' }} →
         </span>
     </div>
 </a>

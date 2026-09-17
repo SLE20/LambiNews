@@ -164,7 +164,7 @@
                     </a>
 
                     <a href="{{ route('fundraisers.index') }}">
-                        Kanpay finansman
+                        Campagnes de financement
                     </a>
 
                     <a href="{{ route('media-kit') }}">

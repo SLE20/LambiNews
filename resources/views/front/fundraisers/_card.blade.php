@@ -4,7 +4,7 @@
     la reconnaît d'un coup d'œil où qu'il la croise.
 
     $fundraiser : la campagne.
-    $context    : 'list' sur /kanpay (on montre l'état de la campagne),
+    $context    : 'list' sur /campagnes (on montre l'état de la campagne),
                   'promo' ailleurs (on rappelle de quoi il s'agit).
 --}}
 @php($context = $context ?? 'promo')
@@ -28,10 +28,10 @@
     <span class="fdr__body{{ $fundraiser->photo ? ' fdr__body--offset' : '' }}">
         @if($context === 'list')
             <span class="fdr__badge{{ $fundraiser->isOpen() ? '' : ' fdr__badge--closed' }}">
-                {{ $fundraiser->isOpen() ? 'An kou' : 'Fèmen' }}
+                {{ $fundraiser->isOpen() ? 'En cours' : 'Clôturée' }}
             </span>
         @else
-            <span class="fdr__eyebrow">💛 Kanpay finansman</span>
+            <span class="fdr__eyebrow">💛 Campagne de financement</span>
         @endif
 
         <span class="fdr__title">{{ $fundraiser->title }}</span>
@@ -48,19 +48,19 @@
 
         <span class="fdr__amounts">
             <b>{{ $fundraiser->formatted((float) $fundraiser->raised_amount) }}</b>
-            <span>sou {{ $fundraiser->formatted((float) $fundraiser->goal_amount) }}</span>
+            <span>sur {{ $fundraiser->formatted((float) $fundraiser->goal_amount) }}</span>
         </span>
 
         <span class="fdr__meta">
-            {{ number_format($fundraiser->rawPercent(), 0) }} % atenn ·
-            {{ $fundraiser->contributions_count }} kontribisyon
+            {{ number_format($fundraiser->rawPercent(), 0) }} % atteint ·
+            {{ $fundraiser->contributions_count }} contribution(s)
             @if($fundraiser->daysLeft() !== null && $fundraiser->isOpen())
-                · rete {{ $fundraiser->daysLeft() }} jou
+                · {{ $fundraiser->daysLeft() }} jour(s) restant(s)
             @endif
         </span>
 
         <span class="fdr__cta">
-            {{ $fundraiser->isOpen() ? 'Kontribye kounye a' : 'Wè tout detay yo' }}
+            {{ $fundraiser->isOpen() ? 'Contribuer maintenant' : 'Voir tous les détails' }}
         </span>
     </span>
 </a>

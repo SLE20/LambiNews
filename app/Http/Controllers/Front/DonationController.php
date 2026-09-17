@@ -81,7 +81,7 @@ class DonationController extends Controller
                 (float) $amount,
                 self::CURRENCY,
                 $donation->reference,
-                'Sipò pou Lambi News',
+                'Soutien à Lambi News',
                 'paypal_order_id'
             );
 
@@ -102,14 +102,14 @@ class DonationController extends Controller
                 $amount,
                 self::CURRENCY,
                 $donation->reference,
-                'Sipò pou Lambi News'
+                'Soutien à Lambi News'
             );
         } catch (Throwable $e) {
             $donation->update(['status' => Donation::STATUS_FAILED]);
             Log::error('PayPal createOrder: '.$e->getMessage());
 
             return response()->json([
-                'message' => 'Nou pa rive kontakte PayPal. Tanpri eseye ankò.',
+                'message' => 'Impossible de joindre PayPal. Veuillez réessayer.',
             ], 502);
         }
 
@@ -147,7 +147,7 @@ class DonationController extends Controller
             Log::error('PayPal captureOrder: '.$e->getMessage());
 
             return response()->json([
-                'message' => 'Peman an pa pase. Okenn kòb pa pran sou kont ou.',
+                'message' => 'Le paiement n’a pas abouti. Aucun montant n’a été prélevé.',
             ], 502);
         }
 
@@ -178,7 +178,7 @@ class DonationController extends Controller
 
         if (! $isCompleted) {
             return response()->json([
-                'message' => 'PayPal pa konfime peman an.',
+                'message' => 'PayPal n’a pas confirmé le paiement.',
             ], 422);
         }
 

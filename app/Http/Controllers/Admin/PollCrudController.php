@@ -107,7 +107,7 @@ class PollCrudController extends CrudController
             'name'  => 'headline',
             'label' => 'Titre du bandeau',
             'type'  => 'text',
-            'hint'  => 'Ex. « Sondaj Prézidansyèl 2026 ». Le dernier mot '
+            'hint'  => 'Ex. « Présidentielle 2026 ». Le dernier mot '
                 .'s’affiche en rouge. Vide = la question est utilisée.',
             'tab'   => 'Affiche',
         ]);

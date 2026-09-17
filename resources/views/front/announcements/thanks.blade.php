@@ -11,23 +11,23 @@
 <section class="anons">
     <div class="anons__wrap" style="max-width:620px; text-align:center">
         <div class="anons__body">
-            <h1 class="anons__title">Mèsi, nou resevwa anons ou an</h1>
+            <h1 class="anons__title">Merci, nous avons bien reçu votre annonce</h1>
 
             <p style="color:var(--muted)">
-                Referans: <strong>{{ $announcement->reference }}</strong><br>
-                Montan peye: <strong>{{ $announcement->getFormattedAmount() }}</strong>
+                Référence : <strong>{{ $announcement->reference }}</strong><br>
+                Montant payé : <strong>{{ $announcement->getFormattedAmount() }}</strong>
             </p>
 
             <p>
-                Redaksyon an ap li anons ou an anvan li parèt sou sit la —
-                sa pran jeneralman mwens pase 24 èdtan. N ap voye yon mesaj
-                nan <strong>{{ $announcement->requester_email }}</strong>
-                lè li an liy.
+                La rédaction relit votre annonce avant sa mise en ligne —
+                cela prend généralement moins de 24 heures. Un message sera
+                envoyé à <strong>{{ $announcement->requester_email }}</strong>
+                dès sa publication.
             </p>
 
             <p style="margin-top:22px">
                 <a href="{{ route('announcements.index') }}" class="anons__btn">
-                    Wè lòt anons yo
+                    Voir les autres annonces
                 </a>
             </p>
         </div>

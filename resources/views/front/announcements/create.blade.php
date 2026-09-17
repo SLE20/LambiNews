@@ -28,7 +28,7 @@
 
         @if(! $paypalReady && ! $moncashReady)
             <p class="anons__alert">
-                Sistèm peman an poko konfigire. Tanpri retounen pita.
+                Le paiement n’est pas encore configuré. Merci de revenir plus tard.
             </p>
         @else
 
@@ -121,7 +121,7 @@
             <div id="paypal-buttons"></div>
 
             <button type="button" class="anons__moncash" id="anons-moncash" hidden>
-                Kontinye ak MonCash
+                Continuer avec MonCash
             </button>
 
             <p class="anons__secure">
@@ -160,7 +160,7 @@
     mc.addEventListener('click', function () {
         var d = new FormData(form);
         mc.disabled = true;
-        mc.textContent = 'Ap prepare peman an…';
+        mc.textContent = 'Préparation du paiement…';
 
         fetch(@json(route('announcements.store')), {
             method: 'POST',
@@ -182,7 +182,7 @@
             return r.json().then(function (x) {
                 if (!r.ok) {
                     var first = x.errors ? x.errors[Object.keys(x.errors)[0]][0] : null;
-                    throw new Error(first || x.message || 'Yon erè rive.');
+                    throw new Error(first || x.message || 'Une erreur est survenue.');
                 }
                 return x;
             });
@@ -191,7 +191,7 @@
         }).catch(function (e) {
             var err = document.getElementById('anons-error');
             err.textContent = e.message; err.hidden = false;
-            mc.disabled = false; mc.textContent = 'Kontinye ak MonCash';
+            mc.disabled = false; mc.textContent = 'Continuer avec MonCash';
         });
     });
 
@@ -250,7 +250,7 @@
                     var first = data.errors
                         ? data.errors[Object.keys(data.errors)[0]][0]
                         : null;
-                    throw new Error(first || data.message || 'Yon erè rive.');
+                    throw new Error(first || data.message || 'Une erreur est survenue.');
                 }
                 return data;
             });
@@ -258,7 +258,7 @@
     }
 
     if (!window.paypalSdk) {
-        showError('Nou pa rive chaje PayPal. Verifye koneksyon ou.');
+        showError('Impossible de charger PayPal. Vérifiez votre connexion.');
         return;
     }
 
@@ -293,7 +293,7 @@
         },
 
         onError: function () {
-            showError('PayPal rankontre yon pwoblèm. Tanpri eseye ankò.');
+            showError('PayPal a rencontré un problème. Veuillez réessayer.');
         }
     }).render('#paypal-buttons');
 })();

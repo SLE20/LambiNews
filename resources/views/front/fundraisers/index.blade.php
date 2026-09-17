@@ -1,7 +1,7 @@
 @extends('front.layouts.app')
 
-@section('title', 'Kanpay finansman — Lambi News')
-@section('meta_description', 'Sipòte kanpay finansman Lambi News yo ak MonCash oswa PayPal.')
+@section('title', 'Campagnes de financement — Lambi News')
+@section('meta_description', 'Soutenez les campagnes de financement de Lambi News avec MonCash ou PayPal.')
 
 @push('styles')
     @include('front.fundraisers._styles')
@@ -12,16 +12,16 @@
 <section class="fr">
     <div class="fr__wrap">
         <header class="fr__head">
-            <p class="fr__eyebrow">Finansman patisipatif</p>
-            <h1 class="fr__title">Kanpay yo</h1>
+            <p class="fr__eyebrow">Financement participatif</p>
+            <h1 class="fr__title">Nos campagnes</h1>
             <p class="fr__lead">
-                Sipòte yon pwojè ak MonCash oswa PayPal. Chak kontribisyon
-                parèt an dirèk sou kanpay la.
+                Soutenez un projet avec MonCash ou PayPal. Chaque contribution
+                s’affiche en direct sur la campagne.
             </p>
         </header>
 
         @if($fundraisers->isEmpty())
-            <p class="fr__empty">Pa gen kanpay pou kounye a.</p>
+            <p class="fr__empty">Aucune campagne pour le moment.</p>
         @else
             <div class="fr__grid">
                 @foreach($fundraisers as $fundraiser)
