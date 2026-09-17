@@ -5,6 +5,7 @@
 
 @push('styles')
     @include('front.fundraisers._styles')
+    @include('front.fundraisers._card_styles')
 @endpush
 
 @section('content')
@@ -24,56 +25,10 @@
         @else
             <div class="fr__grid">
                 @foreach($fundraisers as $fundraiser)
-                    <a href="{{ route('fundraisers.show', $fundraiser->slug) }}" class="fr__card">
-                        @if($fundraiser->cover_image || $fundraiser->photo)
-                            <span class="fr__cover">
-                                @if($fundraiser->cover_image)
-                                    <img src="{{ asset('storage/'.$fundraiser->cover_image) }}"
-                                         alt="" loading="lazy">
-                                @endif
-
-                                @if($fundraiser->photo)
-                                    <span class="fr__photo">
-                                        <img src="{{ asset('storage/'.$fundraiser->photo) }}"
-                                             alt="{{ $fundraiser->beneficiary ?: $fundraiser->title }}"
-                                             loading="lazy">
-                                    </span>
-                                @endif
-                            </span>
-                        @endif
-
-                        <div class="fr__body{{ $fundraiser->photo ? ' fr__body--offset' : '' }}">
-                            <span class="fr__badge {{ $fundraiser->isOpen() ? '' : 'fr__badge--closed' }}">
-                                {{ $fundraiser->isOpen() ? 'An kou' : 'Fèmen' }}
-                            </span>
-
-                            <h2 class="fr__cardtitle">{{ $fundraiser->title }}</h2>
-
-                            @if($fundraiser->summary)
-                                <p class="fr__summary">
-                                    {{ \Illuminate\Support\Str::limit($fundraiser->summary, 110) }}
-                                </p>
-                            @endif
-
-                            <div class="fr__bar">
-                                <span class="fr__fill" style="width: {{ $fundraiser->percent() }}%"></span>
-                            </div>
-
-                            <div class="fr__amounts">
-                                <span class="fr__raised">{{ $fundraiser->formatted((float) $fundraiser->raised_amount) }}</span>
-                                <span class="fr__goal">sou {{ $fundraiser->formatted((float) $fundraiser->goal_amount) }}</span>
-                            </div>
-
-                            <p class="fr__meta">
-                                {{ $fundraiser->contributions_count }} kontribisyon
-                                @if($fundraiser->daysLeft() !== null && $fundraiser->isOpen())
-                                    · rete {{ $fundraiser->daysLeft() }} jou
-                                @endif
-                            </p>
-
-                            <span class="fr__more">Wè tout detay yo →</span>
-                        </div>
-                    </a>
+                    @include('front.fundraisers._card', [
+                        'fundraiser' => $fundraiser,
+                        'context'    => 'list',
+                    ])
                 @endforeach
             </div>
 

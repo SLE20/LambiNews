@@ -13,54 +13,11 @@
     .fr__lead { color: var(--muted); max-width: 58ch; margin: 0 auto; }
 
     .fr__grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 20px; }
-    .fr__card {
-        display: block; background: var(--surface); border: 1px solid var(--border);
-        border-radius: var(--radius); overflow: hidden; color: inherit;
-        transition: border-color .15s, box-shadow .15s, transform .15s;
-    }
-    .fr__card:hover { border-color: var(--primary); box-shadow: var(--shadow); transform: translateY(-2px); }
-    .fr__cover {
-        position: relative;
-        aspect-ratio: 16/9; background: var(--border); overflow: hidden;
-    }
-    .fr__cover img { width: 100%; height: 100%; object-fit: cover; display: block; }
-
-    /*
-        Le portrait chevauche la bannière, comme un badge d'auteur : il
-        signe la campagne sans voler la place du titre. Le corps de la
-        carte compense d'autant pour ne pas passer dessous.
-    */
-    .fr__photo {
-        position: absolute; left: 16px; bottom: -26px; z-index: 2;
-        width: 62px; height: 62px; border-radius: 50%; overflow: hidden;
-        border: 3px solid var(--surface); background: var(--surface);
-        box-shadow: 0 2px 10px rgba(0,0,0,.18);
-    }
-    .fr__photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
-
-    .fr__body { padding: 18px; }
-    .fr__body--offset { padding-top: 36px; }
-    .fr__cardtitle {
-        font-family: "Playfair Display", Georgia, serif;
-        font-size: 1.12rem; line-height: 1.32; margin: 0 0 8px;
-    }
-    .fr__summary { color: var(--muted); font-size: .88rem; margin: 0 0 14px; }
+    /* La carte des campagnes vit dans _card_styles.blade.php. */
 
     /* ---------- Barre de progression ---------- */
     .fr__bar { height: 9px; border-radius: 999px; background: var(--border); overflow: hidden; }
     .fr__fill { display: block; height: 100%; border-radius: 999px; background: var(--primary); }
-    .fr__amounts {
-        display: flex; justify-content: space-between; gap: 10px;
-        margin-top: 9px; font-size: .84rem;
-    }
-    .fr__raised { font-weight: 800; color: var(--primary-dark); }
-    .fr__goal { color: var(--muted); }
-    .fr__meta { margin-top: 10px; font-size: .78rem; color: var(--muted); }
-    .fr__more {
-        display: inline-block; margin-top: 12px;
-        font-size: .84rem; font-weight: 700; color: var(--primary-dark);
-    }
-    .fr__card:hover .fr__more { text-decoration: underline; }
     .fr__badge {
         display: inline-block; padding: 3px 10px; border-radius: 999px;
         font-size: .68rem; font-weight: 800; letter-spacing: .08em;
