@@ -44,7 +44,10 @@ class ElectionEvent extends Model
     protected static function booted(): void
     {
         static::updating(function (ElectionEvent $event): void {
-            if (! $event->isDirty(['starts_on', 'ends_on', 'status'])) {
+            // Corriger un brouillon n'est pas un report : seul un
+            // changement sur une échéance déjà publiée est archivé.
+            if (! $event->getOriginal('is_published')
+                || ! $event->isDirty(['starts_on', 'ends_on', 'status'])) {
                 return;
             }
 
