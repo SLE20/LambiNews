@@ -15,6 +15,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use Throwable;
 
 class PollController extends Controller
@@ -61,6 +62,50 @@ class PollController extends Controller
             $poll->isShowcase() ? 'front.polls.showcase' : 'front.polls.show',
             $data
         );
+    }
+
+    /**
+     * Urne publique d'un sondage clôturé : un bulletin par ligne, pour
+     * que chacun puisse recompter.
+     *
+     * Rien qui identifie un votant : ni empreinte, ni adresse, ni heure
+     * précise — seulement le jour, qui ne permet pas de recouper.
+     */
+    public function ballots(string $slug): StreamedResponse
+    {
+        $poll = Poll::query()->with('options')->where('slug', $slug)->firstOrFail();
+
+        abort_unless($poll->isClosed(), 404);
+
+        $labels = $poll->options->pluck('label', 'id');
+
+        return response()->streamDownload(function () use ($poll, $labels): void {
+            $out = fopen('php://output', 'w');
+            fwrite($out, "\xEF\xBB\xBF");
+            fputcsv($out, ['bulletin', 'choix', 'jour', 'type'], ';');
+
+            $n = 0;
+            PollVote::query()
+                ->where('poll_id', $poll->id)
+                ->where('is_void', false)
+                ->whereIn('payment_status', [PollVote::PAY_FREE, PollVote::PAY_PAID])
+                // Trié par choix : l'ordre de dépôt ne se devine pas, et le
+                // parcours par lots reste stable (un tri aléatoire ne l'est pas).
+                ->orderBy('poll_option_id')
+                ->orderBy('id')
+                ->select(['id', 'poll_option_id', 'voted_at', 'payment_status'])
+                ->lazy(500)
+                ->each(function ($vote) use ($out, $labels, &$n): void {
+                    fputcsv($out, [
+                        ++$n,
+                        $labels[$vote->poll_option_id] ?? '?',
+                        optional($vote->voted_at)->toDateString(),
+                        $vote->payment_status === PollVote::PAY_PAID ? 'payant' : 'gratuit',
+                    ], ';');
+                });
+
+            fclose($out);
+        }, 'urne-'.$poll->slug.'.csv', ['Content-Type' => 'text/csv; charset=UTF-8']);
     }
 
     /** Vote gratuit, envoyé par le formulaire. */

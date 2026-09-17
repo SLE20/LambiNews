@@ -135,6 +135,18 @@ Route::group([
     Route::get('statistiques', [StatisticsController::class, 'index'])
     ->name('admin.statistics');
 
+    // Espace « Élections ».
+    Route::crud('election-event', 'ElectionEventCrudController');
+    Route::crud('electoral-actor', 'ElectoralActorCrudController');
+    Route::crud('voting-center', 'VotingCenterCrudController');
+    Route::crud('political-party', 'PoliticalPartyCrudController');
+    Route::crud('party-question', 'PartyQuestionCrudController');
+    Route::crud('party-answer', 'PartyAnswerCrudController');
+
+    Route::get('voting-center-import', [\App\Http\Controllers\Admin\VotingCenterCrudController::class, 'importForm'])
+        ->name('voting-center.import');
+    Route::post('voting-center-import', [\App\Http\Controllers\Admin\VotingCenterCrudController::class, 'import']);
+
     // Revenus : dons, annonces, votes payants, campagnes, publicité.
     Route::get('revenus', [\App\Http\Controllers\Admin\RevenueController::class, 'index'])
         ->name('admin.revenue');

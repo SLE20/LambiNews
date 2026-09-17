@@ -93,6 +93,18 @@
     </x-backpack::menu-dropdown>
 @endif
 
+{{-- Élections : ouvert aux éditeurs --}}
+@if(backpack_user()?->isEditor())
+<x-backpack::menu-dropdown title="Élections" icon="la la-vote-yea">
+    <x-backpack::menu-dropdown-item title="Calendrier électoral" icon="la la-calendar" :link="backpack_url('election-event')" />
+    <x-backpack::menu-dropdown-item title="Acteurs du processus" icon="la la-sitemap" :link="backpack_url('electoral-actor')" />
+    <x-backpack::menu-dropdown-item title="Centres de vote" icon="la la-map-marker" :link="backpack_url('voting-center')" />
+    <x-backpack::menu-dropdown-item title="Structures politiques" icon="la la-flag" :link="backpack_url('political-party')" />
+    <x-backpack::menu-dropdown-item title="Questionnaire aux partis" icon="la la-question-circle" :link="backpack_url('party-question')" />
+    <x-backpack::menu-dropdown-item title="Réponses des partis" icon="la la-comments" :link="backpack_url('party-answer')" />
+</x-backpack::menu-dropdown>
+@endif
+
 {{-- Administration --}}
 @if(backpack_user()?->isAdmin())
     <x-backpack::menu-dropdown

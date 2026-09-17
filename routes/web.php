@@ -9,6 +9,7 @@ use App\Http\Controllers\Front\CategoryController;
 use App\Http\Controllers\Front\CommentController;
 use App\Http\Controllers\Front\ContactController;
 use App\Http\Controllers\Front\DonationController;
+use App\Http\Controllers\Front\ElectionController;
 use App\Http\Controllers\Front\FeedController;
 use App\Http\Controllers\Front\FundraiserController;
 use App\Http\Controllers\Front\WalCashWebhookController;
@@ -47,6 +48,23 @@ Route::get('/recherche', [SearchController::class, 'index'])
 |--------------------------------------------------------------------------
 */
 
+/*
+|--------------------------------------------------------------------------
+| Élections 2026
+|--------------------------------------------------------------------------
+*/
+
+Route::prefix('elections')->name('elections.')->controller(ElectionController::class)->group(function () {
+    Route::get('/', 'index')->name('index');
+    Route::get('/calendrier', 'calendar')->name('calendar');
+    Route::get('/cycle-electoral', 'cycle')->name('cycle');
+    Route::get('/acteurs/{slug}', 'actor')->name('actor');
+    Route::get('/ou-voter', 'whereToVote')->name('where');
+    Route::get('/centres.json', 'centers')->middleware('throttle:60,1')->name('centers');
+    Route::get('/partis', 'parties')->name('parties');
+    Route::get('/partis/{slug}', 'party')->name('party');
+});
+
 Route::get('/contact', [ContactController::class, 'create'])
     ->name('contact.create');
 
@@ -62,6 +80,11 @@ Route::post('/contact', [ContactController::class, 'store'])
 
 Route::get('/sondages', [PollController::class, 'index'])
     ->name('polls.index');
+
+// Urne publique d'un sondage clôturé (avant /sondages/{slug}).
+Route::get('/sondages/{slug}/urne.csv', [PollController::class, 'ballots'])
+    ->middleware('throttle:10,1')
+    ->name('polls.ballots');
 
 Route::get('/sondages/{slug}', [PollController::class, 'show'])
     ->name('polls.show');

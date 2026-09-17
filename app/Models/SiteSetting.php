@@ -115,6 +115,7 @@ class SiteSetting extends Model
             'seo'      => 'Référencement',
             'reseaux'  => 'Réseaux sociaux',
             'paiement' => 'Paiement (PayPal)',
+            'elections' => 'Élections',
             default    => $this->group,
         };
     }

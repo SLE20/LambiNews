@@ -59,11 +59,16 @@ class SitemapController extends Controller
                 'updated_at',
             ]);
 
+        $electionActors = \App\Models\ElectoralActor::published()->pluck('slug');
+        $electionParties = \App\Models\PoliticalParty::published()->get(['slug', 'updated_at']);
+
         return $this->xml('front.sitemap', compact(
             'articles',
             'categories',
             'authors',
-            'pages'
+            'pages',
+            'electionActors',
+            'electionParties'
         ));
     }
 

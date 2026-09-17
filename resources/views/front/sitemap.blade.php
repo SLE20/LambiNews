@@ -16,6 +16,21 @@
         <priority>0.3</priority>
     </url>
 
+    {{-- Espace Élections --}}
+    @foreach(['elections.index' => 'daily', 'elections.calendar' => 'daily', 'elections.where' => 'weekly', 'elections.parties' => 'weekly', 'elections.cycle' => 'monthly'] as $name => $freq)
+        <url>
+            <loc>{{ route($name) }}</loc>
+            <changefreq>{{ $freq }}</changefreq>
+            <priority>0.8</priority>
+        </url>
+    @endforeach
+    @foreach($electionActors as $actor)
+        <url><loc>{{ route('elections.actor', $actor) }}</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
+    @endforeach
+    @foreach($electionParties as $party)
+        <url><loc>{{ route('elections.party', $party->slug) }}</loc><lastmod>{{ $party->updated_at->toAtomString() }}</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url>
+    @endforeach
+
     {{-- Rubriques --}}
     @foreach($categories as $category)
         <url>

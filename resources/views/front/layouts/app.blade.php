@@ -1655,6 +1655,8 @@
                                class="nav-dropdown-link">{{ $extra->name }}</a>
                         @endforeach
 
+                        <a href="{{ route('elections.index') }}" class="nav-dropdown-link"><strong>🗳 Élections 2026</strong></a>
+                        <a href="{{ route('elections.where') }}" class="nav-dropdown-link">Où voter ?</a>
                         <a href="{{ route('announcements.index') }}" class="nav-dropdown-link">Annonces</a>
                         <a href="{{ route('polls.index') }}" class="nav-dropdown-link">Sondages</a>
                         <a href="{{ route('fundraisers.index') }}" class="nav-dropdown-link">Campagnes de financement</a>

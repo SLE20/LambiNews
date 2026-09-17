@@ -459,6 +459,8 @@
                 La campagne en cours occupe cette place, plus utile ici
                 qu'un rappel des réseaux : le pied de page les liste déjà.
             --}}
+            <x-election-countdown />
+
             <div style="margin-bottom:18px">
                 <x-featured-fundraiser />
             </div>

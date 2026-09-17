@@ -14,6 +14,9 @@
     $canVote   = ! $hasVoted && ! $closed;
     $remaining = $recorder->remainingVotes($poll);
     $isPaid    = $poll->isPaid();
+    // Mode « baromètre » : aucun chiffre avant d'avoir voté, pour ne pas
+    // influencer le choix. À la clôture, tout redevient visible.
+    $hideNumbers = $poll->hide_results_before_vote && ! $hasVoted && ! $closed;
 
     /*
      * Camembert : on convertit chaque part en segment de cercle.
@@ -486,7 +489,7 @@
                     <span class="sx__ico">👤</span>
                     <span>
                         <small>Total des participants</small>
-                        <strong>{{ number_format($total, 0, ',', ' ') }}</strong>
+                        <strong>{{ $hideNumbers ? '—' : number_format($total, 0, ',', ' ') }}</strong>
                     </span>
                 </div>
 
@@ -512,7 +515,13 @@
             <div class="sx__panel">
                 <h2 class="sx__h2" style="font-size:.95rem;margin-bottom:14px">📊 Résultats du sondage</h2>
 
-                @if($total < 1)
+                @if($hideNumbers)
+                    <p style="color:#64748b;font-size:.86rem;margin:0">
+                        🔒 Aucun chiffre n’est affiché avant votre vote, pour ne pas influencer
+                        votre choix. Les résultats apparaissent dès que vous avez voté, et pour
+                        tous à la clôture.
+                    </p>
+                @elseif($total < 1)
                     <p style="color:#64748b;font-size:.86rem;margin:0">
                         Aucun vote pour l’instant. Les résultats s’affichent dès le premier participant.
                     </p>
@@ -587,6 +596,13 @@
                 comprendre les préférences des citoyens haïtiens.
             </p>
         </div>
+
+        @if($closed && $total > 0)
+            <p class="sx__note" style="margin-bottom:6px">
+                🗳 Sondage clôturé : <a href="{{ route('polls.ballots', $poll->slug) }}">télécharger l’urne</a>
+                (un bulletin par ligne, anonyme) pour recompter vous-même.
+            </p>
+        @endif
 
         <p class="sx__note">
             Sondage informel, réservé aux lecteurs de Lambi News. Ce n’est pas une
