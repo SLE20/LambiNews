@@ -23,6 +23,10 @@ class VideoController extends Controller
 
         $term = trim($validated['q'] ?? '');
 
+        $featured = ($term === '' && empty($validated['rubrique']))
+            ? Video::live()->with('category')->where('is_featured', true)->orderByDesc('published_at')->first()
+            : null;
+
         $videos = Video::query()
             ->live()
             ->with(['category', 'author'])
@@ -32,6 +36,9 @@ class VideoController extends Controller
                 $like = '%'.addcslashes($term, '%_\\').'%';
                 $q->where(fn ($w) => $w->where('title', 'like', $like)->orWhere('description', 'like', $like));
             })
+            // La vidéo mise en avant est déjà en haut de page : l'afficher
+            // une seconde fois dans la grille ne sert à rien.
+            ->when($featured, fn ($q) => $q->where('id', '!=', $featured->id))
             ->orderByDesc('published_at')
             ->paginate(24)
             ->withQueryString();
@@ -42,10 +49,6 @@ class VideoController extends Controller
             ->withCount(['videos' => fn ($q) => $q->live()])
             ->orderBy('name')
             ->get(['id', 'name', 'slug']);
-
-        $featured = ($term === '' && empty($validated['rubrique']))
-            ? Video::live()->with('category')->where('is_featured', true)->orderByDesc('published_at')->first()
-            : null;
 
         return view('front.videos.index', [
             'videos'   => $videos,
