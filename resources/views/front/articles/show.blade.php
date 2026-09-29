@@ -196,16 +196,17 @@
     }
 
     .share-section {
-        margin: 1.7rem 0;
-        padding: 1.15rem;
+        margin: 1.5rem 0;
+        padding: 1rem 1.15rem;
         border: 1px solid var(--border);
         border-radius: var(--radius);
         background: #fff;
     }
 
     .share-title {
-        margin: 0 0 0.8rem;
-        font-size: 0.82rem;
+        margin: 0 0 0.75rem;
+        color: var(--black);
+        font-size: 0.78rem;
         font-weight: 800;
         letter-spacing: 0.06em;
         text-transform: uppercase;
@@ -213,32 +214,47 @@
 
     .share-buttons {
         display: flex;
+        align-items: center;
         flex-wrap: wrap;
-        gap: 0.6rem;
+        gap: 0.55rem;
     }
 
     .share-button {
-        min-height: 40px;
-        padding: 0.55rem 1rem;
+        width: 44px;
+        height: 44px;
+        flex: 0 0 44px;
+        padding: 0;
         display: inline-flex;
         align-items: center;
         justify-content: center;
         border: 0;
-        border-radius: 999px;
+        border-radius: 50%;
         color: #fff;
         cursor: pointer;
-        font-size: 0.84rem;
-        font-weight: 700;
         text-decoration: none;
         transition:
             opacity 0.2s ease,
-            transform 0.2s ease;
+            transform 0.2s ease,
+            box-shadow 0.2s ease;
+    }
+
+    .share-button svg {
+        width: 20px;
+        height: 20px;
+        display: block;
+        fill: currentColor;
     }
 
     .share-button:hover {
         color: #fff;
-        opacity: 0.88;
+        opacity: 0.9;
         transform: translateY(-2px);
+        box-shadow: 0 5px 14px rgba(0, 0, 0, 0.16);
+    }
+
+    .share-button:focus-visible {
+        outline: 3px solid rgba(196, 150, 35, 0.4);
+        outline-offset: 3px;
     }
 
     .share-facebook {
@@ -263,7 +279,7 @@
 
     .copy-message {
         display: none;
-        margin-top: 0.75rem;
+        margin-top: 0.65rem;
         color: #168b46;
         font-size: 0.8rem;
         font-weight: 700;
@@ -772,14 +788,19 @@
             line-height: 1.68;
         }
 
+        .share-section {
+            padding: 0.9rem;
+        }
+
         .share-buttons {
-            display: grid;
-            grid-template-columns:
-                repeat(2, minmax(0, 1fr));
+            flex-wrap: nowrap;
+            gap: 0.45rem;
         }
 
         .share-button {
-            width: 100%;
+            width: 42px;
+            height: 42px;
+            flex-basis: 42px;
         }
 
         .article-sidebar {
@@ -796,10 +817,6 @@
     }
 
     @media (max-width: 420px) {
-
-        .share-buttons {
-            grid-template-columns: 1fr;
-        }
 
         .sidebar-block {
             padding: 17px;
@@ -1018,8 +1035,12 @@
                         target="_blank"
                         rel="noopener noreferrer"
                         class="share-button share-facebook"
+                        aria-label="Partager sur Facebook"
+                        title="Facebook"
                     >
-                        Facebook
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M14 8h3V4h-3c-3 0-5 2-5 5v2H6v4h3v7h4v-7h3l1-4h-4V9c0-.7.3-1 1-1Z"/>
+                        </svg>
                     </a>
 
                     <a
@@ -1029,8 +1050,12 @@
                         target="_blank"
                         rel="noopener noreferrer"
                         class="share-button share-whatsapp"
+                        aria-label="Partager sur WhatsApp"
+                        title="WhatsApp"
                     >
-                        WhatsApp
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18a8 8 0 0 1-4.1-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8 8 0 1 1 12 20Zm4.4-6c-.2-.1-1.4-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.6 6.6 0 0 1-3.2-2.8c-.2-.3 0-.4.1-.5l.5-.6c.1-.2.2-.3.3-.5 0-.2 0-.3-.1-.5l-.7-1.7c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.3.3-1 1-1 2.4s1 2.8 1.2 3c.1.2 2 3.1 5 4.3.7.3 1.2.5 1.7.6.7.2 1.3.2 1.8.1.6-.1 1.4-.6 1.6-1.1.2-.6.2-1 .1-1.1-.1-.2-.3-.2-.5-.3Z"/>
+                        </svg>
                     </a>
 
                     <a
@@ -1038,15 +1063,23 @@
                         target="_blank"
                         rel="noopener noreferrer"
                         class="share-button share-telegram"
+                        aria-label="Partager sur Telegram"
+                        title="Telegram"
                     >
-                        Telegram
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="m21.7 3.3-3.2 15.1c-.2 1.1-.9 1.4-1.8.9l-4.9-3.6-2.4 2.3c-.3.3-.5.5-1 .5l.4-5 9-8.1c.4-.4-.1-.6-.6-.2L6.1 12.1 1.3 10.6C.3 10.3.2 9.6 1.5 9.1L20.2 2c.9-.3 1.7.2 1.5 1.3Z"/>
+                        </svg>
                     </a>
 
                     <a
                         href="mailto:?subject={{ urlencode($shareTitle) }}&body={{ urlencode($articleUrl) }}"
                         class="share-button share-email"
+                        aria-label="Partager par courriel"
+                        title="Courriel"
                     >
-                        Courriel
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Zm0 4-8 5-8-5V6l8 5 8-5v2Z"/>
+                        </svg>
                     </a>
 
                     <button
@@ -1054,8 +1087,12 @@
                         class="share-button share-copy"
                         id="copy-article-link"
                         data-url="{{ $articleUrl }}"
+                        aria-label="Copier le lien de l’article"
+                        title="Copier le lien"
                     >
-                        Copier le lien
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M16 1H4a2 2 0 0 0-2 2v14h2V3h12V1Zm3 4H8a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2Zm0 16H8V7h11v14Z"/>
+                        </svg>
                     </button>
 
                 </div>
@@ -1097,8 +1134,6 @@
             @endif
 
         </article>
-
-        <x-telegram-cta variant="inline" />
 
         <x-ad-slot position="below_article" />
 
@@ -1461,8 +1496,15 @@
                                 .add('visible');
                         }
 
-                        copyButton.textContent =
-                            'Lien copié';
+                        copyButton.setAttribute(
+                            'aria-label',
+                            'Lien copié'
+                        );
+
+                        copyButton.setAttribute(
+                            'title',
+                            'Lien copié'
+                        );
 
                         setTimeout(
                             function () {
@@ -1473,8 +1515,15 @@
                                         .remove('visible');
                                 }
 
-                                copyButton.textContent =
-                                    'Copier le lien';
+                                copyButton.setAttribute(
+                                    'aria-label',
+                                    'Copier le lien de l’article'
+                                );
+
+                                copyButton.setAttribute(
+                                    'title',
+                                    'Copier le lien'
+                                );
 
                             },
                             2500
