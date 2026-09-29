@@ -16,6 +16,21 @@
         <priority>0.3</priority>
     </url>
 
+    {{-- Médias --}}
+    <url>
+        <loc>{{ route('videos.index') }}</loc>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+    </url>
+    @foreach($videos as $video)
+        <url>
+            <loc>{{ route('videos.show', $video->slug) }}</loc>
+            <lastmod>{{ $video->updated_at->toAtomString() }}</lastmod>
+            <changefreq>weekly</changefreq>
+            <priority>0.6</priority>
+        </url>
+    @endforeach
+
     {{-- Espace Élections --}}
     @foreach(['elections.index' => 'daily', 'elections.calendar' => 'daily', 'elections.where' => 'weekly', 'elections.parties' => 'weekly', 'elections.cycle' => 'monthly'] as $name => $freq)
         <url>

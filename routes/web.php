@@ -21,6 +21,7 @@ use App\Http\Controllers\Front\PageController;
 use App\Http\Controllers\Front\PollController;
 use App\Http\Controllers\Front\SearchController;
 use App\Http\Controllers\Front\SitemapController;
+use App\Http\Controllers\Front\VideoController;
 use App\Http\Controllers\Front\ThumbnailController;
 use Illuminate\Support\Facades\Route;
 
@@ -47,6 +48,15 @@ Route::get('/recherche', [SearchController::class, 'index'])
 | Contact
 |--------------------------------------------------------------------------
 */
+
+/*
+|--------------------------------------------------------------------------
+| Médias (vidéos)
+|--------------------------------------------------------------------------
+*/
+
+Route::get('/medias', [VideoController::class, 'index'])->name('videos.index');
+Route::get('/medias/{slug}', [VideoController::class, 'show'])->name('videos.show');
 
 /*
 |--------------------------------------------------------------------------

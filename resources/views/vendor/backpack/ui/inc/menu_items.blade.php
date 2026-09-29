@@ -17,6 +17,12 @@
     />
 
     <x-backpack::menu-dropdown-item
+        title="Vidéos (Médias)"
+        icon="la la-video"
+        :link="backpack_url('video')"
+    />
+
+    <x-backpack::menu-dropdown-item
         title="Brouillons"
         icon="la la-file-alt"
         :link="backpack_url('article?status=draft')"

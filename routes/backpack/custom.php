@@ -135,6 +135,8 @@ Route::group([
     Route::get('statistiques', [StatisticsController::class, 'index'])
     ->name('admin.statistics');
 
+    Route::crud('video', 'VideoCrudController');
+
     // Espace « Élections ».
     Route::crud('election-event', 'ElectionEventCrudController');
     Route::crud('electoral-actor', 'ElectoralActorCrudController');

@@ -698,6 +698,15 @@
                 transform 0.18s ease;
         }
 
+        /*
+            Les derniers menus s'ouvrent vers la gauche : sinon « Plus »
+            dépasse le bord droit et la page défile horizontalement.
+        */
+        .navigation-menu > .nav-item:nth-last-child(-n+2) .nav-dropdown {
+            left: auto;
+            right: 0;
+        }
+
         .nav-item:hover > .nav-dropdown,
         .nav-item:focus-within > .nav-dropdown {
             visibility: visible;
@@ -1624,6 +1633,7 @@
                             [route('elections.calendar'), '📅 Calendrier électoral'],
                             [route('elections.where'), '📍 Où voter ?'],
                             [route('elections.parties'), '🚩 Partis et positions'],
+                            [route('videos.index'), '▶ Médias (vidéos)'],
                             [route('announcements.index'), 'Annonces'],
                             [route('polls.index'), 'Sondages'],
                             [route('fundraisers.index'), 'Campagnes de financement'],
@@ -1632,6 +1642,10 @@
                             [route('contact.create'), 'Contact'],
                         ])->all();
                 @endphp
+
+                <div class="nav-item">
+                    <a href="{{ route('videos.index') }}" class="nav-link">▶ Médias</a>
+                </div>
 
                 {{-- Élections : mis en avant pendant le cycle électoral. --}}
                 <div class="nav-item nav-item--elections">

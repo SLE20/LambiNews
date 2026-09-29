@@ -59,6 +59,7 @@ class SitemapController extends Controller
                 'updated_at',
             ]);
 
+        $videos = \App\Models\Video::live()->get(['slug', 'updated_at']);
         $electionActors = \App\Models\ElectoralActor::published()->pluck('slug');
         $electionParties = \App\Models\PoliticalParty::published()->get(['slug', 'updated_at']);
 
@@ -67,6 +68,7 @@ class SitemapController extends Controller
             'categories',
             'authors',
             'pages',
+            'videos',
             'electionActors',
             'electionParties'
         ));
